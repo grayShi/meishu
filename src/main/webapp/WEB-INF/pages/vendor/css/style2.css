@@ -1,0 +1,81 @@
+* {
+	margin: 0;
+	padding: 0;
+	box-sizing: border-box;
+	font-family: "Microsoft Yahei Light", "Microsoft Yahei";
+}
+
+a {
+	text-decoration: none;
+	out-line: none;
+	color: inherit;
+}
+
+html {
+	height: 100%;
+	min-height: 100%;
+	font-size: 100%;
+	position: relative;
+}
+
+body {
+	min-width: 1200px;
+	height: 100%;
+	min-height: 100%;
+	background-color: #F8A641;
+}
+.panel{
+	float: left;
+  top: 30%;
+  background-color: rgba(255, 235, 205, 0.63);
+ right: 25%;
+  border-radius: 20px;
+  border: 1px white solid;
+  padding-left: 15px;
+  padding-right: 15px;
+  padding-bottom: 25px;
+}
+.panel-title{
+  text-align: center;
+  color: white;
+}
+.btn{
+  text-align: center;
+  margin-left:  15px;
+  width: 87%;
+  margin-top: 5px;
+
+}
+.icon{
+  position: absolute;
+  padding:4.5px;
+}
+#user , #password{
+  padding:15px;
+}
+.form-group{
+  padding: 15px;
+}
+.image{
+	  float: left;
+    top: 30%;
+    left: 18%;
+}
+.pic-1{
+  margin-left: 27%;
+  margin-bottom:20px;
+
+}
+.pic-2{
+  width:80%;
+}
+i{
+  color: orange;
+}
+.container{
+	min-width: 1200px;
+}
+.box{
+margin-left: 10%;
+margin-top: 18%;
+}
