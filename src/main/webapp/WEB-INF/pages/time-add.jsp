@@ -29,7 +29,7 @@
 
     <!-- Custom CSS -->
     <link href="dist/css/sb-admin-2.css" rel="stylesheet">
-
+    <link href="vendor/datetimepicker/jquery.datetimepicker.css" rel="stylesheet">
     <!-- Custom Fonts -->
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -117,17 +117,12 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-
-    <!-- jQuery -->
-    <script src="vendor/jquery/jquery.min.js"></script>
-    <!-- Bootstrap Core JavaScript -->
-    <script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-    <!-- Custom Theme JavaScript -->
-    <script src="dist/js/sb-admin-2.js"></script>
-    <!-- Metis Menu Plugin JavaScript -->
-    <script src="vendor/metisMenu/metisMenu.min.js"></script>
-
+    <script src="vendor/datetimepicker/jquery.datetimepicker.js"></script>
     <script>
+        $('#date').datetimepicker({
+            step: 30,
+            roundTime: 'round',
+        });
         function setClassPlace() {
             var place = document.getElementById("place").value;
             var subPlace;

@@ -10,7 +10,7 @@
     String power= (String) session.getAttribute("power");
     String username = (String) session.getAttribute("username");
 %>
-<nav class="navbar navbar-default navbar-static-top" role="navigation" style="margin-bottom: 0">
+<nav class="navbar navbar-default navbar-static-top navbar-fixed-top" role="navigation" style="margin-bottom: 0">
     <div class="navbar-header">
         <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
             <span class="sr-only">Toggle navigation</span>
@@ -28,7 +28,7 @@
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
                 <i class="fa fa-user fa-fw"></i><%=username %> <i class="fa fa-caret-down"></i>
             </a>
-            <ul class="dropdown-menu dropdown-user">
+            <ul class="dropdown-menu dropdown-message">
                 <li><a href="#"><i class="fa fa-gear fa-fw"></i> 修改密码</a>
                 </li>
                 <li class="divider"></li>
@@ -101,4 +101,50 @@
         <!-- /.sidebar-collapse -->
     </div>
     <!-- /.navbar-static-side -->
+    <div class="navbar-fixed-bottom navbar-default" style="text-align: right">
+        Copyright © 2018 -2020. All rights reserved.
+    </div>
 </nav>
+<div id="wrap">
+    <button type="button" class="btn btn-default btn-circle btn-lg" id="btn_top"><i class="fa fa-arrow-up"></i>
+    </button>
+</div>
+<!-- jQuery -->
+<script src="vendor/jquery/jquery.min.js"></script>
+<!-- Bootstrap Core JavaScript -->
+<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
+<!-- Custom Theme JavaScript -->
+<script src="dist/js/sb-admin-2.js"></script>
+<!-- Metis Menu Plugin JavaScript -->
+<script src="vendor/metisMenu/metisMenu.min.js"></script>
+<script>
+    $("#btn_top").hide();         //刚进入页面时设置为隐藏
+    $("#btn_top").bind("click",function(){     //单击时返回顶部
+        $('html, body').animate({scrollTop: 0},300);return false;
+    });
+    $(window).bind('scroll resize',function(){   //判断页面所在的位置，小于300就隐藏，否则就显示
+        if($(window).scrollTop()<=300){
+            $("#btn_top").hide();
+        }else{
+            $("#btn_top").show();
+        }
+    });
+</script>
+<style>
+    @media (min-width: 768px) {
+        #wrap {
+            display: block;
+            bottom: 21px;
+            right: 1px !important;
+            width: 200px;
+            line-height: 30px;
+            position: fixed;
+            text-align: right;
+        }
+    }
+    @media (max-width: 768px) {
+        #wrap {
+            display: none;
+        }
+    }
+</style>

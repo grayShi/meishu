@@ -74,7 +74,7 @@ public class FileService {
         return response;
     }
 
-    public HttpServletResponse outputExcel(HttpServletResponse response,List<Map<String,Object>> dataList,String[] titles,String[] keys,String filename) throws UnsupportedEncodingException {
+    public void outputExcel(HttpServletResponse response,List<Map<String,Object>> dataList,String[] titles,String[] keys,String filename) throws UnsupportedEncodingException {
         HSSFWorkbook wb = new HSSFWorkbook();
         // 在webbook中添加一个sheet,对应Excel文件中的sheet
         HSSFSheet sheet = wb.createSheet("sheet1");
@@ -133,7 +133,13 @@ public class FileService {
         }catch (Exception ex){
             ex.printStackTrace();
         }
-        return response;
+//        return response;
+//        如果出现：javax.servlet.ServletException: File &quot;/head.jsp&quot; not found，
+// 这种异常而且页面可以正常跳转显示数据的话，但是后台就是报这个异常的话，
+// 那就说明你在controller中用了两次response到前台来，
+// 出现情况是controller方法上既用了@RequestBody注解方式返回前台页面，
+// 在方法结尾又使用了工具方法类似HtmlUtils.wirte(X,X);的response方式响应到了前台，
+// 所以出出现file&quot;的一个异常信息；只需要采取一种方式即可；
     }
 
 

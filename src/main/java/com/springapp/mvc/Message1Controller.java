@@ -35,7 +35,7 @@ public class Message1Controller extends BaseController{
         return modelAndView;
     }
     @RequestMapping(value = "/message2", method = RequestMethod.POST)
-    public ModelAndView loanData(@RequestParam MultipartFile[] myfiles,
+    public ModelAndView loanData(@RequestParam MultipartFile[] myfiles,@RequestParam(value = "endSignUpdate")String endSignUpdate,
                            HttpServletRequest request) throws IOException {
         // 如果只是上传一个文件，则只需要MultipartFile类型接收文件即可，而且无需显式指定@RequestParam注解
         // 如果想上传多个文件，那么这里就要用MultipartFile[]类型来接收文件，并且还要指定@RequestParam注解
@@ -395,7 +395,7 @@ public class Message1Controller extends BaseController{
         }
     }
     @RequestMapping("/message1/getExcel")
-    public HttpServletResponse download1(HttpServletResponse resp) throws IOException {
+    public void download1(HttpServletResponse resp) throws IOException {
         FileService service = new FileService();
         String[] titles = new String[]{"*姓名","*国籍","*民族","*性别","*出生日期","联系方式","地址","*科目","*级别","*报名省市","*机构名称"};
         String[] keys = new String[]{"name","country","nation","sex","birth","phoneNumber","address","subject","level","reportPlace","subPlace","mark"};
@@ -430,6 +430,6 @@ public class Message1Controller extends BaseController{
         map.put("mark","此行为模板信息，导入时请把此行删除");
         dataList.add(map);
         String filename = "全国美术考级报名信息上传模板";
-        return  service.outputExcel(resp, dataList, titles, keys, filename);
+        service.outputExcel(resp, dataList, titles, keys, filename);
     }
     }

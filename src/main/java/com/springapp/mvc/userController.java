@@ -19,7 +19,22 @@ import java.util.List;
 public class userController extends BaseController {
     @RequestMapping(value="/user",method = RequestMethod.GET)
     public ModelAndView home(ModelAndView modelAndView){
-        List<User> user=userDao.findAll("from User");
+        List<User> user = userDao.findAll("from User");
+        for(User us : user){
+            if(us.getSubPlace() != null){
+                char [] sub = us.getSubPlace().toCharArray();
+                String subPlace ="";
+                for(int i=0;i<sub.length;i++){
+                    if(sub[i] == '￥'){
+                        for(int j=i+1;j<sub.length;j++) {
+                            subPlace += sub[j];
+                        }
+                        break;
+                    }
+                }
+                us.setSubPlace(subPlace);
+            }
+        }
         modelAndView.addObject("user",user);
         String userList = JSONArray.fromObject(user).toString();
         modelAndView.addObject("userList",userList);

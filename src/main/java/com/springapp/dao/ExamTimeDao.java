@@ -12,7 +12,7 @@ import java.util.List;
 @Repository
 public class ExamTimeDao extends BaseDao{
     public List<examTime> getId(Long id){
-        return this.findAll("from examTime where id="+id,examTime.class);
+        return this.findAll("from examTime where id="+id);
     }
 
 }

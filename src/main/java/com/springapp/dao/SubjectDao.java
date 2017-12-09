@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public class SubjectDao extends BaseDao {
     public List<subject> getId(Long id){
-        return this.findAll("from subject where id="+id,subject.class);
+        return this.findAll("from subject where id="+id);
     }
 }

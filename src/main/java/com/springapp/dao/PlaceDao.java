@@ -14,9 +14,10 @@ public class PlaceDao extends BaseDao{
         return this.getCount("select count (*) from Place where place= '"+place+"'");
     }
     public long setId(String place){
-        return this.findAll("from Place where place= '"+place+"'",Place.class).get(0).getId();
+        List<Place> find = this.findAll("from Place where place= '"+place+"'");
+        return find.get(0).getId();
     }
     public List<Place> getId(Long id){
-        return this.findAll("from Place where id="+id,Place.class);
+        return this.findAll("from Place where id="+id);
     }
 }

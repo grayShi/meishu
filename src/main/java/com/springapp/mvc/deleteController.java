@@ -34,12 +34,16 @@ public class deleteController extends BaseController{
     public ModelAndView home(HttpServletRequest request, ModelAndView modelAndView) {
         searchSql search = new searchSql();
         String sql = search.getSession(request);
-        List<message> message = messageDao.findAll("from message where isDelete = 0 "+sql);
-        String messageList= JSONArray.fromObject(message).toString();
-        modelAndView.addObject("messageList",messageList);
+//        List<message> message = messageDao.findAll("from message where isDelete = 0 "+sql);
+//        String messageList= JSONArray.fromObject(message).toString();
+//        modelAndView.addObject("messageList",messageList);
         List<message> messageReportList=messageDao.findAll("select DISTINCT(reportPlace),subPlace from message where isDelete = 0 "+sql+" GROUP BY reportPlace,subPlace ");
         String messageReport= JSONArray.fromObject(messageReportList).toString();
         modelAndView.addObject("messageReport",messageReport);
+        List<message> timeList = messageDao.findAll("select distinct time from message where isDelete = 0 and time IS NOT NULL "+sql+"");
+        modelAndView.addObject("timeList",timeList);
+        List<message> endTimeList = messageDao.findAll("select distinct endSignUpTime from message where isDelete = 0 and endSignUpTime IS NOT NULL "+sql+"");
+        modelAndView.addObject("endTimeList",endTimeList);
         List<message> levelList = messageDao.findAll("select distinct level from message where isDelete = 0 "+sql+" order by level ");
         modelAndView.addObject("levelList",levelList);
         List<subject> subjectList = subjectDao.findAll("from subject");
@@ -55,6 +59,24 @@ public class deleteController extends BaseController{
         List<message> list = messageDao.getId(id);
         list.get(0).setIsDelete(1);
         messageDao.update(list);
+        return "success";
+    }
+    @RequestMapping(value="/rollback",method = RequestMethod.POST)
+    @ResponseBody
+    public String rollback(@RequestParam(value = "id") Long id){
+        List<message> list = messageDao.findAll("from message where isDelete = 1 and id="+id);
+        list.get(0).setIsDelete(0);
+        messageDao.update(list);
+        return "success";
+    }
+    @RequestMapping(value="/startTotal",method = RequestMethod.POST)
+    @ResponseBody
+    public String deleteTotal(@RequestParam(value = "deleteArray") Long[] deleteArray){
+        for(int i = 0;i<deleteArray.length;i++){
+            List<message> list = messageDao.getId(deleteArray[i]);
+            list.get(0).setIsDelete(1);
+            messageDao.update(list);
+        }
         return "success";
     }
     @RequestMapping(value="/editMessage",method = RequestMethod.POST)
@@ -76,8 +98,17 @@ public class deleteController extends BaseController{
                          @RequestParam(value = "classPlace") String classPlace,
                          @RequestParam(value = "examPlace") String examPlace,
                          @RequestParam(value = "reportPlace") String reportPlace,
-                         @RequestParam(value = "subPlace") String subPlace){
-        String str="from message where isDelete=0 ";
+                         @RequestParam(value = "subPlace") String subPlace,
+                         @RequestParam(value = "time") String time,
+                         @RequestParam(value = "endSignUpTime") String endSignUpTime,
+                         @RequestParam(value = "isDelete") Boolean isDelete
+                         ){
+        String str="from message where ";
+        if(isDelete){
+            str += "isDelete = 1 ";
+        } else {
+            str += "isDelete = 0 ";
+        }
         if(name!="")
             str+=" and name = '"+name+"'";
         if(!subject.equals("0"))
@@ -90,18 +121,24 @@ public class deleteController extends BaseController{
             str+=" and classPlace = '"+classPlace+"' and examPlace = '"+examPlace+"'";
         if(cardNumber!="")
             str+=" and cardNumber like '%"+cardNumber+"%'";
+        if(!time.equals("0"))
+            str+=" and time = '"+time+"'";
+        if(!endSignUpTime.equals("0"))
+            str+=" and endSignUpTime = '"+endSignUpTime+"'";
         searchSql search = new searchSql();
         String sql = search.getSession(request);
         List<message> messageList = messageDao.findAll(str + sql);
         return JSONArray.fromObject(messageList).toString();
     }
     @RequestMapping(value="/getExcel",method = RequestMethod.GET)
-    public HttpServletResponse getExcel(HttpServletRequest request,@RequestParam(value = "name") String name,@RequestParam(value = "subject") String subject,
+    public void getExcel(HttpServletRequest request,@RequestParam(value = "name") String name,@RequestParam(value = "subject") String subject,
                            @RequestParam(value = "level") String level,
                          @RequestParam(value = "cardNumber") String cardNumber,@RequestParam(value = "classPlace") String classPlace,
                                         @RequestParam(value = "examPlace") String examPlace,@RequestParam(value = "reportPlace") String reportPlace,
-                                        @RequestParam(value = "subPlace") String subPlace,HttpServletResponse resp)throws IOException{
-        String searchList=search(request,name,subject,level,cardNumber,classPlace,examPlace,reportPlace,subPlace);
+                                        @RequestParam(value = "time") String time,
+                                        @RequestParam(value = "endSignUpTime") String endSignUpTime,
+                                        @RequestParam(value = "subPlace") String subPlace,@RequestParam(value = "isDelete") Boolean isDelete,HttpServletResponse resp)throws IOException{
+        String searchList=search(request,name,subject,level,cardNumber,classPlace,examPlace,reportPlace,subPlace,time,endSignUpTime,isDelete);
         List<Map> search = JSONArray.fromObject(searchList);
         FileService service = new FileService();
         String[] titles = new String[]{"准考证号","姓名","国籍","民族","性别","出生日期","联系方式","地址","科目","级别","报名省市","机构名称","考点地址","考场地址","考试时间","持续时间"};
@@ -151,6 +188,6 @@ public class deleteController extends BaseController{
             dataList.add(map);
         }
         String filename = "全国美术考级报名信息表";
-        return  service.outputExcel(resp, dataList, titles, keys, filename);
+        service.outputExcel(resp, dataList, titles, keys, filename);
     }
 }

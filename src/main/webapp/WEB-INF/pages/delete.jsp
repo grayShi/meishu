@@ -84,14 +84,32 @@
                     </div>
                 </div>
             <div class="col-lg-12 row-top">
-                <div class="col-lg-6">
+                <div class="col-lg-3">
+                    <span> 报名截止日期</span>
+                    <select id="endSignUpTime"class="form-control" >
+                        <option value="0" selected="selected">报名截止日期</option>
+                        <c:forEach items="${endTimeList}" var="item">
+                            <option value="${item}">${item}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="col-lg-3">
+                    <span> 考试时间</span>
+                    <select id="time"class="form-control" >
+                        <option value="0" selected="selected">考试时间</option>
+                        <c:forEach items="${timeList}" var="item">
+                            <option value="${item}">${item}</option>
+                        </c:forEach>
+                    </select>
+                </div>
+                <div class="col-lg-3">
                     <span> 报名省市-机构名称</span>
                     <select id="reportPlace"class="form-control" >
                         <option value="0" selected="selected">报名省市</option>
 
                     </select>
                 </div>
-                <div class="col-lg-6">
+                <div class="col-lg-3">
                     <span> 考点地址-考场地址</span>
                     <select id="examPlace" class="form-control">
                         <option value="0" selected="selected">考点地址</option>
@@ -102,6 +120,8 @@
                 </div>
                 </div>
                 <div class="col-lg-12 text-center">
+                    <input type="checkbox" id="checkDelete" name="checkAll" />查看删除考生
+                    <button type='button' data-toggle='modal' class='btn btn-default' data-target='#delete-total'>批量删除</button>
                     <button class="btn btn-primary" type="button" onclick="getSearch()">搜索</button>
                     <button class="btn btn-primary" onclick="getExcel()">导出EXCEL</button>
                 </div>
@@ -109,9 +129,10 @@
             </div>
         <div class="row">
             <div class="table-responsive table-bordered">
-                <table class="table table-striped table-bordered table-hover row-top">
+                <table class="table table-striped table-bordered table-hover row-top" id="table">
                     <thead>
                     <tr>
+                        <th><input type="checkbox" id="checkAll" name="checkAll" /></th>
                         <th>准考证号</th>
                         <th>姓名</th>
                         <th>性别</th>
@@ -148,6 +169,38 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
+    <div class="modal fade" id="delete-total" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">删除提示</h4>
+                </div>
+                <div class="modal-body text-center">
+                    <p>你确定要删除吗？</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="totalDelete()">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <div class="modal fade" id="rollback" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">删除提示</h4>
+                </div>
+                <div class="modal-body text-center">
+                    <p>你确定要删除吗？</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button type="button" class="btn btn-danger" data-dismiss="modal" onclick="rollbackById()">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
     <div class="modal fade" id="edit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -180,14 +233,8 @@
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
 </div>
-<!-- jQuery -->
-<script src="vendor/jquery/jquery.min.js"></script>
-<!-- Bootstrap Core JavaScript -->
-<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-<!-- Custom Theme JavaScript -->
-<script src="dist/js/sb-admin-2.js"></script>
-<!-- Metis Menu Plugin JavaScript -->
-<script src="vendor/metisMenu/metisMenu.min.js"></script>
+
+<script src="js/checkBox.js"></script>
 
 <script>
     $(function(){
@@ -208,44 +255,46 @@
         }
         $("#reportPlace").html(row);
 
-        var message=JSON.parse('${messageList}');
-        var list="";
-        for(var i=0;i<message.length;i++){
-            var subject=message[i].subject;
-            var sub1="";
-            for(var x=0;x<subject.length;x++){
-                if(subject[x]=="￥"){
-                    for(var j=x+1;j<subject.length;j++) {
-                        sub1 += subject[j];
-                    }
-                    break;
-                }
-            }
-            var subPlace=message[i].subPlace;
-            var sub2="";
-            for(var x=0;x<subPlace.length;x++){
-                if(subPlace[x]=="￥"){
-                    for(var j=x+1;j<subPlace.length;j++) {
-                        sub2 += subPlace[j];
-                    }
-                    break;
-                }
-            }
-            list+="<tr> " +
-                "<td>"+message[i].cardNumber+"</td>"+
-                "<td>"+message[i].name+"</td>"+
-                "<td>"+message[i].sex+"</td>"+
-                "<td>"+message[i].birth+"</td>"+
-                "<td>"+message[i].time+"</td>"+
-                "<td>"+sub1+"</td>"+
-                "<td>"+message[i].level+"</td>"+
-                "<td>"+message[i].reportPlace+" "+sub2+"</td>"+
-                "<td>"+message[i].examPlace+" "+message[i].classPlace+"</td>"+
-                "<td><button type='button' onclick='editMessage(\""+message[i].id+"\",\""+message[i].name+"\",\""+message[i].sex+"\",\""+message[i].birth+"\")' class='btn btn-default'>编辑</button> " +
-                "<button type='button' data-toggle='modal' data-target='#delete' onclick='getId("+message[i].id+")' class='btn btn-default'>删除</button> </td>"
-        }
-        $("#list").html(list);
-    })
+        <%--var message=JSON.parse('${messageList}');--%>
+        <%--var list="";--%>
+        <%--for(var i=0;i<message.length;i++){--%>
+            <%--var subject=message[i].subject;--%>
+            <%--var sub1="";--%>
+            <%--for(var x=0;x<subject.length;x++){--%>
+                <%--if(subject[x]=="￥"){--%>
+                    <%--for(var j=x+1;j<subject.length;j++) {--%>
+                        <%--sub1 += subject[j];--%>
+                    <%--}--%>
+                    <%--break;--%>
+                <%--}--%>
+            <%--}--%>
+            <%--var subPlace=message[i].subPlace;--%>
+            <%--var sub2="";--%>
+            <%--for(var x=0;x<subPlace.length;x++){--%>
+                <%--if(subPlace[x]=="￥"){--%>
+                    <%--for(var j=x+1;j<subPlace.length;j++) {--%>
+                        <%--sub2 += subPlace[j];--%>
+                    <%--}--%>
+                    <%--break;--%>
+                <%--}--%>
+            <%--}--%>
+            <%--list+="<tr> " +--%>
+                    <%--"<td><input type='checkbox' name='checkItem' value="+message[i].id+"/></td>"+--%>
+                <%--"<td>"+message[i].cardNumber+"</td>"+--%>
+                <%--"<td>"+message[i].name+"</td>"+--%>
+                <%--"<td>"+message[i].sex+"</td>"+--%>
+                <%--"<td>"+message[i].birth+"</td>"+--%>
+                <%--"<td>"+message[i].time+"</td>"+--%>
+                <%--"<td>"+sub1+"</td>"+--%>
+                <%--"<td>"+message[i].level+"</td>"+--%>
+                <%--"<td>"+message[i].reportPlace+" "+sub2+"</td>"+--%>
+                <%--"<td>"+message[i].examPlace+" "+message[i].classPlace+"</td>"+--%>
+                <%--"<td><button type='button' onclick='editMessage(\""+message[i].id+"\",\""+message[i].name+"\",\""+message[i].sex+"\",\""+message[i].birth+"\")' class='btn btn-default'>编辑</button> " +--%>
+                <%--"<button type='button' data-toggle='modal' data-target='#delete' onclick='getId("+message[i].id+")' class='btn btn-default'>删除</button> </td>"--%>
+        <%--}--%>
+        <%--$("#list").html(list);--%>
+        <%--initTableCheckbox();--%>
+    });
     var id;
     function getId(Id){
         id=Id;
@@ -261,7 +310,37 @@
                 if(data=="success"){
                     getSearch();
                 }
-
+            }
+        })
+    }
+    function rollbackById() {
+        $.ajax({
+            url:"delete/rollback",
+            type:"post",
+            data:{
+                id:id
+            },
+            success:function(data){
+                if(data=="success"){
+                    getSearch();
+                }
+            }
+        })
+    }
+    function totalDelete() {
+        var deleteArray = getCheck();
+        console.log(deleteArray);
+        $.ajax({
+            url:"delete/startTotal",
+            type:"post",
+            traditional: true,
+            data:{
+                deleteArray:deleteArray
+            },
+            success:function(data){
+                if(data=="success"){
+                    getSearch();
+                }
             }
         })
     }
@@ -273,11 +352,17 @@
     var CLASSPLACE="0";
     var REPORTPLACE ="0";
     var SUBPLACE ="0";
+    var TIME ="0";
+    var ENDSIGNTIME = "0";
+    var CHECKDELETE = "0";
     function getSearch(){
+        CHECKDELETE = $("#checkDelete")[0].checked;
         NAME=$("#name").val();
         SUBJECT=$("#subject option:selected").val();
         LEVEL = $("#level option:selected").val();
         CARDNUMBER=$("#number").val();
+        TIME = $('#time').val();
+        ENDSIGNTIME = $('#endSignUpTime').val();
         var examPlace=$("#examPlace option:selected").val();
         var reportPlace = $("#reportPlace option:selected").val();
         var exam=examPlace.split("￥");
@@ -310,44 +395,65 @@
                 examPlace:EXAMPLACE,
                 classPlace:CLASSPLACE,
                 reportPlace:REPORTPLACE,
-                subPlace:SUBPLACE
+                subPlace:SUBPLACE,
+                time:TIME,
+                endSignUpTime:ENDSIGNTIME,
+                isDelete: CHECKDELETE,
             },
             success:function(data){
-                $(data).each(function(index){
-                    var subject=data[index].subject;
-                    var sub1="";
-                    for(var x=0;x<subject.length;x++){
-                        if(subject[x]=="￥"){
-                            for(var j=x+1;j<subject.length;j++) {
+                $(data).each(function(index) {
+                    var subject = data[index].subject;
+                    var sub1 = "";
+                    for (var x = 0; x < subject.length; x++) {
+                        if (subject[x] == "￥") {
+                            for (var j = x + 1; j < subject.length; j++) {
                                 sub1 += subject[j];
                             }
                             break;
                         }
                     }
-                    var subPlace=data[index].subPlace;
-                    var sub2="";
-                    for(var x=0;x<subPlace.length;x++){
-                        if(subPlace[x]=="￥"){
-                            for(var j=x+1;j<subPlace.length;j++) {
+                    var subPlace = data[index].subPlace;
+                    var sub2 = "";
+                    for (var x = 0; x < subPlace.length; x++) {
+                        if (subPlace[x] == "￥") {
+                            for (var j = x + 1; j < subPlace.length; j++) {
                                 sub2 += subPlace[j];
                             }
                             break;
                         }
                     }
-                    list+="<tr> " +
-                        "<td>"+data[index].cardNumber+"</td>"+
-                        "<td>"+data[index].name+"</td>"+
-                        "<td>"+data[index].sex+"</td>"+
-                        "<td>"+data[index].birth+"</td>"+
-                        "<td>"+data[index].time+"</td>"+
-                        "<td>"+sub1+"</td>"+
-                        "<td>"+data[index].level+"</td>"+
-                        "<td>"+data[index].reportPlace+" "+sub2+"</td>"+
-                        "<td>"+data[index].examPlace+" "+data[index].classPlace+"</td>"+
-                        "<td><button type='button' onclick='editMessage(\""+data[index].id+"\",\""+data[index].name+"\",\""+data[index].sex+"\",\""+data[index].birth+"\")' class='btn btn-default'>编辑</button> " +
-                        "<button type='button' data-toggle='modal' data-target='#delete' onclick='getId("+data[index].id+")' class='btn btn-default'>删除</button> </td></tr>"
+                    if (!CHECKDELETE) {
+                        list += "<tr> " +
+                            "<td><input type='checkbox' name='checkItem' value=" + data[index].id + "></td>" +
+                            "<td>" + data[index].cardNumber + "</td>" +
+                            "<td>" + data[index].name + "</td>" +
+                            "<td>" + data[index].sex + "</td>" +
+                            "<td>" + data[index].birth + "</td>" +
+                            "<td>" + data[index].time + "</td>" +
+                            "<td>" + sub1 + "</td>" +
+                            "<td>" + data[index].level + "</td>" +
+                            "<td>" + data[index].reportPlace + " " + sub2 + "</td>" +
+                            "<td>" + data[index].examPlace + " " + data[index].classPlace + "</td>" +
+                            "<td><button type='button' onclick='editMessage(\"" + data[index].id + "\",\"" + data[index].name + "\",\"" + data[index].sex + "\",\"" + data[index].birth + "\")' class='btn btn-default'>编辑</button> " +
+                            "<button type='button' data-toggle='modal' data-target='#delete' onclick='getId(" + data[index].id + ")' class='btn btn-default'>删除</button> </td></tr>";
+                    } else {
+                        list += "<tr> " +
+                            "<td><input type='checkbox' name='checkItem' value=" + data[index].id + "></td>" +
+                            "<td>" + data[index].cardNumber + "</td>" +
+                            "<td>" + data[index].name + "</td>" +
+                            "<td>" + data[index].sex + "</td>" +
+                            "<td>" + data[index].birth + "</td>" +
+                            "<td>" + data[index].time + "</td>" +
+                            "<td>" + sub1 + "</td>" +
+                            "<td>" + data[index].level + "</td>" +
+                            "<td>" + data[index].reportPlace + " " + sub2 + "</td>" +
+                            "<td>" + data[index].examPlace + " " + data[index].classPlace + "</td>" +
+                            "<td><button type='button' onclick='editMessage(\"" + data[index].id + "\",\"" + data[index].name + "\",\"" + data[index].sex + "\",\"" + data[index].birth + "\")' class='btn btn-default'>编辑</button> " +
+                            "<button type='button' data-toggle='modal' data-target='#rollback' onclick='getId(" + data[index].id + ")' class='btn btn-default'>撤销</button> </td></tr>";
+                    }
                     });
                 $("#list").html(list);
+                initTableCheckbox();
             }
         })
     }
@@ -380,11 +486,33 @@
         }
     }
     function getExcel() {
-        var name=$("#name").val();
-        var subject=$("#subject option:selected").val();
-        var cardNumber=$("#number").val();
-        var list="";
-        location.href="delete/getExcel?name="+NAME+"&subject="+SUBJECT+"&cardNumber="+CARDNUMBER+"&level="+LEVEL+"&examPlace="+EXAMPLACE+"&classPlace="+CLASSPLACE+"&reportPlace="+REPORTPLACE+"&subPlace="+SUBPLACE;
+        CHECKDELETE = $("#checkDelete")[0].checked;
+        NAME=$("#name").val();
+        SUBJECT=$("#subject option:selected").val();
+        LEVEL = $("#level option:selected").val();
+        CARDNUMBER=$("#number").val();
+        TIME = $('#time').val();
+        ENDSIGNTIME = $('#endSignUpTime').val();
+        var examPlace=$("#examPlace option:selected").val();
+        var reportPlace = $("#reportPlace option:selected").val();
+        var exam=examPlace.split("￥");
+        if(exam[0]!="0") {
+            EXAMPLACE = exam[0];
+            CLASSPLACE = exam[1];
+        }else{
+            EXAMPLACE = "0";
+            CLASSPLACE = "0";
+        }
+        var report=reportPlace.split(",");
+        if(report[0]!="0") {
+            REPORTPLACE = report[0];
+            SUBPLACE = report[1];
+        }else{
+            REPORTPLACE = "0";
+            SUBPLACE = "0";
+        }
+        location.href="delete/getExcel?name="+NAME+"&subject="+SUBJECT+"&cardNumber="+CARDNUMBER+"&level="+LEVEL+"&examPlace="
+            +EXAMPLACE+"&classPlace="+CLASSPLACE+"&reportPlace="+REPORTPLACE+"&subPlace="+SUBPLACE+"&time="+TIME+"&endSignUpTime="+ENDSIGNTIME+"&isDelete="+CHECKDELETE;
     }
     var ID;
     function editMessage(id,name,sex,birth) {

@@ -15,7 +15,7 @@ import java.util.List;
 @Repository
 public class MessageDao extends BaseDao{
     public List<message> getId(Long id){
-        return this.findAll("from message where isDelete = 0 and id="+id,message.class);
+        return this.findAll("from message where isDelete = 0 and id="+id);
     }
     public String getDate(HSSFCell hssfCell){
         DecimalFormat df = new DecimalFormat("#");

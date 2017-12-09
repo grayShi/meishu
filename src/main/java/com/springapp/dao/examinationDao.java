@@ -9,6 +9,6 @@ import java.util.List;
  */
 public class examinationDao extends BaseDao {
     public List<message> getId(Long id){
-        return this.findAll("from message where isDelete = 0 and id="+id,message.class);
+        return this.findAll("from message where isDelete = 0 and id="+id);
     }
 }

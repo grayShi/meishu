@@ -28,6 +28,9 @@ public class message {
     private String examPlace; //考试地点
     private String classPlace;   //考场地点
     private int realLevel;   //评定等级
+    private String endSignUpTime;        //报名结束时间
+    private Boolean isPay;        //是否缴费
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {
@@ -183,5 +186,21 @@ public class message {
 
     public void setExamTime(String examTime) {
         this.examTime = examTime;
+    }
+
+    public String getEndSignUpTime() {
+        return endSignUpTime;
+    }
+
+    public void setEndSignUpTime(String endSignUpTime) {
+        this.endSignUpTime = endSignUpTime;
+    }
+
+    public Boolean getPay() {
+        return isPay;
+    }
+
+    public void setPay(Boolean pay) {
+        isPay = pay;
     }
 }

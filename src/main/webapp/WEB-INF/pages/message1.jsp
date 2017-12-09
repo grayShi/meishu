@@ -28,7 +28,7 @@
 
     <!-- Custom CSS -->
     <link href="dist/css/sb-admin-2.css" rel="stylesheet">
-
+    <link href="vendor/datetimepicker/jquery.datetimepicker.css" rel="stylesheet">
     <!-- Custom Fonts -->
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -54,6 +54,9 @@
                     <table class="table" id="queryCondition">
                         <tbody class="tbd">
                         <tr>
+                            <td>报名截止日期<input class="form-control" id="date" name="endSignUpdate" /></td>
+                        </tr>
+                        <tr>
                             <td align="right" style="padding-right: 2px">
                                 <input name="myfiles" id="myfiles" style="display: none;" onchange="document.getElementById('filePath').value=this.value" type="file">
                                 <div class="input-group">
@@ -62,8 +65,9 @@
                                         <button type="button" class="btn btn-info" id="btn_check">请选择文件</button>
                                     </span>
                                 </div>
+                            </td>
                             <td align="left" style="padding-left: 2px">
-                            <button type="button" class="btn btn-info" id="upload" onclick="submitExcel()">导入</button>
+                                <button type="button" class="btn btn-info" id="upload" onclick="submitExcel()">导入</button>
                             </td>
                         </tr>
                         </tbody>
@@ -108,20 +112,14 @@
     </div><!-- /.modal -->
 </div>
 
-<!-- jQuery -->
-<script src="vendor/jquery/jquery.min.js"></script>
-<!-- Bootstrap Core JavaScript -->
-<script src="vendor/bootstrap/js/bootstrap.min.js"></script>
-<!-- Custom Theme JavaScript -->
-<script src="dist/js/sb-admin-2.js"></script>
-<!-- Metis Menu Plugin JavaScript -->
-<script src="vendor/metisMenu/metisMenu.min.js"></script>
-
+<script src="vendor/datetimepicker/jquery.datetimepicker.js"></script>
 <script>
     function submitExcel(){
         var excelFile = $("#myfiles").val();
+        var date = $('#date').val();
         if(excelFile=='') {$("#message").html('请选择需上传的文件!'); $("#false").modal('show');return false;}
         else if(excelFile.indexOf('.xls')==-1){$("#message").html("文件格式不正确，请选择正确的Excel文件(后缀名.xls)!");$("#false").modal('show');return false;}
+        else if(date ==''){$("#message").html('请选择报名截止日期!'); $("#false").modal('show');return false;}
         else {
             $("#commit").modal('show');
             $("#fileUpload").submit();
@@ -129,6 +127,13 @@
     }
 
     $(function() {
+        $('#date').datetimepicker({
+            format:    'Y/m/d',
+            formatDate: 'Y/m/d',
+            timepicker: false,
+            step: 30,
+            roundTime: 'round',
+        });
         $("#btn_check").click(function() {
             $("#myfiles").trigger('click');
         });

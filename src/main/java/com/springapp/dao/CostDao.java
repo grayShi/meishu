@@ -11,6 +11,6 @@ import java.util.List;
 @Repository
 public class CostDao extends BaseDao {
         public List<cost> getId(Long id){
-            return this.findAll("from cost where id="+id,cost.class);
+            return this.findAll("from cost where id="+id);
         }
 }
