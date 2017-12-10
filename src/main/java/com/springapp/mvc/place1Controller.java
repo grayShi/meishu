@@ -34,13 +34,17 @@ public class place1Controller extends  BaseController{
         ModelAndView modelAndView = new ModelAndView();
         List<examPlace> placeEdit=examPlaceDao.findAll("from examPlace where id =" + id);
         modelAndView.addObject("placeEdit", placeEdit);
+        List<reportPlace> place=reportPlaceDao.findAll("select distinct place from reportPlace where isDelete = 0");
+        modelAndView.addObject("place",place);
         modelAndView.addObject("id", id);
         modelAndView.setViewName("place1-edit");
         return modelAndView;
     }
     @RequestMapping(value="/place1-edit1",method = RequestMethod.POST)
     @ResponseBody
-    public String edit1(@RequestParam(value = "id") Long id,@RequestParam(value="count")int count,@RequestParam(value = "place") String place,@RequestParam(value = "classPlace") String classPlace,@RequestParam(value = "remark") String remark){
+    public String edit1(@RequestParam(value = "id") Long id,@RequestParam(value="count")int count,
+                        @RequestParam(value = "reportPlace") String reportPlace,@RequestParam(value = "subPlace") String subPlace,
+                        @RequestParam(value = "place") String place,@RequestParam(value = "classPlace") String classPlace,@RequestParam(value = "remark") String remark){
         Long examPlaceCount = examPlaceDao.getCount("select count (*) from examPlace where place ='"+place+"' and classPlace = '"+classPlace+"'");
         if(examPlaceCount <= 1) {
             examPlace exam = examPlaceDao.getId(id).get(0);
@@ -67,6 +71,8 @@ public class place1Controller extends  BaseController{
                 exam.setClassPlace(classPlace);
                 exam.setCount(count);
                 exam.setRemark(remark);
+                exam.setReportPlace(reportPlace);
+                exam.setSubPlace(subPlace);
                 reportPlaceDao.update(exam);
                 return "success";
             }else
@@ -90,7 +96,9 @@ public class place1Controller extends  BaseController{
     }
     @RequestMapping(value="/place1-add1",method = RequestMethod.POST)
     @ResponseBody
-    public String add1(@RequestParam(value="count")int count,@RequestParam(value = "place") String place,@RequestParam(value = "classPlace") String classPlace,@RequestParam(value = "remark") String remark){
+    public String add1(@RequestParam(value="count")int count,@RequestParam(value = "place") String place,
+                       @RequestParam(value = "classPlace") String classPlace,@RequestParam(value = "remark") String remark,
+                       @RequestParam(value = "reportPlace") String reportPlace,@RequestParam(value = "subPlace") String subPlace){
         Long examPlaceCount = examPlaceDao.getCount("select count (*) from examPlace where place ='"+place+"' and classPlace = '"+classPlace+"'");
         if(examPlaceCount == 0) {
             examPlace exam = new examPlace();
@@ -98,6 +106,8 @@ public class place1Controller extends  BaseController{
             exam.setClassPlace(classPlace);
             exam.setCount(count);
             exam.setRemark(remark);
+            exam.setReportPlace(reportPlace);
+            exam.setSubPlace(subPlace);
             examPlaceDao.save(exam);
             return "success";
         }

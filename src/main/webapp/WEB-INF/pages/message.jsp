@@ -29,6 +29,7 @@
 
     <!-- Custom CSS -->
     <link href="dist/css/sb-admin-2.css" rel="stylesheet">
+    <link href="vendor/datetimepicker/jquery.datetimepicker.css" rel="stylesheet">
 
     <!-- Custom Fonts -->
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
@@ -140,6 +141,12 @@
                                 <option value="0" selected="selected">级别</option>
                             </select></td>
                     </tr>
+                    <tr>
+                        <td>报名截止日期</td>
+                        <td>
+                            <input class="form-control" id="date" name="endSignUpdate" />
+                        </td>
+                    </tr>
                     </tbody>
                 </table>
                 <div>说明：如果以前报考过，只输入姓名，性别，出生年月 点击搜索查询，就可查询出该考生信息</div>
@@ -190,18 +197,18 @@
     </div><!-- /.modal -->
 </div>
 
+<script src="vendor/datetimepicker/jquery.datetimepicker.js"></script>
 <script>
     $(function(){
         setSubPlace();
+        $('#date').datetimepicker({
+            format: 'Y-m-d',
+            timepicker: false,
+            validateOnBlur: false,
+            step: 30,
+            roundTime: 'round',
+        });
     });
-//    $('#birth').datetimepicker({
-//        lang:'ch',
-//        format:"Y-m-d",
-//        formatDate:'Y/m/d',
-//        timepicker:false,
-//        yearStart: 1990,
-//        yearEnd: 2050
-//    });
     function setSubPlace(){
         var place=$('#reportPlace option:selected').val();
         $.ajax({
@@ -372,8 +379,14 @@
         var level2=$("#level2 option:selected").val();
         var subject3=$("#subject3 option:selected").val();
         var level3=$("#level3 option:selected").val();
+        var date = $('#date').val();
         if(reportPlace==''||subPlace==''||subject1==''||level1==''||name==""||birth==""){
             $("#message").html('报名省市，机构名称，名字，生日，科目一，级别一不可为空');
+            $('#false').modal('show');
+            return 0;
+        }
+        if(date ==''){
+            $("#message").html('请选择报名截止日期!');
             $('#false').modal('show');
             return 0;
         }
@@ -433,14 +446,14 @@
                 return 0;
             }
         }
-        save(reportPlace,subPlace,name,sex,birth,country,nation,address,phoneNumber,subject1,level1);
+        save(reportPlace,subPlace,name,sex,birth,country,nation,address,phoneNumber,subject1,level1,date);
         realCount++;
         if(subject2!='0' && level2!= '0') {
-            save(reportPlace, subPlace, name, sex, birth,  country, nation, address, phoneNumber, subject2, level2);
+            save(reportPlace, subPlace, name, sex, birth,  country, nation, address, phoneNumber, subject2, level2,date);
             realCount++;
         }
         if(subject3!='0' && level3!= '0') {
-            save(reportPlace, subPlace, name, sex, birth,  country, nation, address, phoneNumber, subject3, level3);
+            save(reportPlace, subPlace, name, sex, birth,  country, nation, address, phoneNumber, subject3, level3,date);
             realCount++;
         }
         if(count==realCount){
@@ -466,7 +479,7 @@
     }
     var count=0;
     var realCount=0;
-    function save(reportPlace,subPlace,name,sex,birth,country,nation,address,phoneNumber,subject,level){
+    function save(reportPlace,subPlace,name,sex,birth,country,nation,address,phoneNumber,subject,level,date){
         var birth1="";
         for(var i=0;i<birth.length;i++){
             if(birth[i]!="-"){
@@ -488,7 +501,8 @@
                 address:address,
                 phoneNumber:phoneNumber,
                 subject:subject,
-                level:level
+                level:level,
+                date:date,
             },
             success: function (data) {
                 if(data=='success'){
@@ -790,8 +804,14 @@
         var level2=$("#level2 option:selected").val();
         var subject3=$("#subject3 option:selected").val();
         var level3=$("#level3 option:selected").val();
+        var date = $("#date").val();
         if(reportPlace==''||subPlace==''||subject1==''||level1==''||name==""||birth==""){
             $("#message").html('报名省市，机构名称，名字，生日，科目一，级别一不可为空');
+            $('#false').modal('show');
+            return 0;
+        }
+        if(date ==''){
+            $("#message").html('请选择报名截止日期!');
             $('#false').modal('show');
             return 0;
         }
@@ -851,20 +871,20 @@
                 return 0;
             }
         }
-        edit(setId[0],reportPlace,subPlace,name,sex,birth,country,nation,address,phoneNumber,subject1,level1);
+        edit(setId[0],reportPlace,subPlace,name,sex,birth,country,nation,address,phoneNumber,subject1,level1,date);
         realCount++;
         if(subject2!='0' && level2!= '0') {
             if(setId.length>1)
-                edit(setId[1],reportPlace, subPlace, name, sex, birth,  country, nation, address,  phoneNumber, subject2, level2);
+                edit(setId[1],reportPlace, subPlace, name, sex, birth,  country, nation, address,  phoneNumber, subject2, level2,date);
             else
-                save(reportPlace, subPlace, name, sex, birth,  country, nation, address,  phoneNumber, subject2, level2);
+                save(reportPlace, subPlace, name, sex, birth,  country, nation, address,  phoneNumber, subject2, level2,date);
             realCount++;
         }
         if(subject3!='0' && level3!= '0') {
             if(setId.length>2)
-                edit(setId[2],reportPlace, subPlace, name, sex, birth,  country, nation, address,  phoneNumber, subject3, level3);
+                edit(setId[2],reportPlace, subPlace, name, sex, birth,  country, nation, address,  phoneNumber, subject3, level3,date);
             else
-                save(reportPlace, subPlace, name, sex, birth,  country, nation, address,  phoneNumber, subject3, level3);
+                save(reportPlace, subPlace, name, sex, birth,  country, nation, address,  phoneNumber, subject3, level3,date);
             realCount++;
         }
         if(count==realCount){
@@ -875,7 +895,7 @@
     }
     var count=0;
     var realCount=0;
-    function edit(id,reportPlace,subPlace,name,sex,birth,country,nation,address,phoneNumber,subject,level){
+    function edit(id,reportPlace,subPlace,name,sex,birth,country,nation,address,phoneNumber,subject,level,date){
         var birth1="";
         for(var i=0;i<birth.length;i++){
             if(birth[i]!="-"){
@@ -898,7 +918,8 @@
                 address:address,
                 phoneNumber:phoneNumber,
                 subject:subject,
-                level:level
+                level:level,
+                date:date,
             },
             success: function (data) {
                 if(data=='success'){

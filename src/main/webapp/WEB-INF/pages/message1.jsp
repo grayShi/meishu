@@ -80,7 +80,7 @@
 
 
     </div>
-    <div class="modal fade" id="commit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal fade" id="commit" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" data-backdrop="static" data-keyboard="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -90,7 +90,8 @@
                     <p>系统正在提交表格，请等待</p>
                 </div>
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>
+                    <%--<button type="button" class="btn btn-primary" data-dismiss="modal">确定</button>--%>
+                    <p>请勿刷新页面</p>
                 </div>
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
@@ -128,9 +129,9 @@
 
     $(function() {
         $('#date').datetimepicker({
-            format:    'Y/m/d',
-            formatDate: 'Y/m/d',
+            format: 'Y-m-d',
             timepicker: false,
+            validateOnBlur: false,
             step: 30,
             roundTime: 'round',
         });

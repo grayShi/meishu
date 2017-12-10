@@ -16,7 +16,19 @@ public class searchSql {
         if(power.equals("admin")){
             return " and 1 = 1";
         } else {
-            sql += "and reportPlace = '"+place+"' and subPlace like '%"+ subPlace +"'";
+            sql += " and reportPlace = '"+place+"' and subPlace like '%"+ subPlace +"'";
+            return sql;
+        }
+    }
+    public String getSessionSubPlace(HttpServletRequest request){
+        HttpSession session= request.getSession();
+        String subPlace = (String) session.getAttribute("subPlace");
+        String power = (String) session.getAttribute("power");
+        String sql = "";
+        if(power.equals("admin")){
+            return " and 1 = 1";
+        } else {
+            sql += "and subPlace like '%"+ subPlace +"'";
             return sql;
         }
     }

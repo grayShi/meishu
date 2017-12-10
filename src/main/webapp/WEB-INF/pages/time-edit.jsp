@@ -29,7 +29,7 @@
 
     <!-- Custom CSS -->
     <link href="dist/css/sb-admin-2.css" rel="stylesheet">
-
+    <link href="vendor/datetimepicker/jquery.datetimepicker.css" rel="stylesheet">
     <!-- Custom Fonts -->
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -124,12 +124,17 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-
+    <script src="vendor/datetimepicker/jquery.datetimepicker.js"></script>
     <script>
         function reload(){
             location.href="time";
         }
-
+        $('#date').datetimepicker({
+            step: 30,
+            roundTime: 'round',
+            validateOnBlur: false,
+            format: 'Y-m-d',
+        });
         function editTime(){
             var place=$("#place option:selected").val();
             var classPlace=$("#classPlace option:selected").val();

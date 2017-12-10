@@ -1,6 +1,6 @@
 
 function initTableCheckbox() {
-    var $thr = $('table thead tr');
+    var $thr = $('#table thead tr');
 //      var $checkAllTh = $('<th><input type="checkbox" id="checkAll" name="checkAll" /></th>');
     /*将全选/反选复选框添加到表头最前，即增加一列*/
 //      $thr.prepend($checkAllTh);
@@ -23,7 +23,7 @@ function initTableCheckbox() {
     $checkAllTh.click(function(){
         $(this).find('input').click();
     });
-    var $tbr = $('table tbody tr');
+    var $tbr = $('#table tbody tr');
 //      var $checkItemTd = $('<td><input type="checkbox" name="checkItem" /></td>');
     /*每一行都在最前面插入一个选中复选框的单元格*/
 //      $tbr.prepend($checkItemTd);
@@ -44,7 +44,12 @@ function initTableCheckbox() {
 function getCheck() {
     var arrayList=[];
     $('input[name="checkItem"]:checked').each(function(){
-        arrayList.push(Number($(this).val()));
+        if(!isNaN($(this).val())){
+            arrayList.push(Number($(this).val()));
+        } else {
+            arrayList.push($(this).val());
+        }
+
     });
     return arrayList;
 }

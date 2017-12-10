@@ -122,6 +122,8 @@
         $('#date').datetimepicker({
             step: 30,
             roundTime: 'round',
+            validateOnBlur: false,
+            format: 'Y-m-d',
         });
         function setClassPlace() {
             var place = document.getElementById("place").value;

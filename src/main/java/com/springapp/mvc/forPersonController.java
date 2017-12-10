@@ -32,11 +32,21 @@ public class forPersonController extends BaseController{
         String place = (String) session.getAttribute("place");
         String subPlace = (String) session.getAttribute("subPlace");
         String power = (String) session.getAttribute("power");
+        char [] sub = subPlace.toCharArray();
+        String SUBPLACE ="";
+        for(int i=0;i<sub.length;i++){
+            if(sub[i] == '￥'){
+                for(int j=i+1;j<sub.length;j++) {
+                    SUBPLACE += sub[j];
+                }
+                break;
+            }
+        }
         String sql1 = "";
         if(power.equals("admin")){
             sql1 += " and 1 = 1";
         } else {
-            sql1 += "and examPlace.reportPlace = '"+place+"' and examPlace.subPlace like '%"+ subPlace +"'";
+            sql1 += "and examPlace.reportPlace = '"+place+"' and examPlace.subPlace = '"+ SUBPLACE +"'";
         }
         List<time> timeList = timeDao.findAll("select time from time as time,examPlace as examPlace where " +
                 "time.place = examPlace.place and time.classPlace = examPlace.classPlace "+ sql1);
@@ -80,11 +90,21 @@ public class forPersonController extends BaseController{
         String place = (String) session.getAttribute("place");
         String subPlace = (String) session.getAttribute("subPlace");
         String power = (String) session.getAttribute("power");
+        char [] sub = subPlace.toCharArray();
+        String SUBPLACE ="";
+        for(int i=0;i<sub.length;i++){
+            if(sub[i] == '￥'){
+                for(int j=i+1;j<sub.length;j++) {
+                    SUBPLACE += sub[j];
+                }
+                break;
+            }
+        }
         String sql1 = "";
         if(power.equals("admin")){
             sql1 += " and 1 = 1";
         } else {
-            sql1 += "and examPlace.reportPlace = '"+place+"' and examPlace.subPlace like '%"+ subPlace +"'";
+            sql1 += "and examPlace.reportPlace = '"+place+"' and examPlace.subPlace = '"+ SUBPLACE +"'";
         }
         List<time> timeList = timeDao.findAll("select time from time as time,examPlace as examPlace where time.startTime = '"+time+"'" +
                 "and time.place = examPlace.place and time.classPlace = examPlace.classPlace "+ sql1);

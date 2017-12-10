@@ -30,11 +30,21 @@ public class examinationController extends BaseController {
         String place = (String) session.getAttribute("place");
         String subPlace = (String) session.getAttribute("subPlace");
         String power = (String) session.getAttribute("power");
+        char [] sub = subPlace.toCharArray();
+        String SUBPLACE ="";
+        for(int i=0;i<sub.length;i++){
+            if(sub[i] == '￥'){
+                for(int j=i+1;j<sub.length;j++) {
+                    SUBPLACE += sub[j];
+                }
+                break;
+            }
+        }
         String sql = "";
         if(power.equals("admin")){
             sql += " and 1 = 1";
         } else {
-            sql += "and examPlace.reportPlace = '"+place+"' and examPlace.subPlace like '%"+ subPlace +"'";
+            sql += "and examPlace.reportPlace = '"+place+"' and examPlace.subPlace = '"+ SUBPLACE +"'";
         }
         List<String> timeList = timeDao.findAll("select distinct time.startTime from time as time,examPlace as examPlace " +
                 "where time.place = examPlace.place and time.classPlace = examPlace.classPlace "+ sql);

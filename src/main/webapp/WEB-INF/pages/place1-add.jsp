@@ -151,6 +151,13 @@
             var classPlace =$('#classPlace').val();
             var count=$('#count').val();
             var remark = $('#remark').val();
+            var reportPlace=$("#reportPlace option:selected").val();
+            var subPlace=$("#subPlace option:selected").val();
+            if(reportPlace =="0" || subPlace =="0"){
+                $("#message").html("报名省市.机构名称不能为空");
+                $('#false').modal('show');
+                return 0;
+            }
             $.ajax({
                 url: "place1-add1",
                 type: "post",
@@ -158,7 +165,9 @@
                     place: place,
                     remark: remark,
                     classPlace: classPlace,
-                    count:count
+                    count:count,
+                    reportPlace:reportPlace,
+                    subPlace:subPlace
                 },
                 success: function (data) {
                     if (data == "success")
@@ -186,7 +195,7 @@
                 success:function(data){
                     var row="<option value='0'>机构名称</option>";
                     $(data).each(function(index){
-                        row+="<option value='"+data[index].subPlaceId+"￥"+data[index].subPlace+"' >"+data[index].subPlace+"</option>";
+                        row+="<option value='"+data[index].subPlace+"' >"+data[index].subPlace+"</option>";
                     })
                     $("#subPlace").html(row);
                 }

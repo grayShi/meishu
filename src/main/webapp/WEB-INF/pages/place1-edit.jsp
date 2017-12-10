@@ -73,7 +73,11 @@
                             <td>
                                 <select id="reportPlace"class="form-control" onchange="javascript:setSubPlace()">
                                     <option value="${item.reportPlace}" selected="selected">${item.reportPlace}</option>
-
+                                    <c:forEach items="${place}" var="it">
+                                        <c:if test="${it != item.reportPlace}">
+                                            <option value="${it}" >${it}</option>
+                                        </c:if>
+                                    </c:forEach>
                                 </select>
                             </td>
                         </tr>
@@ -153,6 +157,13 @@
             var classPlace =$('#classPlace').val();
             var count=$('#count').val();
             var remark = $('#remark').val();
+            var reportPlace=$("#reportPlace option:selected").val();
+            var subPlace=$("#subPlace option:selected").val();
+            if(reportPlace =="0" || subPlace =="0"){
+                $("#message").html("报名省市.机构名称不能为空");
+                $('#false').modal('show');
+                return 0;
+            }
             $.ajax({
                 url:"place1-edit1",
                 type:"post",
@@ -161,7 +172,9 @@
                     place:place,
                     classPlace:classPlace,
                     count:count,
-                    remark:remark
+                    remark:remark,
+                    reportPlace:reportPlace,
+                    subPlace:subPlace
                 },
                 success:function(data){
                     if(data=="success")
@@ -188,7 +201,7 @@
                 success:function(data){
                     var row="<option value='0'>机构名称</option>";
                     $(data).each(function(index){
-                        row+="<option value='"+data[index].subPlaceId+"￥"+data[index].subPlace+"' >"+data[index].subPlace+"</option>";
+                        row+="<option value='"+data[index].subPlace+"' >"+data[index].subPlace+"</option>";
                     })
                     $("#subPlace").html(row);
                 }

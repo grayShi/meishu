@@ -56,9 +56,10 @@
                 <div class="col-lg-12 text-center">
                     <h4>收费信息明细</h4>
                 </div>
-                <table class="table table-striped table-bordered table-hover">
+                <table class="table table-striped table-bordered table-hover" id="table">
                     <thead>
                     <tr>
+                        <th><input type="checkbox" id="checkAll" name="checkAll" /></th>
                         <th>考点编号</th>
                         <th>报名省市 机构名称</th>
                         <th>级别</th>
@@ -72,6 +73,7 @@
                     <tbody id="costTable">
                     <c:forEach items="${allCostList}" var="item">
                         <tr>
+                            <td><input type='checkbox' name='checkItem' value='${item.subID}'></td>
                             <td>${item.subID}</td>
                             <td>${item.reportPlace}  ${item.subPlace}</td>
                             <td>${item.level}</td>
@@ -82,15 +84,27 @@
                             <td>${item.remark}</td>
                         </tr>
                     </c:forEach>
-                    <tr>
-                        <td colspan="3" style="text-align:center">合&nbsp;&nbsp;&nbsp;&nbsp;计</td>
-                        <td>${totalCost.count}</td>
-                        <td>${totalCost.baomingfei}</td>
-                        <td>${totalCost.kaowufei}</td>
-                        <td>${totalCost.zhengshufei}</td>
-                        <td>${totalCost.remark}</td>
-                    </tr>
                     </tbody>
+                </table>
+                <table class="table table-striped table-bordered table-hover">
+                    <thead>
+                    <tr>
+                        <td></td>
+                        <th>报考人数</th>
+                        <th>报名费</th>
+                        <th>考务费</th>
+                        <th>证书费</th>
+                        <th>合计</th>
+                    </tr>
+                        <tr>
+                            <td style="text-align:center">合计</td>
+                            <td>${totalCost.count}</td>
+                            <td>${totalCost.baomingfei}</td>
+                            <td>${totalCost.kaowufei}</td>
+                            <td>${totalCost.zhengshufei}</td>
+                            <td>${totalCost.remark}</td>
+                        </tr>
+                    </thead>
                 </table>
             </div>
         </div>
@@ -99,8 +113,16 @@
     </div>
 </div>
 
-
+<script src="js/checkBox.js"></script>
 <script>
+    $(function () {
+        initTableCheckbox();
+        var $tbr = $('#table tbody tr');
+        $tbr.find('input').click(function(event){
+            var arrayList = getCheck();
+            debugger;
+        });
+    });
     function setSubPlace(){
         var reportPlace = $("#reportPlace option:selected").val();
         if(reportPlace!='0'){

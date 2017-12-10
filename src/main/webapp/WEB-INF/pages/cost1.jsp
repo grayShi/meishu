@@ -50,15 +50,15 @@
         </div>
         <div class="row">
             <div class="col-lg-12 search-row">
-                <div class="col-lg-3">
-                    <span>级别</span>
-                    <select id="level" class="form-control">
-                        <option value="0" selected="selected">报考级别</option>
-                        <c:forEach items="${levelList1}" var="item">
-                            <option value="${item}">${item}级</option>
-                        </c:forEach>
-                    </select>
-                </div>
+                <%--<div class="col-lg-3">--%>
+                    <%--<span>级别</span>--%>
+                    <%--<select id="level" class="form-control">--%>
+                        <%--<option value="0" selected="selected">报考级别</option>--%>
+                        <%--<c:forEach items="${levelList1}" var="item">--%>
+                            <%--<option value="${item}">${item}级</option>--%>
+                        <%--</c:forEach>--%>
+                    <%--</select>--%>
+                <%--</div>--%>
                 <div class="col-lg-3">
                     <span>报名省市</span>
                     <select id="reportPlace" onchange="javaScript:setSubPlace()" class="form-control">
@@ -74,15 +74,15 @@
                         <option value="0" selected="selected">机构名称</option>
                     </select>
                 </div>
-                <div class="col-lg-3">
-                    <span>考试时间</span>
-                    <select id="examTime" class="form-control">
-                        <option value="0" selected="selected">考试时间</option>
-                        <c:forEach items="${examTime}" var="item">
-                            <option value="${item}">${item}</option>
-                        </c:forEach>
-                    </select>
-                </div>
+                    <div class="col-lg-3">
+                        <span> 报名截止日期</span>
+                        <select id="endSignUpTime"class="form-control" >
+                            <option value="0" selected="selected">报名截止日期</option>
+                            <c:forEach items="${endTimeList}" var="item">
+                                <option value="${item}">${item}</option>
+                            </c:forEach>
+                        </select>
+                    </div>
                 <button class="btn btn-primary" style="margin-top: 2% ;float: right" type="button" onclick="getSearch()">查看</button>
             </div>
             <div class="col-lg-12 text-center table-title">
@@ -107,26 +107,26 @@
                     </tr>
                     </thead>
                     <tbody id="costTable">
-                    <c:forEach items="${totalCostList}" var="item">
-                        <tr>
-                            <td>${item.subID}</td>
-                            <td><a href='javascript:void(0)' onclick='searchPlace("${item.subID}")'>${item.reportPlace}  ${item.subPlace}</a></td>
-                            <td>${item.startTime}</td>
-                            <td>${item.count}</td>
-                            <td>${item.baomingfei}</td>
-                            <td>${item.kaowufei}</td>
-                            <td>${item.zhengshufei}</td>
-                            <td>${item.remark}</td>
-                        </tr>
-                    </c:forEach>
-                    <tr>
-                        <td colspan="3" style="text-align:center">合&nbsp;&nbsp;&nbsp;&nbsp;计</td>
-                        <td>${totalCost.count}</td>
-                        <td>${totalCost.baomingfei}</td>
-                        <td>${totalCost.kaowufei}</td>
-                        <td>${totalCost.zhengshufei}</td>
-                        <td>${totalCost.remark}</td>
-                    </tr>
+                    <%--<c:forEach items="${totalCostList}" var="item">--%>
+                        <%--<tr>--%>
+                            <%--<td>${item.subID}</td>--%>
+                            <%--<td><a href='javascript:void(0)' onclick='searchPlace("${item.subID}")'>${item.reportPlace}  ${item.subPlace}</a></td>--%>
+                            <%--<td>${item.startTime}</td>--%>
+                            <%--<td>${item.count}</td>--%>
+                            <%--<td>${item.baomingfei}</td>--%>
+                            <%--<td>${item.kaowufei}</td>--%>
+                            <%--<td>${item.zhengshufei}</td>--%>
+                            <%--<td>${item.remark}</td>--%>
+                        <%--</tr>--%>
+                    <%--</c:forEach>--%>
+                    <%--<tr>--%>
+                        <%--<td colspan="3" style="text-align:center">合&nbsp;&nbsp;&nbsp;&nbsp;计</td>--%>
+                        <%--<td>${totalCost.count}</td>--%>
+                        <%--<td>${totalCost.baomingfei}</td>--%>
+                        <%--<td>${totalCost.kaowufei}</td>--%>
+                        <%--<td>${totalCost.zhengshufei}</td>--%>
+                        <%--<td>${totalCost.remark}</td>--%>
+                    <%--</tr>--%>
                     </tbody>
                 </table>
             </div>
@@ -140,7 +140,7 @@
         var reportPlace = $("#reportPlace option:selected").val();
         if(reportPlace!='0'){
             $.ajax({
-                url:"date/setSubPlace",
+                url:"data/setSubPlace",
                 type:"post",
                 dataType:"json",
                 data:{
@@ -171,19 +171,17 @@
         }
     }
     function getSearch(){
-        var level = $("#level option:selected").val();
         var reportPlace = $("#reportPlace option:selected").val();
         var subPlace = $("#subPlace option:selected").val();
-        var examTime = $("#examTime option:selected").val();
+        var endSignUpTime = $("#endSignUpTime option:selected").val();
         $.ajax({
             url:"cost1/getSearch",
             type:"post",
             dataType:"json",
             data:{
-                level:level,
                 reportPlace:reportPlace,
                 subPlace:subPlace,
-                examTime:examTime
+                endSignUpTime:endSignUpTime
             },
             success:function(data){
                 var str="";

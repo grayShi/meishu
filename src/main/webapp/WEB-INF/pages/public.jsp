@@ -71,7 +71,6 @@
                         <li><a href="delete">管理信息</a></li>
                     </ul>
                 </li>
-                <% if(power.equals("admin")){%>
                     <li>
                         <a href="javascript:void(0)"><i class="fa fa-bar-chart-o fa-fw"></i> 数据分析 <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
@@ -79,7 +78,6 @@
                             <li><a href="cost1">收费情况</a></li>
                         </ul>
                     </li>
-                <% } %>
                 <li>
                     <a  href="javascript:void(0)"><i class="fa fa-bar-chart-o fa-fw"></i> 考场安排 <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">

@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
@@ -29,13 +30,14 @@ import java.util.regex.Pattern;
  */
 @Controller
 public class Message1Controller extends BaseController{
+
     @RequestMapping(value = "/message1",method = RequestMethod.GET)
     public ModelAndView home(ModelAndView modelAndView) {
         modelAndView.setViewName("message1");
         return modelAndView;
     }
     @RequestMapping(value = "/message2", method = RequestMethod.POST)
-    public ModelAndView loanData(@RequestParam MultipartFile[] myfiles,@RequestParam(value = "endSignUpdate")String endSignUpdate,
+    public ModelAndView loanData(@RequestParam MultipartFile[] myfiles,@RequestParam(value = "endSignUpdate")String endSignUpTime,
                            HttpServletRequest request) throws IOException {
         // 如果只是上传一个文件，则只需要MultipartFile类型接收文件即可，而且无需显式指定@RequestParam注解
         // 如果想上传多个文件，那么这里就要用MultipartFile[]类型来接收文件，并且还要指定@RequestParam注解
@@ -43,6 +45,14 @@ public class Message1Controller extends BaseController{
         File[] files = new File[myfiles.length];
         String lineNum="";
         String FileName="";
+        HttpSession session= request.getSession();
+        String place = (String) session.getAttribute("place");
+        String subPlace = (String) session.getAttribute("subPlace");
+        String power = (String) session.getAttribute("power");
+        Boolean isAdmin = false;
+        if(power.equals("admin")){
+            isAdmin = true;
+        }
         for (MultipartFile myfile : myfiles) {
             if (myfile.isEmpty()) {
                 System.out.println("文件未上传");
@@ -54,7 +64,7 @@ public class Message1Controller extends BaseController{
                 File file = new File(realPath, myfile.getOriginalFilename());
                 FileUtils.copyInputStreamToFile(myfile.getInputStream(), file);
                 if(myfile.getOriginalFilename().toLowerCase().endsWith("xls")){
-                    lineNum=readXls(myfile.getInputStream(),lineNum);
+                    lineNum=readXls(myfile.getInputStream(),lineNum, endSignUpTime,place ,subPlace, isAdmin );
                 }else{
                     //xlsx格式
                 }
@@ -108,7 +118,7 @@ public class Message1Controller extends BaseController{
 //        }
 //    }
 
-    private synchronized String readXls(InputStream is,String lineNum) throws IOException {
+    private synchronized String readXls(InputStream is,String lineNum, String endSignUpTime, String place, String subPlace,Boolean isAdmin) throws IOException {
         HSSFWorkbook hssfWorkbook = new HSSFWorkbook(is);
         int inputTotal=0;
         Boolean isSheetSuccess = true;
@@ -162,12 +172,12 @@ public class Message1Controller extends BaseController{
                 for (int cellNum = 0; cellNum <= 10; cellNum++) {
                         HSSFCell hssfCell = hssfRow.getCell(cellNum);
                         if (hssfCell == null && cellNum != 6 && cellNum != 5) {            /////////空excel单元格
-                            lineNum +="(Sheet"+(numSheet+1)+")"+ (rowNum + 1) + "(存在空单元格),";
+                            lineNum += "(Sheet"+(numSheet+1)+")"+ (rowNum + 1) + "(存在空单元格),";
                             isSuccess = false;
                             break;
                         }
                         if (cellNum == 0 ) {
-                            if(getValue(hssfCell) != "") {
+                            if(!getValue(hssfCell).equals("")) {
                                 if(getValue(hssfCell).equals("张三(例)")){
                                     lineNum +="(Sheet"+(numSheet+1)+")"+ (rowNum + 1) + "(示例行),";
                                     isSuccess = false;
@@ -183,7 +193,7 @@ public class Message1Controller extends BaseController{
                             }
                         }
                         else if (cellNum == 1 ) {
-                            if(getValue(hssfCell) != "") {
+                            if(!getValue(hssfCell).equals("")) {
                                 newMessage.setCountry(getValue(hssfCell));
                             }else {
                                 lineNum +="(Sheet"+(numSheet+1)+")"+ (rowNum + 1) + "(国家为空),";
@@ -193,7 +203,7 @@ public class Message1Controller extends BaseController{
                         }
                         else if (cellNum == 2 ) {
                             if(getValue(hssfRow.getCell(1)).equals("中国") ) {
-                                if(getValue(hssfCell) != "") {
+                                if(!getValue(hssfCell).equals("")) {
                                     newMessage.setNation(getValue(hssfCell));
                                 }
                                 else {
@@ -206,7 +216,7 @@ public class Message1Controller extends BaseController{
                             }
                         }
                         else if (cellNum == 3 ) {
-                            if (getValue(hssfCell) != "") {
+                            if (!getValue(hssfCell).equals("")) {
                                 newMessage.setSex(getValue(hssfCell));
                             } else {
                                 lineNum +="(Sheet"+(numSheet+1)+")"+ (rowNum + 1) + "(性别为空),";
@@ -215,7 +225,7 @@ public class Message1Controller extends BaseController{
                             }
                         }
                         else if (cellNum == 4 ) {
-                            if (getValue(hssfCell) != "") {
+                            if (!getValue(hssfCell).equals("")) {
                                 try {
 
                                     //BigDecimal db = new BigDecimal(getValue(hssfCell));
@@ -233,7 +243,7 @@ public class Message1Controller extends BaseController{
                             }
                         }
                         else if (cellNum == 5 ) {
-                            if (getValue(hssfCell) != "") {
+                            if (!getValue(hssfCell).equals("")) {
                                 try {
                                     BigDecimal db = new BigDecimal(getValue(hssfCell));
                                     newMessage.setPhoneNumber(db.toPlainString());
@@ -263,7 +273,7 @@ public class Message1Controller extends BaseController{
 //                        }
 
                         else if (cellNum == 7 ) {
-                            if(getValue(hssfCell) != ""){
+                            if(!getValue(hssfCell).equals("")){
                                 subjectList = subjectDao.findAll("from subject where subject ='"+getValue(hssfCell)+"'");
                                 oldSubject=getValue(hssfCell);
                                 if(subjectList.size()!=0) {
@@ -285,7 +295,7 @@ public class Message1Controller extends BaseController{
                             }
                         }
                         else if (cellNum == 8 ) {
-                            if(getValue(hssfCell) != "") {
+                            if(!getValue(hssfCell).equals("")) {
                                 if(pattern.matcher((int) (Double.parseDouble(getValue(hssfCell)))+"").matches()) {     ///判断是否全为为数字
                                     if(subjectList.get(0).getLevel() >= (int) (Double.parseDouble(getValue(hssfCell)))) {
                                         newMessage.setLevel((int) (Double.parseDouble(getValue(hssfCell))));
@@ -310,8 +320,14 @@ public class Message1Controller extends BaseController{
                             }
                         }
                         else if (cellNum == 9 ) {
-                            if(getValue(hssfCell) != "") {
-                                newMessage.setReportPlace(getValue(hssfCell));
+                            if(!getValue(hssfCell).equals("")) {
+                                if(getValue(hssfCell) != place && !isAdmin){
+                                    lineNum +="(Sheet"+(numSheet+1)+")"+ (rowNum + 1) + "(无效报名省市),";
+                                    isSuccess = false;
+                                    break;
+                                } else {
+                                    newMessage.setReportPlace(getValue(hssfCell));
+                                }
                             }else {
                                 lineNum +="(Sheet"+(numSheet+1)+")"+ (rowNum + 1) + "(报名省市为空),";
                                 isSuccess = false;
@@ -319,31 +335,37 @@ public class Message1Controller extends BaseController{
                             }
                         }
                         else if (cellNum == 10 ) {
-                            if(getValue(hssfCell) != "") {
-                                List<reportPlace> subPlaceList = reportPlaceDao.findAll("from reportPlace where isDelete = 0 and place='" + getValue(hssfRow.getCell(9)) + "' and subPlace ='" + getValue(hssfCell) + "'");
-                                if (subPlaceList.size() != 0) {
-                                    if(subPlaceList.get(0).getPlaceId()<10)
-                                        subPlaceIdCount += "0"+subPlaceList.get(0).getPlaceId();
-                                    else
-                                        subPlaceIdCount += subPlaceList.get(0).getPlaceId()+"";
-                                    if(subPlaceList.get(0).getSubPlaceId()<10)
-                                        subPlaceIdCount += "0"+subPlaceList.get(0).getSubPlaceId();
-                                    else
-                                        subPlaceIdCount += subPlaceList.get(0).getSubPlaceId()+"";
-                                    newMessage.setSubPlace(subPlaceIdCount + "￥" + subPlaceList.get(0).getSubPlace());
-                                    if(subPlaceList.get(0).getPlaceId()<10)
-                                        placeId +='0';
-                                    placeId += subPlaceList.get(0).getPlaceId();
-                                    if (subPlaceList.get(0).getSubPlaceId() < 10)
-                                        subPlaceId += '0';
-                                    subPlaceId += subPlaceList.get(0).getSubPlaceId();
-                                } else {
-                                    lineNum +="(Sheet"+(numSheet+1)+")"+ (rowNum + 1) + "(报名省市或机构名称不存在),";
+                            if(!getValue(hssfCell).equals("")) {
+                                if(getValue(hssfCell) != subPlace && !isAdmin){
+                                    lineNum +="(Sheet"+(numSheet+1)+")"+ (rowNum + 1) + "(无效机构名称),";
                                     isSuccess = false;
                                     break;
+                                } else {
+                                    List<reportPlace> subPlaceList = reportPlaceDao.findAll("from reportPlace where isDelete = 0 and place='" + getValue(hssfRow.getCell(9)) + "' and subPlace ='" + getValue(hssfCell) + "'");
+                                    if (subPlaceList.size() != 0) {
+                                        if (subPlaceList.get(0).getPlaceId() < 10)
+                                            subPlaceIdCount += "0" + subPlaceList.get(0).getPlaceId();
+                                        else
+                                            subPlaceIdCount += subPlaceList.get(0).getPlaceId() + "";
+                                        if (subPlaceList.get(0).getSubPlaceId() < 10)
+                                            subPlaceIdCount += "0" + subPlaceList.get(0).getSubPlaceId();
+                                        else
+                                            subPlaceIdCount += subPlaceList.get(0).getSubPlaceId() + "";
+                                        newMessage.setSubPlace(subPlaceIdCount + "￥" + subPlaceList.get(0).getSubPlace());
+                                        if (subPlaceList.get(0).getPlaceId() < 10)
+                                            placeId += '0';
+                                        placeId += subPlaceList.get(0).getPlaceId();
+                                        if (subPlaceList.get(0).getSubPlaceId() < 10)
+                                            subPlaceId += '0';
+                                        subPlaceId += subPlaceList.get(0).getSubPlaceId();
+                                    } else {
+                                        lineNum += "(Sheet" + (numSheet + 1) + ")" + (rowNum + 1) + "(报名省市或机构名称不存在),";
+                                        isSuccess = false;
+                                        break;
+                                    }
                                 }
                             }else {
-                                lineNum +="(Sheet"+(numSheet+1)+")"+ (rowNum + 1) + "(机构名称),";
+                                lineNum +="(Sheet"+(numSheet+1)+")"+ (rowNum + 1) + "(机构名称为空),";
                                 isSuccess = false;
                                 break;
                             }
@@ -363,7 +385,7 @@ public class Message1Controller extends BaseController{
                             if ((int) (Double.parseDouble(getValue(hssfRow.getCell(8)))) < 10)
                                 Id += '0';
                             Id += (int) (Double.parseDouble(getValue(hssfRow.getCell(8))));
-                            Long countId = messageDao.getCount("select count (*) from message where reportPlace = '"+newMessage.getReportPlace()+"'and subPlace = '"+newMessage.getSubPlace()+"'and subject='" + subject1 + "'and level = " + (int) (Double.parseDouble(getValue(hssfRow.getCell(8))))) + 1;
+                            Long countId = messageDao.getCount("select count (*) from message where endSignUpTime = '"+ endSignUpTime +"' and reportPlace = '"+newMessage.getReportPlace()+"'and subPlace = '"+newMessage.getSubPlace()+"'and subject='" + subject1 + "'and level = " + (int) (Double.parseDouble(getValue(hssfRow.getCell(8))))) + 1;
                             ///////搜索全表 包括isDeLETE = 0
 
                             if (countId < 1000)
@@ -374,6 +396,8 @@ public class Message1Controller extends BaseController{
                                 Id += '0';
                             Id += countId;
                             newMessage.setCardNumber(Id);
+                            newMessage.setEndSignUpTime(endSignUpTime);
+                            newMessage.setPay(false);
                             messageDao.save(newMessage);
                             inputTotal++;
                         }
