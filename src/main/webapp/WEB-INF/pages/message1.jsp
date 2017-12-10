@@ -130,6 +130,7 @@
     $(function() {
         $('#date').datetimepicker({
             format: 'Y-m-d',
+            lang:'ch',
             timepicker: false,
             validateOnBlur: false,
             step: 30,

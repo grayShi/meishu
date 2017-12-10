@@ -134,6 +134,7 @@
             roundTime: 'round',
             validateOnBlur: false,
             format: 'Y-m-d',
+            lang:'ch',
         });
         function editTime(){
             var place=$("#place option:selected").val();

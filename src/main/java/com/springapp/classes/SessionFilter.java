@@ -60,7 +60,7 @@ import javax.servlet.http.HttpSession;
 
 public class SessionFilter implements Filter {
     private String[] adminPages = {"/subject","/place","/place1","/examTime","/time",
-            "/cost","/message","/user"};
+            "/cost","/message","/user","/changePassword"};
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         // TODO Auto-generated method stub

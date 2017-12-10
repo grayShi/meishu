@@ -301,7 +301,7 @@
     }
     function deleteMessage(){
         $.ajax({
-            url:"delete/start",
+            url:"delete-start",
             type:"post",
             data:{
                 id:id
@@ -315,7 +315,7 @@
     }
     function rollbackById() {
         $.ajax({
-            url:"delete/rollback",
+            url:"delete-rollback",
             type:"post",
             data:{
                 id:id
@@ -331,7 +331,7 @@
         var deleteArray = getCheck();
         console.log(deleteArray);
         $.ajax({
-            url:"delete/startTotal",
+            url:"delete-startTotal",
             type:"post",
             traditional: true,
             data:{
@@ -383,7 +383,7 @@
         }
         var list="";
         $.ajax({
-            url:"delete/search",
+            url:"delete-search",
             type:"post",
             dataType:"json",
             async:false,
@@ -461,7 +461,7 @@
         var subject = $("#subject option:selected").val();
         if(subject!='0'){
             $.ajax({
-                url:"data/setLevel",
+                url:"data-setLevel",
                 type:"post",
                 dataType:"json",
                 data:{
@@ -511,7 +511,7 @@
             REPORTPLACE = "0";
             SUBPLACE = "0";
         }
-        location.href="delete/getExcel?name="+NAME+"&subject="+SUBJECT+"&cardNumber="+CARDNUMBER+"&level="+LEVEL+"&examPlace="
+        location.href="delete-getExcel?name="+NAME+"&subject="+SUBJECT+"&cardNumber="+CARDNUMBER+"&level="+LEVEL+"&examPlace="
             +EXAMPLACE+"&classPlace="+CLASSPLACE+"&reportPlace="+REPORTPLACE+"&subPlace="+SUBPLACE+"&time="+TIME+"&endSignUpTime="+ENDSIGNTIME+"&isDelete="+CHECKDELETE;
     }
     var ID;
@@ -528,7 +528,7 @@
         var editBirth = $("#editBirth").val();
         if(editName!=""&& editBirth!="") {
             $.ajax({
-                url: "delete/editMessage",
+                url: "delete-editMessage",
                 type: "post",
                 data: {
                     id: ID,

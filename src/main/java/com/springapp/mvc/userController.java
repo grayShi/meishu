@@ -114,4 +114,27 @@ public class userController extends BaseController {
         }else
             return  "is_exist";
     }
+    @RequestMapping(value="/changePassword",method = RequestMethod.GET)
+    public ModelAndView changePassword(@RequestParam(value = "id") Long id){
+        ModelAndView modelAndView = new ModelAndView();
+        List<User> userList = userDao.findAll("from User where id =" + id);
+        modelAndView.addObject("username", userList.get(0).getUsername());
+        modelAndView.addObject("id", id);
+        modelAndView.setViewName("changePassword");
+        return modelAndView;
+    }
+    @RequestMapping(value="/changePassword-user",method = RequestMethod.POST)
+    @ResponseBody
+    public String changePassword(@RequestParam(value = "id") Long id,
+                        @RequestParam(value = "originPassword") String originPassword,
+                                 @RequestParam(value = "newPassword") String newPassword){
+        User user = userDao.getId(id).get(0);
+        if(user.getPassword().equals(originPassword)) {
+            user.setPassword(newPassword);
+            userDao.update(user);
+            return "success";
+        }else {
+            return "error_origin";
+        }
+    }
 }

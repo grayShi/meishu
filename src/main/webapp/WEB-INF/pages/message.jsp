@@ -202,11 +202,19 @@
     $(function(){
         setSubPlace();
         $('#date').datetimepicker({
+            lang:'ch',
             format: 'Y-m-d',
             timepicker: false,
             validateOnBlur: false,
             step: 30,
             roundTime: 'round',
+        });
+        $('#birth').datetimepicker({
+            lang:'ch',
+            format:"Y-m-d",
+            timepicker:false,
+            yearStart: 1990,
+            yearEnd: 2050
         });
     });
     function setSubPlace(){

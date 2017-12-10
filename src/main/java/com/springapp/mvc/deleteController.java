@@ -28,9 +28,8 @@ import java.util.Map;
  * Created by hello on 2016/7/5.
  */
 @Controller
-@RequestMapping(value = "/delete")
 public class deleteController extends BaseController{
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/delete",method = RequestMethod.GET)
     public ModelAndView home(HttpServletRequest request, ModelAndView modelAndView) {
         searchSql search = new searchSql();
         String sql = search.getSession(request);
@@ -53,7 +52,7 @@ public class deleteController extends BaseController{
         modelAndView.setViewName("delete");
         return modelAndView;
     }
-    @RequestMapping(value="/start",method = RequestMethod.POST)
+    @RequestMapping(value="/delete-start",method = RequestMethod.POST)
     @ResponseBody
     public String delete(@RequestParam(value = "id") Long id){
         List<message> list = messageDao.getId(id);
@@ -61,7 +60,7 @@ public class deleteController extends BaseController{
         messageDao.update(list);
         return "success";
     }
-    @RequestMapping(value="/rollback",method = RequestMethod.POST)
+    @RequestMapping(value="/delete-rollback",method = RequestMethod.POST)
     @ResponseBody
     public String rollback(@RequestParam(value = "id") Long id){
         List<message> list = messageDao.findAll("from message where isDelete = 1 and id="+id);
@@ -69,7 +68,7 @@ public class deleteController extends BaseController{
         messageDao.update(list);
         return "success";
     }
-    @RequestMapping(value="/startTotal",method = RequestMethod.POST)
+    @RequestMapping(value="/delete-startTotal",method = RequestMethod.POST)
     @ResponseBody
     public String deleteTotal(@RequestParam(value = "deleteArray") Long[] deleteArray){
         for(int i = 0;i<deleteArray.length;i++){
@@ -79,7 +78,7 @@ public class deleteController extends BaseController{
         }
         return "success";
     }
-    @RequestMapping(value="/editMessage",method = RequestMethod.POST)
+    @RequestMapping(value="/delete-editMessage",method = RequestMethod.POST)
     @ResponseBody
     public String editMessage(@RequestParam(value = "id") Long id,@RequestParam(value = "editName") String editName,
                                     @RequestParam(value = "editSex") String editSex,@RequestParam(value = "editBirth") String editBirth){
@@ -90,7 +89,7 @@ public class deleteController extends BaseController{
         messageDao.update(list);
         return "success";
     }
-    @RequestMapping(value="/search",method = RequestMethod.POST)
+    @RequestMapping(value="/delete-search",method = RequestMethod.POST)
     @ResponseBody
     public String search(HttpServletRequest request, @RequestParam(value = "name") String name,@RequestParam(value = "subject") String subject,
                          @RequestParam(value = "level") String level,
@@ -130,7 +129,7 @@ public class deleteController extends BaseController{
         List<message> messageList = messageDao.findAll(str + sql);
         return JSONArray.fromObject(messageList).toString();
     }
-    @RequestMapping(value="/getExcel",method = RequestMethod.GET)
+    @RequestMapping(value="/delete-getExcel",method = RequestMethod.GET)
     public void getExcel(HttpServletRequest request,@RequestParam(value = "name") String name,@RequestParam(value = "subject") String subject,
                            @RequestParam(value = "level") String level,
                          @RequestParam(value = "cardNumber") String cardNumber,@RequestParam(value = "classPlace") String classPlace,

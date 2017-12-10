@@ -162,7 +162,7 @@
         var reportPlace = $("#reportPlace option:selected").val();
         var subPlace = $("#subPlace option:selected").val();
         $.ajax({
-            url:"cost1/getSearch",
+            url:"cost1-getSearch",
             type:"post",
             dataType:"json",
             data:{

@@ -139,7 +139,7 @@
         var reportPlace = $("#reportPlace option:selected").val();
         if(reportPlace!='0'){
             $.ajax({
-                url:"data/setSubPlace",
+                url:"data-setSubPlace",
                 type:"post",
                 dataType:"json",
                 data:{
@@ -173,7 +173,7 @@
         var subject = $("#subject option:selected").val();
         if(subject!='0'){
             $.ajax({
-                url:"data/setLevel",
+                url:"data-setLevel",
                 type:"post",
                 dataType:"json",
                 data:{
@@ -324,7 +324,7 @@
         var year = $("#year option:selected").val();
         if(search=="level") {
             $.ajax({
-                url:"data/getLevel",
+                url:"data-getLevel",
                 type:"post",
                 dataType:"json",
                 async:false,
@@ -365,7 +365,7 @@
         }
         else if(search=="subject"){
             $.ajax({
-                url: "data/getSubject",
+                url: "data-getSubject",
                 type: "post",
                 dataType: "json",
                 async: false,
@@ -398,7 +398,7 @@
         }
         else if(search=="sex") {
             $.ajax({
-                url: "data/getSex",
+                url: "data-getSex",
                 type: "post",
                 dataType: "json",
                 async: false,
@@ -436,7 +436,7 @@
                 return 0;
             }else{
                 $.ajax({
-                    url: "data/getYear",
+                    url: "data-getYear",
                     type: "post",
                     dataType: "json",
                     async: false,

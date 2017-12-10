@@ -20,9 +20,8 @@ import java.util.List;
  * Created by hello on 2016/7/5.
  */
 @Controller
-@RequestMapping(value = "/data")
 public class DataController extends BaseController{
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/data",method = RequestMethod.GET)
     public ModelAndView home(HttpServletRequest request, ModelAndView modelAndView) {
         searchSql search = new searchSql();
         String sql = search.getSession(request);
@@ -62,7 +61,7 @@ public class DataController extends BaseController{
         modelAndView.setViewName("data");
         return modelAndView;
     }
-    @RequestMapping(value = "/setSubPlace",method=RequestMethod.POST)
+    @RequestMapping(value = "/data-setSubPlace",method=RequestMethod.POST)
     @ResponseBody
     public String setSubPlace(HttpServletRequest request, @RequestParam(value = "reportPlace")String reportPlace){
         searchSql search = new searchSql();
@@ -70,7 +69,7 @@ public class DataController extends BaseController{
         List<message> subPlaceList = messageDao.findAll("select distinct subPlace from message where isDelete = 0 and reportPlace = '"+reportPlace+"' "+sql);
         return JSONArray.fromObject(subPlaceList).toString();
     }
-    @RequestMapping(value = "/setLevel",method=RequestMethod.POST)
+    @RequestMapping(value = "/data-setLevel",method=RequestMethod.POST)
     @ResponseBody
     public String setLevel(HttpServletRequest request, @RequestParam(value = "subject")String subject){
         searchSql search = new searchSql();
@@ -78,7 +77,7 @@ public class DataController extends BaseController{
         List<message> levelList = messageDao.findAll("select distinct level from message where isDelete = 0 and subject = '"+subject+"'"+ sql+ " order by level");
         return JSONArray.fromObject(levelList).toString();
     }
-    @RequestMapping(value="/getLevel",method = RequestMethod.POST)
+    @RequestMapping(value="/data-getLevel",method = RequestMethod.POST)
     @ResponseBody
     public String getLevel(HttpServletRequest request, @RequestParam(value="Subject")String subject,@RequestParam(value="Level") String level,
                            @RequestParam(value="ReportPlace")String reportPlace, @RequestParam(value="SubPlace")String subPlace,@RequestParam(value="year")String year){
@@ -169,7 +168,7 @@ public class DataController extends BaseController{
          return JSONArray.fromObject(tableList).toString();
 
     }
-    @RequestMapping(value="/getSubject",method = RequestMethod.POST)
+    @RequestMapping(value="/data-getSubject",method = RequestMethod.POST)
     @ResponseBody
     public String getSubject(HttpServletRequest request, @RequestParam(value="Subject")String subject,@RequestParam(value="Level") String level,
                            @RequestParam(value="ReportPlace")String reportPlace, @RequestParam(value="SubPlace")String subPlace,@RequestParam(value="year")String year){
@@ -227,7 +226,7 @@ public class DataController extends BaseController{
         }
         return JSONArray.fromObject(tableList).toString();
     }
-    @RequestMapping(value="/getSex",method = RequestMethod.POST)
+    @RequestMapping(value="/data-getSex",method = RequestMethod.POST)
     @ResponseBody
     public String getSex(HttpServletRequest request, @RequestParam(value="Subject")String subject,@RequestParam(value="Level") String level,
                              @RequestParam(value="ReportPlace")String reportPlace, @RequestParam(value="SubPlace")String subPlace,@RequestParam(value="year")String year){
@@ -276,7 +275,7 @@ public class DataController extends BaseController{
         }
         return JSONArray.fromObject(tableList).toString();
     }
-    @RequestMapping(value="/getYear",method = RequestMethod.POST)
+    @RequestMapping(value="/data-getYear",method = RequestMethod.POST)
     @ResponseBody
     public String getYear(HttpServletRequest request, @RequestParam(value="Subject")String subject,@RequestParam(value="Level") String level,
                          @RequestParam(value="ReportPlace")String reportPlace, @RequestParam(value="SubPlace")String subPlace,@RequestParam(value="year")String year) {

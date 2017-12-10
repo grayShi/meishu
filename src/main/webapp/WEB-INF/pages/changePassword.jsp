@@ -1,9 +1,9 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%--
   Created by IntelliJ IDEA.
-  User: gray shi
-  Date: 2017/8/27
-  Time: 2:58
+  User: hello
+  Date: 2017/12/10
+  Time: 23:23
   To change this template use File | Settings | File Templates.
 --%>
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
@@ -29,7 +29,7 @@
 
     <!-- Custom CSS -->
     <link href="dist/css/sb-admin-2.css" rel="stylesheet">
-    <link href="vendor/datetimepicker/jquery.datetimepicker.css" rel="stylesheet">
+
     <!-- Custom Fonts -->
     <link href="vendor/font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
@@ -47,33 +47,39 @@
 
         <div class="row">
             <div class="col-lg-12">
-                <h1 class="page-header">新增报考时间</h1>
+                <h1 class="page-header">修改密码</h1>
             </div>
             <div class="col-lg-12">
-                <button type="button" class="btn btn-primary" onclick="location='time'"><i class="fa fa-chevron-circle-left"></i>返回</button>
+                <button type="button" class="btn btn-primary" onclick="location='user'"><i class="fa fa-chevron-circle-left"></i>返回</button>
             </div>
             <div class="col-lg-6 col-lg-offset-3">
                 <table class="table vertical-table vertical-table1">
                     <tbody>
-                    <tr>
-                        <td>考点地址</td>
-                        <td><select id="place" class="form-control" onchange="javascript:setClassPlace()">
-                            <option value="0">考点地址</option>
-                            <c:forEach items="${PlaceList}" var="item">
-                                <option value="${item}">${item}</option>
-                            </c:forEach>
-                        </select></td>
-                    </tr>
-                    <tr>
-                        <td>考场地址</td>
-                        <td><select  id="classPlace" class="form-control">
-                            <option value="0">考场地址</option>
-                        </select></td>
-                    </tr>
-                    <tr>
-                        <td>考试时间</td>
-                        <td><input class="form-control" id="date" /></td>
-                    </tr>
+                        <tr>
+                            <td>用户名</td>
+                            <td><input class="form-control" readonly id="username" value="${username}"/></td>
+                        </tr>
+                        <tr >
+                            <td>原密码</td>
+                            <td><a href="javascript:void(0)" onclick="setInputType('originPassword')">
+                                <p class="fa fa-eye" style="position: absolute;right: 0px;margin-right: 30px;margin-top: 10px"></p>
+                                </a>
+                                <input class="form-control" type="password" id="originPassword"/></td>
+                        </tr>
+                        <tr>
+                            <td>新密码</td>
+                            <td><a href="javascript:void(0)" onclick="setInputType('newPassword1')">
+                                <p class="fa fa-eye" style="position: absolute;right: 0px;margin-right: 30px;margin-top: 10px"></p>
+                            </a>
+                                <input class="form-control" type="password" id="newPassword1"/></td>
+                        </tr>
+                        <tr>
+                            <td>重复新密码</td>
+                            <td><a href="javascript:void(0)" onclick="setInputType('newPassword2')">
+                                <p class="fa fa-eye" style="position: absolute;right: 0px;margin-right: 30px;margin-top: 10px"></p>
+                            </a>
+                                <input class="form-control" type="password" id="newPassword2"/></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
@@ -81,7 +87,7 @@
 
         <div class="row">
             <div class="col-lg-4 col-lg-offset-5 col-md-4 col-md-offset-5 col-sm-4 col-sm-offset-4">
-                <button class="btn btn-default" data-toggle="modal"  onclick="addTime()">提交</button>
+                <button class="btn btn-default" data-toggle="modal"  onclick="editUser()">提交</button>
             </div>
         </div>
 
@@ -117,76 +123,47 @@
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->
-    <script src="vendor/datetimepicker/jquery.datetimepicker.js"></script>
-    <script>
-        $('#date').datetimepicker({
-            step: 30,
-            roundTime: 'round',
-            validateOnBlur: false,
-            format: 'Y-m-d',
-            lang:'ch',
-        });
-        function setClassPlace() {
-            var place = document.getElementById("place").value;
-            var subPlace;
-            var row="";
-            if(place != 0 ) {
-                $.ajax({
-                    url: "time-edit/getClassPlace",
-                    type: "post",
-                    dataType: "json",
-                    async: false,                   //设置同步
-                    data: {
-                        place: place
-                    },
 
-                    success: function (data) {
-                        row+="<option value='0'>考场地址</option>"
-                        $(data).each(function (index) {
-                            row += "<option value='" + data[index].classPlace + "'>" + data[index].classPlace + "</option>"
-                        })
-                    }
-                })
-                $("#classPlace").html(row);
+    <script src="js/jquery-md5.js"></script>
+    <script>
+        function setInputType(id){
+            if($("#"+id).prop('type')=='password'){
+                $("#"+id).prop('type','text');
+            }else{
+                $("#"+id).prop('type','password');
             }
         }
-        $(document).ready(function(){
-            setClassPlace();
-        })
-        function addTime(){
-            var place = $("#place option:selected").val();
-            var classPlace =$('#classPlace option:selected').val();
-            var startTime=$("#date").val();
-            if(place=="" || classPlace==""|| startTime ==""){
-                $("#message").html("输入数据不能为空");
+        function editUser(){
+            var originPassword =$('#originPassword').val();
+            var newPassword1 =$('#newPassword1').val();
+            var newPassword2 =$('#newPassword2').val();
+            if(originPassword == "" || newPassword1 == "" || newPassword2 == ""){
+                $("#message").html("输入不允许为空");
                 $('#false').modal('show');
                 return 0;
             }
-            if(place=="0"||classPlace=="0"){
-                $("#message").html("提交必须选择考点地址或者考场地址");
+            if(newPassword1 != newPassword2){
+                $("#message").html("两次输入新密码不一致");
                 $('#false').modal('show');
                 return 0;
             }
             $.ajax({
-                url:"time-add1",
+                url:"changePassword-user",
                 type:"post",
                 data:{
-                    place:place,
-                    classPlace:classPlace,
-                    startTime:startTime,
+                    id:'${id}',
+                    originPassword:$.md5($.md5(originPassword)),
+                    newPassword:$.md5($.md5(newPassword1)),
                 },
                 success:function(data){
                     if(data=="success")
                         $('#success').modal('show');
-                    else if(data == "is_exist"){
-                        $("#message").html("存在相同数据");
+                    else if(data == "error_origin"){
+                        $("#message").html("原密码错误,请重新输入");
                         $('#false').modal('show');
                     }
                 }
             })
-        }
-        function reload(){
-            location.href="time";
         }
     </script>
 </body>

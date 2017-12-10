@@ -148,7 +148,7 @@ public class cost1Controller extends BaseController{
         modelAndView.setViewName("cost1");
         return modelAndView;
     }
-    @RequestMapping(value="/cost1/getSearch",method = RequestMethod.POST)
+    @RequestMapping(value="/cost1-getSearch",method = RequestMethod.POST)
     @ResponseBody
     public String getLevel(HttpServletRequest request, @RequestParam(value="endSignUpTime") String endSignUpTime,
                            @RequestParam(value="reportPlace")String reportPlace, @RequestParam(value="subPlace")String subPlace){

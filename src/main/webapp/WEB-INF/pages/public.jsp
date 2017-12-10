@@ -9,6 +9,7 @@
 <%
     String power= (String) session.getAttribute("power");
     String username = (String) session.getAttribute("username");
+    String id = (String) session.getAttribute("userId");
 %>
 <nav class="navbar navbar-default navbar-static-top navbar-fixed-top" role="navigation" style="margin-bottom: 0">
     <div class="navbar-header">
@@ -29,7 +30,7 @@
                 <i class="fa fa-user fa-fw"></i><%=username %> <i class="fa fa-caret-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-message">
-                <li><a href="#"><i class="fa fa-gear fa-fw"></i> 修改密码</a>
+                <li><a href="/changePassword?id=<%=id %>"><i class="fa fa-gear fa-fw"></i> 修改密码</a>
                 </li>
                 <li class="divider"></li>
                 <li><a href="/login"><i class="fa fa-sign-out fa-fw"></i>注销</a>
@@ -55,7 +56,7 @@
 
                             <li><a href="place">报考地点管理</a></li>
                             <li><a href="place1">考试地点管理</a></li>
-                            <li><a href="examTime">考试持续时间管理</a></li>
+                            <li><a href="examTime">持续时间管理</a></li>
                             <li><a href="time">考试时间管理</a></li>
                             <li><a href="cost">收费信息管理</a></li>
                         </ul>

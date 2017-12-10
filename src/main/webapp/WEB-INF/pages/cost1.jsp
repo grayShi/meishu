@@ -140,7 +140,7 @@
         var reportPlace = $("#reportPlace option:selected").val();
         if(reportPlace!='0'){
             $.ajax({
-                url:"data/setSubPlace",
+                url:"data-setSubPlace",
                 type:"post",
                 dataType:"json",
                 data:{
@@ -175,7 +175,7 @@
         var subPlace = $("#subPlace option:selected").val();
         var endSignUpTime = $("#endSignUpTime option:selected").val();
         $.ajax({
-            url:"cost1/getSearch",
+            url:"cost1-getSearch",
             type:"post",
             dataType:"json",
             data:{

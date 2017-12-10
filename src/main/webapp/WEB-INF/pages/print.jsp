@@ -144,7 +144,7 @@
         var subject = $("#subject option:selected").val();
         if(subject!='0'){
             $.ajax({
-                url:"data/setLevel",
+                url:"data-setLevel",
                 type:"post",
                 dataType:"json",
                 data:{
@@ -172,7 +172,7 @@
         var reportPlace = $("#reportPlace option:selected").val();
         if(reportPlace!='0'){
             $.ajax({
-                url:"data/setSubPlace",
+                url:"data-setSubPlace",
                 type:"post",
                 dataType:"json",
                 data:{
