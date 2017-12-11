@@ -22,28 +22,27 @@ import java.util.List;
  * Created by hello on 2016/7/5.
  */
 @Controller
-@RequestMapping(value = "/examination")
 public class examinationController extends BaseController {
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/examination", method = RequestMethod.GET)
     public ModelAndView home(HttpServletRequest request, ModelAndView modelAndView) {
         HttpSession session= request.getSession();
         String place = (String) session.getAttribute("place");
         String subPlace = (String) session.getAttribute("subPlace");
         String power = (String) session.getAttribute("power");
-        char [] sub = subPlace.toCharArray();
-        String SUBPLACE ="";
-        for(int i=0;i<sub.length;i++){
-            if(sub[i] == '￥'){
-                for(int j=i+1;j<sub.length;j++) {
-                    SUBPLACE += sub[j];
-                }
-                break;
-            }
-        }
         String sql = "";
         if(power.equals("admin")){
             sql += " and 1 = 1";
         } else {
+            char [] sub = subPlace.toCharArray();
+            String SUBPLACE ="";
+            for(int i=0;i<sub.length;i++){
+                if(sub[i] == '￥'){
+                    for(int j=i+1;j<sub.length;j++) {
+                        SUBPLACE += sub[j];
+                    }
+                    break;
+                }
+            }
             sql += "and examPlace.reportPlace = '"+place+"' and examPlace.subPlace = '"+ SUBPLACE +"'";
         }
         List<String> timeList = timeDao.findAll("select distinct time.startTime from time as time,examPlace as examPlace " +
@@ -52,7 +51,7 @@ public class examinationController extends BaseController {
         modelAndView.setViewName("examination");
         return modelAndView;
     }
-    @RequestMapping(value="/getSearch",method = RequestMethod.POST)
+    @RequestMapping(value="/examination-getSearch",method = RequestMethod.POST)
     @ResponseBody
     public String getSearch(HttpServletRequest request){
         searchSql search = new searchSql();
@@ -61,13 +60,13 @@ public class examinationController extends BaseController {
         List<String> reportList = messageDao.findAll(sql);
         return JSONArray.fromObject(reportList).toString();
     }
-    @RequestMapping(value="/searchSubject",method = RequestMethod.POST)
+    @RequestMapping(value="/examination-searchSubject",method = RequestMethod.POST)
     @ResponseBody
     public String searchPlace(@RequestParam(value = "reportPlace") String reportPlace,@RequestParam(value = "subPlace") String subPlace){
         List<String> placeList = messageDao.findAll("select distinct subject,level from message where isDelete = 0 and reportPlace ='"+reportPlace+"'and subPlace = '"+subPlace+"'");
         return JSONArray.fromObject(placeList).toString();
     }
-    @RequestMapping(value="/examPlace",method = RequestMethod.POST)
+    @RequestMapping(value="/examination-examPlace",method = RequestMethod.POST)
     @ResponseBody
     public String examPlace(HttpServletRequest request,@RequestParam(value = "time") String time){
         HttpSession session= request.getSession();
@@ -84,7 +83,7 @@ public class examinationController extends BaseController {
                 "and time.place = examPlace.place and time.classPlace = examPlace.classPlace "+ sql);
         return JSONArray.fromObject(timeList).toString();
     }
-    @RequestMapping(value="/getPlaceCount",method = RequestMethod.POST)
+    @RequestMapping(value="/examination-getPlaceCount",method = RequestMethod.POST)
     @ResponseBody
     public String getPlaceCount(@RequestParam(value = "reportPlace") String reportPlace,@RequestParam(value = "subPlace") String subPlace,@RequestParam(value = "subject") String subject,
                                 @RequestParam(value = "level") int level){
@@ -98,14 +97,14 @@ public class examinationController extends BaseController {
         count.add(totalCount);
         return JSONArray.fromObject(count).toString();
     }
-    @RequestMapping(value="/getExamPlaceCount",method = RequestMethod.POST)
+    @RequestMapping(value="/examination-getExamPlaceCount",method = RequestMethod.POST)
     @ResponseBody
     public Long getExamPlaceCount(@RequestParam(value = "examPlace") String examPlace,@RequestParam(value = "classPlace") String classPlace){
         ArrayList<Long> count= new ArrayList<Long>();
         long realCount = messageDao.getCount("select count (*) from message where isDelete = 0 and examPlace='"+examPlace+"' and classPlace= '"+classPlace+"'");
         return realCount;
     }
-    @RequestMapping(value="/start",method = RequestMethod.POST)
+    @RequestMapping(value="/examination-start",method = RequestMethod.POST)
     @ResponseBody
     public String start(@RequestParam(value = "reportPlace") String reportPlace,@RequestParam(value = "subPlace") String subPlace,
                       @RequestParam(value = "realExamPlace") String[] examPlace,@RequestParam(value = "realClassPlace") String[] classPlace,
@@ -138,7 +137,7 @@ public class examinationController extends BaseController {
              }
         return JSONArray.fromObject(changeList).toString();
     }
-    @RequestMapping(value="/startPlace",method = RequestMethod.POST)
+    @RequestMapping(value="/examination-startPlace",method = RequestMethod.POST)
     @ResponseBody
     public String startPlace(@RequestParam(value = "reportPlace") String[] reportPlace,@RequestParam(value = "subPlace") String[] subPlace,
                         @RequestParam(value = "realExamPlace") String[] examPlace,@RequestParam(value = "realClassPlace") String[] classPlace,
@@ -169,27 +168,27 @@ public class examinationController extends BaseController {
         }
         return JSONArray.fromObject(changeList).toString();
     }
-    @RequestMapping(value="/list",method = RequestMethod.POST)
+    @RequestMapping(value="/examination-list",method = RequestMethod.POST)
     @ResponseBody
     public String list(){
         List<message> list=messageDao.findAll("from message where isDelete = 0 and examPlace IS NOT NULL and classPlace IS NOT NULL");
         return JSONArray.fromObject(list).toString();
     }
-    @RequestMapping(value="/getConfigExamList",method = RequestMethod.POST)
+    @RequestMapping(value="/examination-getConfigExamList",method = RequestMethod.POST)
     @ResponseBody
     public String getConfigExamList(){
         List<message> list=messageDao.findAll("select DISTINCT(examPlace),classPlace from message where isDelete = 0 and examPlace IS NOT NULL and classPlace IS NOT NULL GROUP BY examPlace,classPlace");
         return JSONArray.fromObject(list).toString();
     }
 
-    @RequestMapping(value="/getConfigReportList",method = RequestMethod.POST)
+    @RequestMapping(value="/examination-getConfigReportList",method = RequestMethod.POST)
     @ResponseBody
     public String getConfigReportList(){
         List<message> list=messageDao.findAll("select DISTINCT(reportPlace),subPlace from message where isDelete = 0 GROUP BY reportPlace,subPlace");
         return JSONArray.fromObject(list).toString();
     }
 
-    @RequestMapping(value="/startCancel",method = RequestMethod.POST)
+    @RequestMapping(value="/examination-startCancel",method = RequestMethod.POST)
     @ResponseBody
     public String startCancel(@RequestParam(value = "isAllCancel") Boolean isAllCancel,
                               @RequestParam(value = "reportPlace") String reportPlace,

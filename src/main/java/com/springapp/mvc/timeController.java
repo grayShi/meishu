@@ -18,7 +18,6 @@ import java.util.List;
  * Created by hello on 2016/7/5.
  */
 @Controller
-@RequestMapping(value = "**")
 public class timeController extends BaseController{
     @RequestMapping(value="/time",method = RequestMethod.GET)
     public ModelAndView home(ModelAndView modelAndView){
@@ -71,7 +70,7 @@ public class timeController extends BaseController{
             return "is_exist";
         }
     }
-    @RequestMapping(value="/time-edit/getClassPlace",method = RequestMethod.POST)
+    @RequestMapping(value="/time-edit-getClassPlace",method = RequestMethod.POST)
     @ResponseBody
     public String getLevel(@RequestParam(value = "place") String place){
         List<examPlace> placeList= examPlaceDao.findAll("from examPlace where place ='"+place+"'");

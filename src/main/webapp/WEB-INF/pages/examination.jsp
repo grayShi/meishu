@@ -66,7 +66,7 @@
             </div>
             <div class="row">
                 <div class="col-lg-4 table-responsive table-bordered"  style="max-height: 70%;overflow:auto;">
-                    <table class="table table-striped table-bordered table-hover" style="margin-top: 2%">
+                    <table class="table table-striped table-bordered table-hover" id="reportTable" style="margin-top: 2%">
                         <thead>
                         <tr>
                             <th>考点编号</th>
@@ -80,7 +80,7 @@
                     </table>
                 </div>
                 <div class="col-lg-4 table-responsive table-bordered"  style="max-height: 70%;overflow:auto;">
-                    <table class="table table-striped table-bordered table-hover" style="margin-top: 2%">
+                    <table class="table table-striped table-bordered table-hover" id="subjectTable" style="margin-top: 2%">
                         <thead>
                         <tr>
                             <th>科目</th>
@@ -95,7 +95,7 @@
                     </table>
                 </div>
                 <div class="col-lg-4 table-responsive table-bordered"  style="max-height: 70%;overflow:auto;">
-                    <table class="table table-striped table-bordered table-hover" style="margin-top: 2%">
+                    <table class="table table-striped table-bordered table-hover" id="examTable" style="margin-top: 2%">
                         <thead>
                         <tr>
                             <th>考点地址</th>
@@ -163,17 +163,21 @@
         </div><!-- /.modal -->
 </div>
 
+<script src="js/checkBox.js"></script>
 <script>
     $(function(){
         $("#distribute").dropdown('toggle');
     });
+    $(function(){
+        getSearch();
+    })
     var ReportPlace=[];
     var SubPlace=[];
     function getSearch(){
     ReportPlace.length=0;
     SubPlace.length=0;
     $.ajax({
-        url:"examination/getSearch",
+        url:"examination-getSearch",
         type:"post",
         dataType:"json",
         data:{
@@ -196,11 +200,11 @@
                     }
                     subID+=subplace1[x];
                 }
-                row+="<tr><td>"+subID+"</td><td><a href='javascript:void(0)' onclick='searchPlace(\""+sub[0]+"\",\""+sub[1]+"\")'>"+sub[0]+"</a></td><td><input name='subPlace' type='checkbox' />"+subp1+"</td></tr>";
+                row+="<tr><td><input name='subPlace' type='checkbox' />"+subID+"</td><td><a href='javascript:void(0)' onclick='searchPlace(\""+sub[0]+"\",\""+sub[1]+"\")'>"+sub[0]+"</a></td><td>"+subp1+"</td></tr>";
             }
             $("#place").html(row);
             $('#subject').html("");
-
+            initTableCheckbox('reportTable','');
         }
     })
     }
@@ -215,7 +219,7 @@
     REPORTPLACE=reportPlace;
     SUBPLACE=subPlace;
     $.ajax({
-        url:"examination/searchSubject",
+        url:"examination-searchSubject",
         dataType:"json",
         type:"post",
         data:{
@@ -242,6 +246,7 @@
                 row+="<tr><td><input name='subject' type='checkbox' />"+subjcet1+"</td><td>"+sub[1]+"</td><td>"+otherCount+"</td><td>"+totalCount+"</td></tr>";
             }
             $("#subject").html(row);
+            initTableCheckbox('subjectTable','');
         }
     })
     }
@@ -249,7 +254,7 @@
     var otherCount;
     function getPlaceCount(subject,level,reportPlace,subPlace){
     $.ajax({
-        url:"examination/getPlaceCount",
+        url:"examination-getPlaceCount",
         dataType:"json",
         type:"post",
         async:false,
@@ -303,7 +308,7 @@
     }
     if(count3!=0) {
         $.ajax({
-            url: "examination/startPlace",
+            url: "examination-startPlace",
             type: "post",
             dataType:"json",
             traditional: true,
@@ -353,7 +358,7 @@
             return 0;
         }
         $.ajax({
-            url: "examination/start",
+            url: "examination-start",
             type: "post",
             dataType:"json",
             traditional: true,
@@ -393,14 +398,11 @@
     var ClassPlace=[];
     var ExamTime=[];
     var count=[];
-    $(function(){
-    getSearch();
-    })
     function getExamPlace(){
     var time = $("#time option:selected").val();
     TIME=time;
     $.ajax({
-        url:"examination/examPlace",
+        url:"examination-examPlace",
         dataType:"json",
         type:"post",
         async:false,
@@ -417,23 +419,24 @@
             $(data).each(function(index){
                 ExamPlace.push(data[index].place);
                 ClassPlace.push(data[index].classPlace);
-                if(data[index].examTime=="")
+                if(data[index].startTime=="")
                     ExamTime.push("noTime");
                 else
-                    ExamTime.push(data[index].examTime);
+                    ExamTime.push(data[index].startTime);
                 getExamPlaceCount(data[index].place,data[index].classPlace);
                 otherExamPlace=data[index].count-examCount;
                 count.push(otherExamPlace);
                 row+="<tr> <td><input name='examPlace' type='checkbox' />  "+data[index].place+"</td> <td>"+data[index].classPlace+"</td> <td>"+otherExamPlace+"</td> <td>"+data[index].count+"</td> </tr>"
             })
             $("#examPlace").html(row);
+            initTableCheckbox('examTable','');
         }
     })
     }
     var examCount;
     function getExamPlaceCount(examPlace,classPlace){
     $.ajax({
-        url:"examination/getExamPlaceCount",
+        url:"examination-getExamPlaceCount",
         dataType:"json",
         type:"post",
         async:false,
@@ -453,7 +456,7 @@
     }
     function getConfigExamList(){
     $.ajax({
-        url:"examination/getConfigExamList",
+        url:"examination-getConfigExamList",
         dataType:"json",
         type:"post",
         async:"false",
@@ -469,7 +472,7 @@
     }
     function getConfigReportList(){
     $.ajax({
-        url:"examination/getConfigReportList",
+        url:"examination-getConfigReportList",
         dataType:"json",
         type:"post",
         async:"false",
@@ -520,7 +523,7 @@
         }
     }
     $.ajax({
-        url:"examination/startCancel",
+        url:"examination-startCancel",
         data:{
             reportPlace:reportPlace,
             subPlace:subPlace,

@@ -144,7 +144,7 @@
 //        });
     });
     function getExcel(){
-        location.href="<%=request.getContextPath()%>/message1/getExcel";
+        location.href="<%=request.getContextPath()%>/message1-getExcel";
     }
 </script>
 </body>

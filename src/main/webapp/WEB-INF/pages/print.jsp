@@ -98,7 +98,10 @@
                             <option value="0" selected="selected">机构名称</option>
                         </select>
                     </div>
-                    <button class="btn btn-primary" type="button" onclick="getSearch()">搜索</button>
+                    <div class="col-lg-1">
+                        <span>操作</span>
+                        <button class="btn btn-primary form-control" type="button" onclick="getSearch()">搜索</button>
+                    </div>
                     <div class="col-lg-12 search-row">
                         添加备注信息：<input id="remark" type="text" class="form-control"/>
                     </div>
@@ -210,7 +213,7 @@
         var ReportPlace = $("#reportPlace option:selected").val();
         var SubPlace = $("#subPlace option:selected").val();
         $.ajax({
-            url:"getSearch",
+            url:"print-getSearch",
             type:"post",
             dataType:"json",
             data:{

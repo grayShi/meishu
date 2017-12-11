@@ -50,7 +50,7 @@
                 <h1 class="page-header">修改密码</h1>
             </div>
             <div class="col-lg-12">
-                <button type="button" class="btn btn-primary" onclick="location='user'"><i class="fa fa-chevron-circle-left"></i>返回</button>
+                <button type="button" class="btn btn-primary" onclick="history.back(-1)"><i class="fa fa-chevron-circle-left"></i>返回</button>
             </div>
             <div class="col-lg-6 col-lg-offset-3">
                 <table class="table vertical-table vertical-table1">

@@ -127,7 +127,7 @@
         function setLevel() {
             var subject = $("#subject option:selected").val();
             $.ajax({
-                url:"examTime/getlevel",
+                url:"examTime-getlevel",
                 type:"post",
                 dataType:"json",
                 data:{

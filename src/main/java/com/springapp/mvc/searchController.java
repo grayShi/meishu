@@ -16,16 +16,15 @@ import java.util.List;
  * Created by hello on 2016/7/5.
  */
 @Controller
-@RequestMapping(value = "/search")
 public class searchController extends BaseController{
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/search",method = RequestMethod.GET)
     public ModelAndView home(ModelAndView modelAndView) {
         List<subject> subjectList = subjectDao.findAll("from subject");
         modelAndView.addObject("subjectList",subjectList);
         modelAndView.setViewName("search");
         return modelAndView;
     }
-    @RequestMapping(value="/getSearch",method = RequestMethod.POST)
+    @RequestMapping(value="/search-getSearch",method = RequestMethod.POST)
     @ResponseBody
     public String getSearch(@RequestParam(value = "subject")String subject){
         List<message> messageList = messageDao.findAll("from message where isDelete = 0 and subject ='"+subject+"'");

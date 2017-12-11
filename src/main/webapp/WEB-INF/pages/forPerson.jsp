@@ -68,12 +68,13 @@
                             </c:forEach>
                         </datalist>
                     </div>
-                    <div class="col-lg-6">
-                        <button class="btn btn-primary" onclick="addName()">添加</button>
+                    <div class="col-lg-1">
+                        <span>操作</span>
+                        <button class="btn btn-primary form-control" type="button" onclick="addName()">添加</button>
                     </div>
                 </div>
                 <div class="row row-top">
-                    <div class="col-lg-6">
+                    <div class="col-lg-4">
                         <span>考试时间</span>
                             <select id="time" onchange="javaScript:setExamPlace()" class="form-control">
                                 <option value="0" selected="selected" >考试时间</option>
@@ -82,7 +83,7 @@
                                 </c:forEach>
                             </select>
                     </div>
-                    <div class="col-lg-6">
+                    <div class="col-lg-4">
                         <span>考点地址-考场地址</span>
                         <select id="examPlace" class="form-control">
                             <option value="0" selected="selected">考点地址</option>
@@ -100,7 +101,7 @@
                         <table class="table">
                             <thead>
                             <tr>
-                                <th colspan="6" class="text-center">分配考生</th>
+                                <th colspan="6" class="text-center"><h2 class="page-header">分配考生</h2></th>
                             </tr>
                             </thead>
                             <tbody id="nameList">
@@ -204,7 +205,7 @@
             examPlace = exam[0];
             classPlace = exam[1];
             $.ajax({
-                url: "forPerson/startExam",
+                url: "forPerson-startExam",
                 data: {
                     nameList: NAMELIST,
                     birthList: BIRTHLIST,
@@ -233,7 +234,7 @@
         var row='<option value="0" selected="selected">考点地址</option>';
         if(time !="0") {
             $.ajax({
-                url: "forPerson/setExamPlace",
+                url: "forPerson-setExamPlace",
                 dataType: "json",
                 type: "post",
                 data: {

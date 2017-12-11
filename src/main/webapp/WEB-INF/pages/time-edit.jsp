@@ -133,7 +133,7 @@
             step: 30,
             roundTime: 'round',
             validateOnBlur: false,
-            format: 'Y-m-d',
+            format: 'Y-m-d H:i',
             lang:'ch',
         });
         function editTime(){
@@ -169,7 +169,7 @@
             var subPlace;
             var row="";
             $.ajax({
-                url: "time-edit/getClassPlace",
+                url: "time-edit-getClassPlace",
                 type: "post",
                 dataType: "json",
                 async : false,                   //设置同步

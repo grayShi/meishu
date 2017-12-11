@@ -81,7 +81,21 @@
             </div>
         </div>
 
-
+        <div class="modal fade" id="success" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h4 class="modal-title">成功提示</h4>
+                    </div>
+                    <div class="modal-body text-center">
+                        <p>已经成功提交</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-success" data-dismiss="modal" onclick="reload()">确定</button>
+                    </div>
+                </div><!-- /.modal-content -->
+            </div><!-- /.modal-dialog -->
+        </div><!-- /.modal -->
     </div><!-- /#page-wrapper -->
     <div class="modal fade" id="delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
         <div class="modal-dialog">

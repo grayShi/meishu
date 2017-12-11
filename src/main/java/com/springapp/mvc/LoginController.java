@@ -30,7 +30,7 @@ public class LoginController extends BaseController{
         modelAndView.setViewName("login");
         return modelAndView;
     }
-    @RequestMapping(value = "/loginCheck",method = RequestMethod.POST)
+    @RequestMapping(value = "/login-check",method = RequestMethod.POST)
     @ResponseBody
     public String loginCheck(HttpServletRequest request, @RequestParam(value = "username")String username, @RequestParam(value = "password")String password) {
         HttpSession session= request.getSession();

@@ -83,10 +83,13 @@
                             </c:forEach>
                         </select>
                     </div>
-                <button class="btn btn-primary" style="margin-top: 2% ;float: right" type="button" onclick="getSearch()">查看</button>
+                    <div class="col-lg-1">
+                        <span>操作</span>
+                        <button class="btn btn-primary form-control" type="button" onclick="getSearch()">查看</button>
+                    </div>
             </div>
-            <div class="col-lg-12 text-center table-title">
-                收费情况
+            <div class="col-lg-12 text-center">
+                <h2 class="page-header">收费情况</h2>
             </div>
 
         </div>

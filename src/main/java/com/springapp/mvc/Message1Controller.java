@@ -178,7 +178,7 @@ public class Message1Controller extends BaseController{
                         }
                         if (cellNum == 0 ) {
                             if(!getValue(hssfCell).equals("")) {
-                                if(getValue(hssfCell).equals("张三(例)")){
+                                if(getValue(hssfCell).equals("张三(例)") || getValue(hssfCell).equals("中文或英文均可")){
                                     lineNum +="(Sheet"+(numSheet+1)+")"+ (rowNum + 1) + "(示例行),";
                                     isSuccess = false;
                                     break;
@@ -418,7 +418,7 @@ public class Message1Controller extends BaseController{
             return String.valueOf(hssfCell.getStringCellValue());
         }
     }
-    @RequestMapping("/message1/getExcel")
+    @RequestMapping("/message1-getExcel")
     public void download1(HttpServletResponse resp) throws IOException {
         FileService service = new FileService();
         String[] titles = new String[]{"*姓名","*国籍","*民族","*性别","*出生日期","联系方式","地址","*科目","*级别","*报名省市","*机构名称"};

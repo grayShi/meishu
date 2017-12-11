@@ -65,7 +65,7 @@ public class ExamTimeController extends BaseController{
         else
             return "is_exist";
     }
-    @RequestMapping(value="/examTime/getlevel",method = RequestMethod.POST)
+    @RequestMapping(value="/examTime-getlevel",method = RequestMethod.POST)
     @ResponseBody
     public String getlevel(@RequestParam(value = "subject") String subject){
         List<subject> subjectList = subjectDao.findAll("from subject where subject = '"+subject+"'");

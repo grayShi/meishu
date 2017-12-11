@@ -31,11 +31,11 @@
             <p> <img src="images/word.png" class="pic-2"></p>
         </div>
         <div class="panel">
-            <div class="panel-heading">
-                <h3 class="panel-title">
-                    登陆
-                </h3>
-            </div>
+                <div class="panel-heading">
+                    <h1 class="panel-title" style="color: black;font-size: 30px;font-weight: normal">
+                        登陆
+                    </h1>
+                </div>
             <div class="panel-body">
                 <div class="form-group">
                     <span class="icon"><i class="fa fa-user" style="margin-top: 50%;margin-left: -25%"></i></span>
@@ -70,7 +70,7 @@
             return false;
         }
         $.ajax({
-            url:"/loginCheck",
+            url:"/login-check",
             data:{
                 username:username,
                 password:$.md5($.md5(password)),

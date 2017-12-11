@@ -67,7 +67,7 @@ public class PrintController extends BaseController {
         return modelAndView;
     }
 
-    @RequestMapping(value = "/getSearch", method = RequestMethod.POST)
+    @RequestMapping(value = "/print-getSearch", method = RequestMethod.POST)
     @ResponseBody
     public String getSearch(HttpServletRequest request, @RequestParam(value = "examTime") String examTime, @RequestParam(value = "subject") String subject, @RequestParam(value = "level") String level,
                             @RequestParam(value = "reportPlace") String reportPlace, @RequestParam(value = "subPlace") String subPlace) {

@@ -103,12 +103,15 @@
                         <option value="year">考试时间</option>
                     </select>
                 </div>
-                <button class="btn btn-primary" style="margin-top: 2%" type="button" onclick="getSearch()">统计</button>
+                <div class="col-lg-1">
+                    <span>操作</span>
+                    <button class="btn btn-primary form-control" type="button" onclick="getSearch()">统计</button>
+                </div>
             </div>
         </div>
         <div class="row">
-            <div class="col-lg-12 text-center table-title">
-                报表管理
+            <div class="col-lg-12 text-center">
+                <h2 class="page-header">报表管理</h2>
             </div>
             <div class="col-lg-12 text-center" id="table"  align="center" style="border:1px solid darkgray;margin: 0 0 0 0;">
 

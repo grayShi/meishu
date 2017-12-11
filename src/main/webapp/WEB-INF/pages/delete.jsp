@@ -453,7 +453,7 @@
                     }
                     });
                 $("#list").html(list);
-                initTableCheckbox();
+                initTableCheckbox('table','checkAll');
             }
         })
     }

@@ -21,9 +21,8 @@ import java.util.List;
  * Created by hello on 2016/7/5.
  */
 @Controller
-@RequestMapping(value = "/message")
 public class MessageController extends BaseController{
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/message", method = RequestMethod.GET)
     public ModelAndView home(ModelAndView modelAndView) {
         List<reportPlace> place=reportPlaceDao.findAll("select distinct place from reportPlace where isDelete = 0");
         String placeList=JSONArray.fromObject(place).toString();
@@ -36,19 +35,19 @@ public class MessageController extends BaseController{
         modelAndView.setViewName("message");
         return modelAndView;
     }
-    @RequestMapping(value="/getLevel",method = RequestMethod.POST)
+    @RequestMapping(value="/message-getLevel",method = RequestMethod.POST)
     @ResponseBody
     public String getLevel(@RequestParam(value = "subject") String subject){
         List<subject> subjectList= subjectDao.findAll("from subject where subject ='"+subject+"'order by level");
         return JSONArray.fromObject(subjectList).toString();
     }
-    @RequestMapping(value="/getSubPlace",method = RequestMethod.POST)
+    @RequestMapping(value="/message-getSubPlace",method = RequestMethod.POST)
     @ResponseBody
     public String getSubPlace(HttpServletRequest request, @RequestParam(value = "place") String place){
         List<reportPlace> subPlaceList= reportPlaceDao.findAll("from reportPlace where isDelete = 0 and place ='"+place+"' order by subPlace");
         return JSONArray.fromObject(subPlaceList).toString();
     }
-    @RequestMapping(value="/saveMessage",method = RequestMethod.POST)
+    @RequestMapping(value="/message-saveMessage",method = RequestMethod.POST)
     @ResponseBody
     public String saveMessage(@RequestParam(value = "reportPlace") String reportPlace, @RequestParam(value = "subPlace") String subPlace,
                               @RequestParam(value = "name") String name, @RequestParam(value = "sex") String sex,
@@ -135,7 +134,7 @@ public class MessageController extends BaseController{
         messageDao.save(Message);
         return "success";
     }
-    @RequestMapping(value="/getSearch",method = RequestMethod.POST)
+    @RequestMapping(value="/message-getSearch",method = RequestMethod.POST)
     @ResponseBody
     public String getSearch(@RequestParam(value = "name") String name, @RequestParam(value = "sex") String sex,
                             @RequestParam(value = "birth") String birth){
@@ -153,7 +152,7 @@ public class MessageController extends BaseController{
 //        //Long countId=messageDao.getCount("from message where subject='"+subject+"'");
 //        return
 //    }
-    @RequestMapping(value="/editMessage",method = RequestMethod.POST)
+    @RequestMapping(value="/message-editMessage",method = RequestMethod.POST)
     @ResponseBody
     public String editMessage(@RequestParam(value = "id")Long id,@RequestParam(value = "reportPlace") String reportPlace, @RequestParam(value = "subPlace") String subPlace,
                               @RequestParam(value = "name") String name, @RequestParam(value = "sex") String sex,
@@ -237,7 +236,7 @@ public class MessageController extends BaseController{
         messageDao.update(Message);
         return "success";
     }
-    @RequestMapping(value="/searchTime",method = RequestMethod.POST)
+    @RequestMapping(value="/message-searchTime",method = RequestMethod.POST)
     @ResponseBody
     public String searchTime(@RequestParam(value = "subject")String subject,@RequestParam(value="level") int level){
         Long count=examTimeDao.getCount("select count (*) from examTime where subject='"+subject+"'and level = "+level);

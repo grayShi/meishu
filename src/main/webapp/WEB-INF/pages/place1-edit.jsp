@@ -192,7 +192,7 @@
         function setSubPlace(){
             var place=$('#reportPlace option:selected').val();
             $.ajax({
-                url:"message/getSubPlace",
+                url:"message-getSubPlace",
                 type:"post",
                 dataType:"json",
                 data:{

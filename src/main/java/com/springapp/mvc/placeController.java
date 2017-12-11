@@ -19,7 +19,6 @@ import java.util.Map;
  * Created by hello on 2016/7/5.
  */
 @Controller
-@RequestMapping(value = "**")
 public class placeController extends  BaseController{
     @RequestMapping(value="/place",method = RequestMethod.GET)
     public ModelAndView home(ModelAndView modelAndView){

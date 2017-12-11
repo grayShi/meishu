@@ -48,7 +48,7 @@
             <div class="col-lg-12">
                 <h1 class="page-header">手动录入报考信息</h1>
             </div>
-            <div id="table" class="col-lg-12 text-center">
+            <div id="table" class="col-lg-6 text-center" style="margin-left: 25%">
                 <table class="table table-striped table-bordered table-hover">
                     <tbody>
                     <tr>
@@ -220,7 +220,7 @@
     function setSubPlace(){
         var place=$('#reportPlace option:selected').val();
         $.ajax({
-            url:"message/getSubPlace",
+            url:"message-getSubPlace",
             type:"post",
             dataType:"json",
             data:{
@@ -247,7 +247,7 @@
             }
         }
         $.ajax({
-            url:"message/getLevel",
+            url:"message-getLevel",
             type:"post",
             dataType:"json",
             async:false,
@@ -280,7 +280,7 @@
         }
 
         $.ajax({
-            url:"message/getLevel",
+            url:"message-getLevel",
             type:"post",
             dataType:"json",
             async:false,
@@ -324,7 +324,7 @@
             }
         }
         $.ajax({
-            url:"message/getLevel",
+            url:"message-getLevel",
             type:"post",
             dataType:"json",
             async:false,
@@ -473,7 +473,7 @@
     var str="";
     function searchTime(subject,level){
         $.ajax({
-            url:"message/searchTime",
+            url:"message-searchTime",
             type:"post",
             async:false,
             data:{
@@ -495,7 +495,7 @@
             }
         }
         $.ajax({
-            url:"message/saveMessage",
+            url:"message-saveMessage",
             type:"post",
             async:false,
             data:{
@@ -545,7 +545,7 @@
         }
         else{
             $.ajax({
-                url:"message/getSearch",
+                url:"message-getSearch",
                 dataType:"json",
                 type:"post",
                 data:{
@@ -574,7 +574,7 @@
                     $("#reportPlace").html(report);
                     var place=$('#reportPlace option:selected').val();
                     $.ajax({
-                        url:"message/getSubPlace",
+                        url:"message-getSubPlace",
                         type:"post",
                         dataType:"json",
                         data:{
@@ -642,7 +642,7 @@
                 }
             }
             $.ajax({
-                url:"message/getLevel",
+                url:"message-getLevel",
                 type:"post",
                 dataType:"json",
                 async:false,
@@ -678,7 +678,7 @@
                 }
             }
             $.ajax({
-                url:"message/getLevel",
+                url:"message-getLevel",
                 type:"post",
                 dataType:"json",
                 async:false,
@@ -728,7 +728,7 @@
                 }
             }
             $.ajax({
-                url:"message/getLevel",
+                url:"message-getLevel",
                 type:"post",
                 dataType:"json",
                 async:false,
@@ -911,7 +911,7 @@
             }
         }
         $.ajax({
-            url:"message/editMessage",
+            url:"message-editMessage",
             type:"post",
             async:false,
             data:{

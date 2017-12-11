@@ -20,9 +20,8 @@ import java.util.List;
  * Created by sgl on 2017/8/13.
  */
 @Controller
-@RequestMapping(value = "/forPerson")
 public class forPersonController extends BaseController{
-    @RequestMapping(method = RequestMethod.GET)
+    @RequestMapping(value = "/forPerson",method = RequestMethod.GET)
     public ModelAndView home(HttpServletRequest request, ModelAndView modelAndView) {
         searchSql search = new searchSql();
         String sql = search.getSession(request);
@@ -32,20 +31,20 @@ public class forPersonController extends BaseController{
         String place = (String) session.getAttribute("place");
         String subPlace = (String) session.getAttribute("subPlace");
         String power = (String) session.getAttribute("power");
-        char [] sub = subPlace.toCharArray();
-        String SUBPLACE ="";
-        for(int i=0;i<sub.length;i++){
-            if(sub[i] == '￥'){
-                for(int j=i+1;j<sub.length;j++) {
-                    SUBPLACE += sub[j];
-                }
-                break;
-            }
-        }
         String sql1 = "";
         if(power.equals("admin")){
             sql1 += " and 1 = 1";
         } else {
+            char [] sub = subPlace.toCharArray();
+            String SUBPLACE ="";
+            for(int i=0;i<sub.length;i++){
+                if(sub[i] == '￥'){
+                    for(int j=i+1;j<sub.length;j++) {
+                        SUBPLACE += sub[j];
+                    }
+                    break;
+                }
+            }
             sql1 += "and examPlace.reportPlace = '"+place+"' and examPlace.subPlace = '"+ SUBPLACE +"'";
         }
         List<time> timeList = timeDao.findAll("select time from time as time,examPlace as examPlace where " +
@@ -62,7 +61,7 @@ public class forPersonController extends BaseController{
         modelAndView.setViewName("forPerson");
         return modelAndView;
     }
-    @RequestMapping(value="/startExam",method = RequestMethod.POST)
+    @RequestMapping(value="/forPerson-startExam",method = RequestMethod.POST)
     @ResponseBody
     public String startExam(@RequestParam(value = "nameList") String[] nameList,@RequestParam(value = "birthList") String[] birthList,
                        @RequestParam(value = "examPlace") String  examPlace,@RequestParam(value = "classPlace") String  classPlace,
@@ -83,27 +82,27 @@ public class forPersonController extends BaseController{
         messageDao.update(messageList);
         return "success";
     }
-    @RequestMapping(value="/setExamPlace",method = RequestMethod.POST)
+    @RequestMapping(value="/forPerson-setExamPlace",method = RequestMethod.POST)
     @ResponseBody
     public String setExamPlace(HttpServletRequest request, @RequestParam(value = "time") String  time){
         HttpSession session= request.getSession();
         String place = (String) session.getAttribute("place");
         String subPlace = (String) session.getAttribute("subPlace");
         String power = (String) session.getAttribute("power");
-        char [] sub = subPlace.toCharArray();
-        String SUBPLACE ="";
-        for(int i=0;i<sub.length;i++){
-            if(sub[i] == '￥'){
-                for(int j=i+1;j<sub.length;j++) {
-                    SUBPLACE += sub[j];
-                }
-                break;
-            }
-        }
         String sql1 = "";
         if(power.equals("admin")){
             sql1 += " and 1 = 1";
         } else {
+            char [] sub = subPlace.toCharArray();
+            String SUBPLACE ="";
+            for(int i=0;i<sub.length;i++){
+                if(sub[i] == '￥'){
+                    for(int j=i+1;j<sub.length;j++) {
+                        SUBPLACE += sub[j];
+                    }
+                    break;
+                }
+            }
             sql1 += "and examPlace.reportPlace = '"+place+"' and examPlace.subPlace = '"+ SUBPLACE +"'";
         }
         List<time> timeList = timeDao.findAll("select time from time as time,examPlace as examPlace where time.startTime = '"+time+"'" +
