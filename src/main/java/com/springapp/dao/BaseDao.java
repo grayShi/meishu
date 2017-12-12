@@ -1,4 +1,6 @@
 package com.springapp.dao;
+import com.springapp.classes.log4j;
+import net.sf.json.JSONObject;
 import org.hibernate.Query;
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
@@ -12,8 +14,11 @@ import java.util.List;
 @Repository
 public class BaseDao {
 
+
     @Autowired
     private SessionFactory sessionFactory;
+
+    private log4j newLig4j = new log4j();
 
     public void setSessionFactory(SessionFactory sessionFactory) {
         this.sessionFactory = sessionFactory;
@@ -32,6 +37,7 @@ public class BaseDao {
             tx=(JdbcTransaction) session.beginTransaction();
         try {
             session.save(t);
+            this.newLig4j.printLog("save "+ t.getClass()+ " - " + JSONObject.fromObject(t).toString());
             tx.commit();
         } catch (Exception err) {
             if (tx != null) {
@@ -51,6 +57,7 @@ public class BaseDao {
         try {
             for (T t : list) {
                 session.save(t);
+                this.newLig4j.printLog("save "+ t.getClass()+ " - " + JSONObject.fromObject(t).toString());
             }
             tx.commit();
         } catch (Exception err) {
@@ -70,6 +77,7 @@ public class BaseDao {
             tx=(JdbcTransaction) session.beginTransaction();
         try {
             session.delete(t);
+            this.newLig4j.printLog("delete "+ t.getClass()+ " - " + JSONObject.fromObject(t).toString());
             tx.commit();
         } catch (Exception err) {
             if (tx != null) {
@@ -88,6 +96,7 @@ public class BaseDao {
             tx=(JdbcTransaction) session.beginTransaction();
         try {
             session.delete(session.get(entityClass, id));
+            this.newLig4j.printLog("delete "+ entityClass.getName()+ " - id = " + id);
             tx.commit();
         } catch (Exception err) {
             if (tx != null) {
@@ -106,6 +115,7 @@ public class BaseDao {
             tx=(JdbcTransaction) session.beginTransaction();
         try {
             session.update(t);
+            this.newLig4j.printLog("update "+ t.getClass()+ " - " + JSONObject.fromObject(t).toString());
             tx.commit();
         } catch (Exception err) {
             if (tx != null) {
@@ -125,6 +135,7 @@ public class BaseDao {
         try {
             for (T t : list) {
                 session.update(t);
+                this.newLig4j.printLog("update "+ t.getClass()+ " - " + JSONObject.fromObject(t).toString());
             }
             tx.commit();
         } catch (Exception err) {
@@ -282,7 +293,7 @@ public class BaseDao {
             System.out.print("已存在活动的事务");
         else
             tx=(JdbcTransaction) session.beginTransaction();
-
+        this.newLig4j.printLog("findAll - "+ hql);
         Query query = session.createQuery(hql);
         if (params != null) {
             for (int i = 0; i < params.length; i++) {
@@ -348,6 +359,7 @@ public class BaseDao {
             tx=(JdbcTransaction) session.beginTransaction();
 
         Query query = session.createQuery(hql);
+        this.newLig4j.printLog("getCount - "+ hql);
         Number count = (Number) query.uniqueResult();
         try {
             tx.commit();

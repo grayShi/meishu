@@ -70,7 +70,7 @@
             return false;
         }
         $.ajax({
-            url:"/login-check",
+            url:"login-check",
             data:{
                 username:username,
                 password:$.md5($.md5(password)),

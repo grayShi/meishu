@@ -30,10 +30,10 @@
                 <i class="fa fa-user fa-fw"></i><%=username %> <i class="fa fa-caret-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-message">
-                <li><a href="/changePassword?id=<%=id %>"><i class="fa fa-gear fa-fw"></i> 修改密码</a>
+                <li><a href="changePassword?id=<%=id %>"><i class="fa fa-gear fa-fw"></i> 修改密码</a>
                 </li>
                 <li class="divider"></li>
-                <li><a href="/login"><i class="fa fa-sign-out fa-fw"></i>注销</a>
+                <li><a href="login"><i class="fa fa-sign-out fa-fw"></i>注销</a>
                 </li>
             </ul>
             <!-- /.dropdown-user -->

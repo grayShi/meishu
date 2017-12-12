@@ -22,7 +22,7 @@ public class SqlFilter implements Filter {
         String url = req.getRequestURI();
         //获得所有请求参数名
         Enumeration params = req.getParameterNames();
-        System.out.print(params + "params");
+//        System.out.print(params + "params");
         String sql = "";
         while (params.hasMoreElements()) {
             //得到参数名

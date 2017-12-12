@@ -1,6 +1,7 @@
 package com.springapp.classes;
 
 import java.io.IOException;
+import java.util.Enumeration;
 import javax.servlet.Filter;
 import javax.servlet.FilterChain;
 import javax.servlet.FilterConfig;
@@ -61,6 +62,7 @@ import javax.servlet.http.HttpSession;
 public class SessionFilter implements Filter {
     private String[] adminPages = {"/subject","/place","/place1","/examTime","/time",
             "/cost","/message","/user"};
+    private log4j newLig4j = new log4j();
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
         // TODO Auto-generated method stub
@@ -78,10 +80,14 @@ public class SessionFilter implements Filter {
         // 获得用户请求的URI
         String path = servletRequest.getRequestURI();
         //System.out.println(path);
+        //获得所有请求参数名
+        Enumeration params = servletRequest.getParameterNames();
 
         // 从session里获取信息
         String userId = (String) session.getAttribute("userId");
+        String username = (String) session.getAttribute("username");
         String power = (String) session.getAttribute("power");
+
 
         /*创建类Constants.java，里面写的是无需过滤的页面
         for (int i = 0; i < Constants.NoFilter_Pages.length; i++) {
@@ -91,13 +97,14 @@ public class SessionFilter implements Filter {
                 return;
             }
         }*/
-        if(path.endsWith(".css") || path.endsWith(".js") || path.endsWith(".png")){
+        if(path.endsWith(".css") || path.endsWith(".js") || path.endsWith(".png") || path.endsWith(".woff2")){
             chain.doFilter(servletRequest, servletResponse);
             return;
         }
 
         // 登陆页面无需过滤
         if(path.contains("/login")||path.contains("/reLogin")) {
+            this.newLig4j.printLog("["+userId+" - "+ username + " - " +power +"] : " + path);
             chain.doFilter(servletRequest, servletResponse);
             return;
         }
@@ -106,6 +113,25 @@ public class SessionFilter implements Filter {
             // 跳转到登陆页面
             servletResponse.sendRedirect(servletRequest.getContextPath() + "/login");
         } else {
+            this.newLig4j.printLog("["+userId+" - "+ username + " - " +power +"] : " + path);
+            String elements = "";
+            while (params.hasMoreElements()) {
+                //得到参数名
+                String name = params.nextElement().toString();
+                //System.out.println("name===========================" + name + "--");
+                //得到参数对应值
+                String[] value = servletRequest.getParameterValues(name);
+                String val = "";
+                for (int i = 0; i < value.length; i++) {
+                    val = val + value[i];
+                }
+                elements += name + ": " + val + ", ";
+            }
+            if(elements != ""){
+                this.newLig4j.printLog(elements);
+            } else {
+                this.newLig4j.printLog("no_element");
+            }
             // 已经登陆,继续此次请求
             if(power.equals("admin")){
                 chain.doFilter(request, response);

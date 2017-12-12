@@ -1,6 +1,7 @@
 package com.springapp.mvc;
 
 import com.springapp.entity.User;
+import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -21,6 +22,7 @@ public class LoginController extends BaseController{
 //    public String home() {
 //        return "login";
 //    }
+
     @RequestMapping(value = "/login",method = RequestMethod.GET)
     public ModelAndView home(HttpServletRequest request, ModelAndView modelAndView){
         HttpSession session= request.getSession();
