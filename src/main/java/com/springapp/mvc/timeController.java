@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -44,8 +45,8 @@ public class timeController extends BaseController{
     @RequestMapping(value="/time-edit1",method = RequestMethod.POST)
     @ResponseBody
     public String edit1(@RequestParam(value = "id") Long id,@RequestParam(value = "place") String place,@RequestParam(value = "classPlace") String classPlace,
-                        @RequestParam(value = "startTime") String startTime){
-        Long timeCount = timeDao.getCount("select count (*) from time where place ='"+place+"' and classPlace = '"+classPlace +"' and startTime = '"+startTime+"'");
+                        @RequestParam(value = "startTime") String startTime, HttpServletRequest request){
+        Long timeCount = timeDao.getCount("select count (*) from time where place ='"+place+"' and classPlace = '"+classPlace +"' and startTime = '"+startTime+"'",request);
         if(timeCount == 0) {
             time time = timeDao.getId(id).get(0);
             String originalPlace = time.getPlace();
@@ -57,14 +58,14 @@ public class timeController extends BaseController{
                 mes.setClassPlace(classPlace);
                 mes.setTime(startTime);
             }
-            messageDao.update(messageList);
+            messageDao.update(messageList,request);
             time.setPlace(place);
             time.setClassPlace(classPlace);
             List<examPlace> countList = examPlaceDao.findAll("from examPlace where place = '" + place + "' and classPlace = '" + classPlace + "'");
             time.setCount(countList.get(0).getCount());
             time.setStartTime(startTime);
 
-            timeDao.update(time);
+            timeDao.update(time,request);
             return "success";
         }else {
             return "is_exist";
@@ -78,8 +79,8 @@ public class timeController extends BaseController{
     }
     @RequestMapping(value="/time-delete",method = RequestMethod.POST)
     @ResponseBody
-    public String delete(@RequestParam(value = "id") Long id){
-        timeDao.delete(time.class,id);
+    public String delete(@RequestParam(value = "id") Long id, HttpServletRequest request){
+        timeDao.delete(time.class,id,request);
         return "success";
     }
     @RequestMapping(value="/time-add",method = RequestMethod.GET)
@@ -91,9 +92,9 @@ public class timeController extends BaseController{
     }
     @RequestMapping(value="/time-add1",method = RequestMethod.POST)
     @ResponseBody
-    public String add1(@RequestParam(value = "place") String place,@RequestParam(value = "classPlace") String classPlace,
+    public String add1(HttpServletRequest request, @RequestParam(value = "place") String place, @RequestParam(value = "classPlace") String classPlace,
                        @RequestParam(value = "startTime") String startTime){
-        Long timeCount = timeDao.getCount("select count (*) from time where place ='"+place+"' and classPlace = '"+classPlace +"' and startTime = '"+startTime+"'");
+        Long timeCount = timeDao.getCount("select count (*) from time where place ='"+place+"' and classPlace = '"+classPlace +"' and startTime = '"+startTime+"'",request);
         if(timeCount == 0) {
             time time = new time();
             time.setPlace(place);
@@ -101,7 +102,7 @@ public class timeController extends BaseController{
             List<examPlace> countList = examPlaceDao.findAll("from examPlace where place = '" + place + "' and classPlace = '" + classPlace + "'");
             time.setCount(countList.get(0).getCount());
             time.setStartTime(startTime);
-            timeDao.save(time);
+            timeDao.save(time,request);
             return "success";
         }else
             return  "is_exist";

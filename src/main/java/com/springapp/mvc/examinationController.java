@@ -86,10 +86,10 @@ public class examinationController extends BaseController {
     @RequestMapping(value="/examination-getPlaceCount",method = RequestMethod.POST)
     @ResponseBody
     public String getPlaceCount(@RequestParam(value = "reportPlace") String reportPlace,@RequestParam(value = "subPlace") String subPlace,@RequestParam(value = "subject") String subject,
-                                @RequestParam(value = "level") int level){
+                                @RequestParam(value = "level") int level, HttpServletRequest request){
         ArrayList<Long> count= new ArrayList<Long>();
-        long totalCount = messageDao.getCount("select count (*) from message where isDelete = 0 and reportPlace='"+reportPlace+"' and subPlace= '"+subPlace+"' and subject ='"+subject+"' and level ="+level);
-        long realCount = messageDao.getCount("select count (classPlace) from message where isDelete = 0 and reportPlace='"+reportPlace+"' and subPlace= '"+subPlace+"' and subject ='"+subject+"' and level ="+level);
+        long totalCount = messageDao.getCount("select count (*) from message where isDelete = 0 and reportPlace='"+reportPlace+"' and subPlace= '"+subPlace+"' and subject ='"+subject+"' and level ="+level,request);
+        long realCount = messageDao.getCount("select count (classPlace) from message where isDelete = 0 and reportPlace='"+reportPlace+"' and subPlace= '"+subPlace+"' and subject ='"+subject+"' and level ="+level,request);
         BigDecimal b1 = new BigDecimal(totalCount);
         BigDecimal b2 = new BigDecimal(realCount);
         long otherCount = b1.subtract(b2).longValue();
@@ -99,9 +99,9 @@ public class examinationController extends BaseController {
     }
     @RequestMapping(value="/examination-getExamPlaceCount",method = RequestMethod.POST)
     @ResponseBody
-    public Long getExamPlaceCount(@RequestParam(value = "examPlace") String examPlace,@RequestParam(value = "classPlace") String classPlace){
+    public Long getExamPlaceCount(@RequestParam(value = "examPlace") String examPlace,@RequestParam(value = "classPlace") String classPlace, HttpServletRequest request){
         ArrayList<Long> count= new ArrayList<Long>();
-        long realCount = messageDao.getCount("select count (*) from message where isDelete = 0 and examPlace='"+examPlace+"' and classPlace= '"+classPlace+"'");
+        long realCount = messageDao.getCount("select count (*) from message where isDelete = 0 and examPlace='"+examPlace+"' and classPlace= '"+classPlace+"'",request);
         return realCount;
     }
     @RequestMapping(value="/examination-start",method = RequestMethod.POST)
@@ -110,7 +110,7 @@ public class examinationController extends BaseController {
                       @RequestParam(value = "realExamPlace") String[] examPlace,@RequestParam(value = "realClassPlace") String[] classPlace,
                       @RequestParam(value = "realCount") Long[] otherCount,@RequestParam(value = "realSubject") String[] subject,
                         @RequestParam(value = "realExamTime") String[] examTime,
-                      @RequestParam(value = "realLevel") int[] level,@RequestParam(value = "time") String time){
+                      @RequestParam(value = "realLevel") int[] level,@RequestParam(value = "time") String time, HttpServletRequest request){
         String sql="and ((subject ='"+subject[0]+"'and level ="+level[0]+")";
         for(int i=1;i<subject.length;i++){
             sql+="or (subject ='"+subject[i]+"'and level ="+level[i]+")";
@@ -128,7 +128,7 @@ public class examinationController extends BaseController {
                     list.get(count+i).setTime(time);
                     if(!examTime[x].equals("noTime"))
                         list.get(count+i).setExamTime(examTime[x]);
-                    messageDao.update(list.get(count+i));
+                    messageDao.update(list.get(count+i),request);
                     changeList.add(list.get(count+i));
                     if(list.size()==(count+i+1))
                         break;
@@ -141,7 +141,7 @@ public class examinationController extends BaseController {
     @ResponseBody
     public String startPlace(@RequestParam(value = "reportPlace") String[] reportPlace,@RequestParam(value = "subPlace") String[] subPlace,
                         @RequestParam(value = "realExamPlace") String[] examPlace,@RequestParam(value = "realClassPlace") String[] classPlace,
-                        @RequestParam(value = "realCount") Long[] otherCount,@RequestParam(value = "realExamTime") String[] examTime,@RequestParam(value = "time") String time){
+                        @RequestParam(value = "realCount") Long[] otherCount,@RequestParam(value = "realExamTime") String[] examTime,@RequestParam(value = "time") String time, HttpServletRequest request){
         String sql="and ((reportPlace ='"+reportPlace[0]+"'and subPlace ='"+subPlace[0]+"')";
         for(int i=1;i<reportPlace.length;i++){
             sql+="or (reportPlace ='"+reportPlace[i]+"'and subPlace ='"+subPlace[i]+"')";
@@ -159,7 +159,7 @@ public class examinationController extends BaseController {
                 list.get(count+i).setTime(time);
                 if(!examTime[x].equals("noTime"))
                     list.get(count+i).setExamTime(examTime[x]);
-                messageDao.update(list.get(count+i));
+                messageDao.update(list.get(count+i),request);
                 changeList.add(list.get(count+i));
                 if(list.size()==(count+i+1))
                     break;
@@ -194,7 +194,7 @@ public class examinationController extends BaseController {
                               @RequestParam(value = "reportPlace") String reportPlace,
                               @RequestParam(value = "subPlace") String subPlace,
                               @RequestParam(value = "examPlace") String examPlace,
-                              @RequestParam(value = "classPlace") String classPlace){
+                              @RequestParam(value = "classPlace") String classPlace, HttpServletRequest request){
         List<message> messageList = new ArrayList<message>();
         String sql="",sql1="",sql2="",sql3="",sql4="";
         if(isAllCancel){
@@ -223,7 +223,7 @@ public class examinationController extends BaseController {
             message.setExamPlace(null);
             message.setTime(null);
         }
-        messageDao.update(messageList);
+        messageDao.update(messageList,request);
         return JSONArray.fromObject(messageList).toString();
     }
 }

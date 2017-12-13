@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -45,20 +46,20 @@ public class costController extends BaseController{
     @RequestMapping(value="/cost-edit1",method = RequestMethod.POST)
     @ResponseBody
     public String edit1(@RequestParam(value = "id") Long id,@RequestParam(value = "zhengshufei") Double zhengshufei,@RequestParam(value = "baomingfei") Double baomingfei,
-                        @RequestParam(value = "kaowufei") Double kaowufei,@RequestParam(value = "level") int level,@RequestParam(value = "remark") Double remark){
+                        @RequestParam(value = "kaowufei") Double kaowufei,@RequestParam(value = "level") int level,@RequestParam(value = "remark") Double remark, HttpServletRequest request){
         cost cos = costDao.getId(id).get(0);
         cos.setLevel(level);
         cos.setBaomingfei(baomingfei);
         cos.setKaowufei(kaowufei);
         cos.setZhengshufei(zhengshufei);
         cos.setRemark(remark);
-        costDao.update(cos);
+        costDao.update(cos,request);
         return "success";
     }
     @RequestMapping(value="/cost-delete",method = RequestMethod.POST)
     @ResponseBody
-    public String delete(@RequestParam(value = "id") Long id){
-        costDao.delete(cost.class,id);
+    public String delete(@RequestParam(value = "id") Long id, HttpServletRequest request){
+        costDao.delete(cost.class,id,request);
         return "success";
     }
     @RequestMapping(value="/cost-add",method = RequestMethod.GET)
@@ -71,15 +72,15 @@ public class costController extends BaseController{
     }
     @RequestMapping(value="/cost-add1",method = RequestMethod.POST)
     @ResponseBody
-    public String add1(@RequestParam(value = "zhengshufei") Double zhengshufei,@RequestParam(value = "baomingfei") Double baomingfei,
-                       @RequestParam(value = "kaowufei") Double kaowufei,@RequestParam(value = "level") int level,@RequestParam(value = "remark") Double remark){
+    public String add1(HttpServletRequest request, @RequestParam(value = "zhengshufei") Double zhengshufei, @RequestParam(value = "baomingfei") Double baomingfei,
+                       @RequestParam(value = "kaowufei") Double kaowufei, @RequestParam(value = "level") int level, @RequestParam(value = "remark") Double remark){
         cost cos =new cost();
         cos.setLevel(level);
         cos.setBaomingfei(baomingfei);
         cos.setKaowufei(kaowufei);
         cos.setZhengshufei(zhengshufei);
         cos.setRemark(remark);
-        costDao.save(cos);
+        costDao.save(cos, request);
         return "success";
     }
 }

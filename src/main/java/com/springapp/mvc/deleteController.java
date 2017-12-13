@@ -54,39 +54,39 @@ public class deleteController extends BaseController{
     }
     @RequestMapping(value="/delete-start",method = RequestMethod.POST)
     @ResponseBody
-    public String delete(@RequestParam(value = "id") Long id){
+    public String delete(@RequestParam(value = "id") Long id, HttpServletRequest request){
         List<message> list = messageDao.getId(id);
         list.get(0).setIsDelete(1);
-        messageDao.update(list);
+        messageDao.update(list,request);
         return "success";
     }
     @RequestMapping(value="/delete-rollback",method = RequestMethod.POST)
     @ResponseBody
-    public String rollback(@RequestParam(value = "id") Long id){
+    public String rollback(@RequestParam(value = "id") Long id, HttpServletRequest request){
         List<message> list = messageDao.findAll("from message where isDelete = 1 and id="+id);
         list.get(0).setIsDelete(0);
-        messageDao.update(list);
+        messageDao.update(list,request);
         return "success";
     }
     @RequestMapping(value="/delete-startTotal",method = RequestMethod.POST)
     @ResponseBody
-    public String deleteTotal(@RequestParam(value = "deleteArray") Long[] deleteArray){
+    public String deleteTotal(@RequestParam(value = "deleteArray") Long[] deleteArray, HttpServletRequest request){
         for(int i = 0;i<deleteArray.length;i++){
             List<message> list = messageDao.getId(deleteArray[i]);
             list.get(0).setIsDelete(1);
-            messageDao.update(list);
+            messageDao.update(list,request);
         }
         return "success";
     }
     @RequestMapping(value="/delete-editMessage",method = RequestMethod.POST)
     @ResponseBody
     public String editMessage(@RequestParam(value = "id") Long id,@RequestParam(value = "editName") String editName,
-                                    @RequestParam(value = "editSex") String editSex,@RequestParam(value = "editBirth") String editBirth){
+                                    @RequestParam(value = "editSex") String editSex,@RequestParam(value = "editBirth") String editBirth, HttpServletRequest request){
         List<message> list = messageDao.getId(id);
         list.get(0).setName(editName);
         list.get(0).setSex(editSex);
         list.get(0).setBirth(editBirth);
-        messageDao.update(list);
+        messageDao.update(list,request);
         return "success";
     }
     @RequestMapping(value="/delete-search",method = RequestMethod.POST)

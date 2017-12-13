@@ -65,7 +65,7 @@ public class forPersonController extends BaseController{
     @ResponseBody
     public String startExam(@RequestParam(value = "nameList") String[] nameList,@RequestParam(value = "birthList") String[] birthList,
                        @RequestParam(value = "examPlace") String  examPlace,@RequestParam(value = "classPlace") String  classPlace,
-                            @RequestParam(value = "time") String  time){
+                            @RequestParam(value = "time") String  time, HttpServletRequest request){
         String sql = "and (";
         for(int i=0;i<nameList.length;i++){
             sql+="(name = '"+nameList[i]+"' and birth ='"+birthList[i]+"')";
@@ -79,7 +79,7 @@ public class forPersonController extends BaseController{
             message.setClassPlace(classPlace);
             message.setTime(time);
         }
-        messageDao.update(messageList);
+        messageDao.update(messageList,request);
         return "success";
     }
     @RequestMapping(value="/forPerson-setExamPlace",method = RequestMethod.POST)

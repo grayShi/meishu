@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -39,8 +40,8 @@ public class ExamTimeController extends BaseController{
     }
     @RequestMapping(value="/examTime-add1",method = RequestMethod.POST)
     @ResponseBody
-    public String add1(@RequestParam(value = "subject") String subject,@RequestParam(value = "level") int level,@RequestParam(value = "duration") String duration){
-        Long count = examTimeDao.getCount("select count (*) from examTime where subject ='"+subject+"' and level ="+level);
+    public String add1(HttpServletRequest request, @RequestParam(value = "subject") String subject, @RequestParam(value = "level") int level, @RequestParam(value = "duration") String duration){
+        Long count = examTimeDao.getCount("select count (*) from examTime where subject ='"+subject+"' and level ="+level,request);
         if(count == 0) {
             examTime exam = new examTime();
             List<subject> subjectList = subjectDao.findAll("from subject where subject ='"+subject+"'");
@@ -55,8 +56,8 @@ public class ExamTimeController extends BaseController{
                     message.setExamTime(duration);
                     messages.add(message);
                 }
-                messageDao.update(messages);
-                examTimeDao.save(exam);
+                messageDao.update(messages,request);
+                examTimeDao.save(exam,request);
                 return "success";
             }
             else
@@ -89,7 +90,7 @@ public class ExamTimeController extends BaseController{
     }
     @RequestMapping(value="/examTime-edit1",method = RequestMethod.POST)
     @ResponseBody
-    public String edit1(@RequestParam(value = "id") Long id,@RequestParam(value = "subject") String subject,@RequestParam(value = "level") int level,@RequestParam(value = "duration") String duration){
+    public String edit1(@RequestParam(value = "id") Long id,@RequestParam(value = "subject") String subject,@RequestParam(value = "level") int level,@RequestParam(value = "duration") String duration, HttpServletRequest request){
 //        Long count = examTimeDao.getCount("select count (*) from examTime where subject ='"+subject+"' and level ="+level);
 //        if(count == 0) {
             examTime exam = examTimeDao.getId(id).get(0);
@@ -105,8 +106,8 @@ public class ExamTimeController extends BaseController{
                     message.setExamTime(duration);
                     messages.add(message);
                 }
-                messageDao.update(messages);
-                examTimeDao.update(exam);
+                messageDao.update(messages,request);
+                examTimeDao.update(exam,request);
                 return "success";
             }
             else
@@ -116,7 +117,7 @@ public class ExamTimeController extends BaseController{
     }
     @RequestMapping(value="/examTime-delete",method = RequestMethod.POST)
     @ResponseBody
-    public String delete(@RequestParam(value = "id") Long id){
+    public String delete(@RequestParam(value = "id") Long id, HttpServletRequest request){
         examTime exam = examTimeDao.getId(id).get(0);
         List<message> messageList = messageDao.findAll("from message where isDelete = 0 and subject ='"+exam.getSubId()+"￥"+exam.getSubject()+"' and level ="+exam.getLevel());
         List<message> messages = new ArrayList<message>();
@@ -124,8 +125,8 @@ public class ExamTimeController extends BaseController{
             message.setExamTime("");
             messages.add(message);
         }
-        messageDao.update(messages);
-        examTimeDao.delete(examTime.class,id);
+        messageDao.update(messages,request);
+        examTimeDao.delete(examTime.class,id,request);
         return "success";
     }
 }

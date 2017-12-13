@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -39,13 +40,13 @@ public class subjectController extends BaseController{
 }
     @RequestMapping(value="/subject-edit1",method = RequestMethod.POST)
     @ResponseBody
-    public String edit1(@RequestParam(value = "id") Long id,@RequestParam(value = "subject") String subject,@RequestParam(value = "level") int level){
-        Long count = subjectDao.getCount("select count (*) from subject where subject ='"+subject+"' and id !="+id);
+    public String edit1(@RequestParam(value = "id") Long id,@RequestParam(value = "subject") String subject,@RequestParam(value = "level") int level, HttpServletRequest request){
+        Long count = subjectDao.getCount("select count (*) from subject where subject ='"+subject+"' and id !="+id,request);
         if(count == 0) {
             subject sub = subjectDao.getId(id).get(0);
             sub.setLevel(level);
             sub.setSubject(subject);
-            subjectDao.update(sub);
+            subjectDao.update(sub,request);
             return "success";
         }else
             return "is_exist";
@@ -53,8 +54,8 @@ public class subjectController extends BaseController{
 
     @RequestMapping(value="/subject-delete",method = RequestMethod.POST)
     @ResponseBody
-    public String delete(@RequestParam(value = "id") Long id){
-        subjectDao.delete(subject.class,id);
+    public String delete(@RequestParam(value = "id") Long id, HttpServletRequest request){
+        subjectDao.delete(subject.class,id,request);
         return "success";
     }
     @RequestMapping(value="/subject-add",method = RequestMethod.GET)
@@ -64,13 +65,13 @@ public class subjectController extends BaseController{
     }
     @RequestMapping(value="/subject-add1",method = RequestMethod.POST)
     @ResponseBody
-    public String add1(@RequestParam(value = "subject") String subject,@RequestParam(value = "level") int level){
-        Long count = subjectDao.getCount("select count (*) from subject where subject ='"+subject+"'");
+    public String add1(HttpServletRequest request, @RequestParam(value = "subject") String subject, @RequestParam(value = "level") int level){
+        Long count = subjectDao.getCount("select count (*) from subject where subject ='"+subject+"'",request);
         if(count == 0) {
             subject sub = new subject();
             sub.setSubject(subject);
             sub.setLevel(level);
-            subjectDao.save(sub);
+            subjectDao.save(sub,request);
             return "success";
         }
         else

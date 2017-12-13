@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 import java.util.Map;
 
@@ -42,8 +43,8 @@ public class placeController extends  BaseController{
     }
     @RequestMapping(value="/place-edit1",method = RequestMethod.POST)
     @ResponseBody
-    public String edit1(@RequestParam(value = "id") Long id,@RequestParam(value = "place") String place,@RequestParam(value = "subPlace") String subPlace,@RequestParam(value = "remark") String remark){
-        Long reportPlaceCount = reportPlaceDao.getCount("select count(*) from reportPlace where isDelete = 0 and place = '"+place.trim()+"' and subPlace = '"+subPlace.trim()+"' and id !="+id);
+    public String edit1(HttpServletRequest request, @RequestParam(value = "id") Long id, @RequestParam(value = "place") String place, @RequestParam(value = "subPlace") String subPlace, @RequestParam(value = "remark") String remark){
+        Long reportPlaceCount = reportPlaceDao.getCount("select count(*) from reportPlace where isDelete = 0 and place = '"+place.trim()+"' and subPlace = '"+subPlace.trim()+"' and id !="+id,request);
         if(reportPlaceCount != 0)
             return "notOne";
         reportPlace rep = reportPlaceDao.getId(id).get(0);
@@ -59,16 +60,16 @@ public class placeController extends  BaseController{
         String originalSubPlace = originalSubPlaceNum + '￥'+ rep.getSubPlace();
         List<Place> placeList = placeDao.findAll("from Place where place= '"+place.trim()+"'");
         if(placeList.size() == 0) {
-            long placeCount = reportPlaceDao.getCount("select count(*) from reportPlace where placeId = "+rep.getPlaceId() +"and subPlaceId !="+rep.getSubPlaceId());
+            long placeCount = reportPlaceDao.getCount("select count(*) from reportPlace where placeId = "+rep.getPlaceId() +"and subPlaceId !="+rep.getSubPlaceId(),request);
             if(placeCount == 0){
                 List<Place> Place = placeDao.findAll("from Place where place= '"+originalPlace+"'");
                 Place.get(0).setPlace(place.trim());
-                placeDao.update(Place.get(0));
+                placeDao.update(Place.get(0),request);
                 rep.setSubPlaceId(Long.parseLong("1"));
             }else {
                 Place pla = new Place();
                 pla.setPlace(place.trim());
-                placeDao.save(pla);
+                placeDao.save(pla,request);
                 rep.setPlaceId(placeDao.setId(place.trim()));
                 rep.setSubPlaceId(Long.parseLong("1"));
             }
@@ -98,20 +99,20 @@ public class placeController extends  BaseController{
             if(!currentSubPlaceNum.equals(originalSubPlaceNum))
                 changeList.setCardNumber(changeList.getCardNumber().substring(0,2)+currentSubPlaceNum+changeList.getCardNumber().substring(6,changeList.getCardNumber().length()));
         }
-        messageDao.update(messageList);
-        reportPlaceDao.update(rep);
+        messageDao.update(messageList,request);
+        reportPlaceDao.update(rep,request);
         return "success";
     }
     @RequestMapping(value="/place-delete",method = RequestMethod.POST)
     @ResponseBody
-    public String delete(@RequestParam(value = "id") Long id){
+    public String delete(@RequestParam(value = "id") Long id, HttpServletRequest request){
         List<reportPlace>reportPlaces = reportPlaceDao.getId(id);
         reportPlace reportPlace = reportPlaces.get(0);
         reportPlace.setIsDelete(1);
-        reportPlaceDao.update(reportPlace);
-        Long placeCount = reportPlaceDao.getCount("select count(*) from reportPlace where isDelete = 0 and placeId = "+reportPlace.getPlaceId());
+        reportPlaceDao.update(reportPlace,request);
+        Long placeCount = reportPlaceDao.getCount("select count(*) from reportPlace where isDelete = 0 and placeId = "+reportPlace.getPlaceId(),request);
         if(placeCount == 0)
-            placeDao.delete(Place.class,reportPlace.getId());
+            placeDao.delete(Place.class,reportPlace.getId(),request);
         return "success";
     }
     @RequestMapping(value="/place-add",method = RequestMethod.GET)
@@ -121,19 +122,19 @@ public class placeController extends  BaseController{
     }
     @RequestMapping(value="/place-add1",method = RequestMethod.POST)
     @ResponseBody
-    public String add1(@RequestParam(value = "place") String place,@RequestParam(value = "subPlace") String[] subPlace,@RequestParam(value = "remark") String remark){
-        Long placeCount = placeDao.getPlaceCount(place.trim());
+    public String add1(HttpServletRequest request, @RequestParam(value = "place") String place,@RequestParam(value = "subPlace") String[] subPlace,@RequestParam(value = "remark") String remark){
+        Long placeCount = placeDao.getPlaceCount(place.trim(),request);
         if(placeCount == 0) {
             Place pla = new Place();
             pla.setPlace(place.trim());
-            placeDao.save(pla);
+            placeDao.save(pla,request);
         }
         int isCount = 0;  ////重复数据
         for(int i=0;i<subPlace.length;i++) {
             Long placeId = placeDao.setId(place.trim());
             List<reportPlace> reportPlaceList = reportPlaceDao.findAll("from reportPlace where isDelete = 0 and subPlace = '"+subPlace[i].trim()+"' and placeId = " + placeId);
             if(reportPlaceList.size() == 0) {
-                Long count = reportPlaceDao.getCount("select count(*) from reportPlace where placeId = " + placeId);
+                Long count = reportPlaceDao.getCount("select count(*) from reportPlace where placeId = " + placeId,request);
                 ///////搜索全表
                 reportPlace rep = new reportPlace();
                 if(count >0){
@@ -146,7 +147,7 @@ public class placeController extends  BaseController{
                 rep.setSubPlace(subPlace[i].trim());
                 rep.setRemark(remark);
                 rep.setPlaceId(placeDao.setId(place.trim()));
-                reportPlaceDao.save(rep);
+                reportPlaceDao.save(rep,request);
             }else {
                 isCount++;
             }

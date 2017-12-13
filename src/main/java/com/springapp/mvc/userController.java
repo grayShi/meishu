@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -59,8 +60,8 @@ public class userController extends BaseController {
     public String edit1(@RequestParam(value = "id") Long id,
                         @RequestParam(value = "username") String username,@RequestParam(value = "password") String password,
                         @RequestParam(value = "power") String power,@RequestParam(value = "place") String place,
-                        @RequestParam(value = "subPlace") String subPlace){
-        Long userCount = userDao.getCount("select count (*) from User where username ='"+username+"' and id !="+ id);
+                        @RequestParam(value = "subPlace") String subPlace, HttpServletRequest request){
+        Long userCount = userDao.getCount("select count (*) from User where username ='"+username+"' and id !="+ id,request);
         if(userCount == 0) {
             User user = userDao.getId(id).get(0);
             user.setUsername(username);
@@ -75,7 +76,7 @@ public class userController extends BaseController {
                 user.setPlace(place);
                 user.setSubPlace(subPlace);
             }
-            userDao.update(user);
+            userDao.update(user,request);
             return "success";
         }else {
             return "is_exist";
@@ -90,16 +91,16 @@ public class userController extends BaseController {
     }
     @RequestMapping(value="/user-delete",method = RequestMethod.POST)
     @ResponseBody
-    public String delete(@RequestParam(value = "id") Long id){
-        userDao.delete(User.class,id);
+    public String delete(@RequestParam(value = "id") Long id, HttpServletRequest request){
+        userDao.delete(User.class,id,request);
         return "success";
     }
     @RequestMapping(value="/user-add1",method = RequestMethod.POST)
     @ResponseBody
-    public String add1(@RequestParam(value = "username") String username,@RequestParam(value = "password") String password,
-                       @RequestParam(value = "power") String power,@RequestParam(value = "place") String place,
+    public String add1(HttpServletRequest request, @RequestParam(value = "username") String username, @RequestParam(value = "password") String password,
+                       @RequestParam(value = "power") String power, @RequestParam(value = "place") String place,
                        @RequestParam(value = "subPlace") String subPlace){
-        Long userCount = userDao.getCount("select count (*) from User where username ='"+username+"'");
+        Long userCount = userDao.getCount("select count (*) from User where username ='"+username+"'",request);
         if(userCount == 0) {
             User user = new User();
             user.setPower(power);
@@ -109,7 +110,7 @@ public class userController extends BaseController {
                 user.setPlace(place);
                 user.setSubPlace(subPlace);
             }
-            userDao.save(user);
+            userDao.save(user,request);
             return "success";
         }else
             return  "is_exist";
@@ -127,11 +128,11 @@ public class userController extends BaseController {
     @ResponseBody
     public String changePassword(@RequestParam(value = "id") Long id,
                         @RequestParam(value = "originPassword") String originPassword,
-                                 @RequestParam(value = "newPassword") String newPassword){
+                                 @RequestParam(value = "newPassword") String newPassword, HttpServletRequest request){
         User user = userDao.getId(id).get(0);
         if(user.getPassword().equals(originPassword)) {
             user.setPassword(newPassword);
-            userDao.update(user);
+            userDao.update(user,request);
             return "success";
         }else {
             return "error_origin";

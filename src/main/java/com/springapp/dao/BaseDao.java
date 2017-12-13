@@ -9,6 +9,7 @@ import org.hibernate.engine.transaction.spi.LocalStatus;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 @Repository
@@ -28,7 +29,7 @@ public class BaseDao {
         return this.sessionFactory.getCurrentSession();
     }
 
-    public <T> void save(T t) {
+    public <T> void save(T t, HttpServletRequest request) {
         Session session = getSession();
         JdbcTransaction tx = (JdbcTransaction)session.getTransaction();
         if(tx.getLocalStatus().equals(LocalStatus.ACTIVE))
@@ -47,7 +48,7 @@ public class BaseDao {
         }
     }
 
-    public <T> void save(List<T> list) {
+    public <T> void save(List<T> list, HttpServletRequest request) {
         Session session = getSession();
         JdbcTransaction tx = (JdbcTransaction)session.getTransaction();
         if(tx.getLocalStatus().equals(LocalStatus.ACTIVE))
@@ -68,7 +69,7 @@ public class BaseDao {
         }
     }
 
-    public <T> void delete(T t) {
+    public <T> void delete(T t, HttpServletRequest request) {
         Session session = getSession();
         JdbcTransaction tx = (JdbcTransaction)session.getTransaction();
         if(tx.getLocalStatus().equals(LocalStatus.ACTIVE))
@@ -87,7 +88,7 @@ public class BaseDao {
         }
     }
 
-    public <T> void delete(Class<T> entityClass, Long id) {
+    public <T> void delete(Class<T> entityClass, Long id, HttpServletRequest request) {
         Session session = getSession();
         JdbcTransaction tx = (JdbcTransaction)session.getTransaction();
         if(tx.getLocalStatus().equals(LocalStatus.ACTIVE))
@@ -106,7 +107,7 @@ public class BaseDao {
         }
     }
 
-    public <T> void update(T t) {
+    public <T> void update(T t, HttpServletRequest request) {
         Session session = getSession();
         JdbcTransaction tx = (JdbcTransaction)session.getTransaction();
         if(tx.getLocalStatus().equals(LocalStatus.ACTIVE))
@@ -125,7 +126,7 @@ public class BaseDao {
         }
     }
 
-    public <T> void update(List<T> list) {
+    public <T> void update(List<T> list, HttpServletRequest request) {
         Session session = getSession();
         JdbcTransaction tx = (JdbcTransaction)session.getTransaction();
         if(tx.getLocalStatus().equals(LocalStatus.ACTIVE))
@@ -350,7 +351,7 @@ public class BaseDao {
         return result;
     }
 
-    public long getCount(final String hql) {
+    public long getCount(final String hql, HttpServletRequest request) {
         Session session = getSession();
         JdbcTransaction tx = (JdbcTransaction)session.getTransaction();
         if(tx.getLocalStatus().equals(LocalStatus.ACTIVE))
@@ -372,7 +373,7 @@ public class BaseDao {
         return count.longValue();
     }
 
-    public long getCount(final String hql, final Object[] params) {
+    public long getCount(final String hql, final Object[] params, HttpServletRequest request) {
         Session session = getSession();
         JdbcTransaction tx = (JdbcTransaction)session.getTransaction();
         if(tx.getLocalStatus().equals(LocalStatus.ACTIVE))

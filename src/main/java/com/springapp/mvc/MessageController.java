@@ -49,7 +49,7 @@ public class MessageController extends BaseController{
     }
     @RequestMapping(value="/message-saveMessage",method = RequestMethod.POST)
     @ResponseBody
-    public String saveMessage(@RequestParam(value = "reportPlace") String reportPlace, @RequestParam(value = "subPlace") String subPlace,
+    public String saveMessage(HttpServletRequest request, @RequestParam(value = "reportPlace") String reportPlace, @RequestParam(value = "subPlace") String subPlace,
                               @RequestParam(value = "name") String name, @RequestParam(value = "sex") String sex,
                               @RequestParam(value = "birth") String birth, @RequestParam(value = "email",required = false) String email,
                               @RequestParam(value = "country",required = false) String country, @RequestParam(value = "nation",required = false) String nation,
@@ -57,7 +57,7 @@ public class MessageController extends BaseController{
                               @RequestParam(value = "phoneNumber",required = false) String phoneNumber, @RequestParam(value = "subject") String subject,
                               @RequestParam(value = "level") int level,@RequestParam(value = "date") String date){
 
-        Long isCount = messageDao.getCount("select count (*) from message where isDelete = 0 and name ='" + name + "'and address='" + address + "'and subject='" + subject + "'and level = " + level);
+        Long isCount = messageDao.getCount("select count (*) from message where isDelete = 0 and name ='" + name + "'and address='" + address + "'and subject='" + subject + "'and level = " + level,request);
         if(isCount !=0){
             return "notOne";
         }
@@ -117,7 +117,7 @@ public class MessageController extends BaseController{
         if(level<10)
             Id+='0';
         Id+=level;
-        Long countId=messageDao.getCount("select count (*) from message where endSignUpTime = '"+ date +"' and reportPlace = '"+Message.getReportPlace()+"'and subPlace = '"+Message.getSubPlace()+"' and subject='"+subject+"'and level = "+level)+1;
+        Long countId=messageDao.getCount("select count (*) from message where endSignUpTime = '"+ date +"' and reportPlace = '"+Message.getReportPlace()+"'and subPlace = '"+Message.getSubPlace()+"' and subject='"+subject+"'and level = "+level,request)+1;
         if(countId<1000)
             Id+='0';
         if(countId<100)
@@ -131,7 +131,7 @@ public class MessageController extends BaseController{
             Message.setExamTime(examTimeList.get(0).getDuration());
         }
         Message.setEndSignUpTime(date);
-        messageDao.save(Message);
+        messageDao.save(Message, request);
         return "success";
     }
     @RequestMapping(value="/message-getSearch",method = RequestMethod.POST)
@@ -160,7 +160,7 @@ public class MessageController extends BaseController{
                               @RequestParam(value = "country",required = false) String country, @RequestParam(value = "nation",required = false) String nation,
                               @RequestParam(value = "address",required = false) String address, @RequestParam(value = "postCodes",required = false) String postCodes,
                               @RequestParam(value = "phoneNumber",required = false) String phoneNumber, @RequestParam(value = "subject") String subject,
-                              @RequestParam(value = "level") int level,@RequestParam(value = "date") String date){
+                              @RequestParam(value = "level") int level,@RequestParam(value = "date") String date, HttpServletRequest request){
         message Message = messageDao.getId(id).get(0);
         Message.setSubject(subject);
         Message.setAddress(address);
@@ -217,7 +217,7 @@ public class MessageController extends BaseController{
         if(level<10)
             Id+='0';
         Id+=level;
-        Long countId=messageDao.getCount("select count (*) from message where endSignUpTime = '"+ date +"' and reportPlace = '"+Message.getReportPlace()+"'and subPlace = '"+Message.getSubPlace()+"' and subject='"+subject+"'and level = "+level)+1;
+        Long countId=messageDao.getCount("select count (*) from message where endSignUpTime = '"+ date +"' and reportPlace = '"+Message.getReportPlace()+"'and subPlace = '"+Message.getSubPlace()+"' and subject='"+subject+"'and level = "+level,request)+1;
 
         ///搜索全表 包括isDelete=0
         if(countId<1000)
@@ -233,13 +233,13 @@ public class MessageController extends BaseController{
             Message.setExamTime(examTimeList.get(0).getDuration());
         }
         Message.setEndSignUpTime(date);
-        messageDao.update(Message);
+        messageDao.update(Message,request);
         return "success";
     }
     @RequestMapping(value="/message-searchTime",method = RequestMethod.POST)
     @ResponseBody
-    public String searchTime(@RequestParam(value = "subject")String subject,@RequestParam(value="level") int level){
-        Long count=examTimeDao.getCount("select count (*) from examTime where subject='"+subject+"'and level = "+level);
+    public String searchTime(@RequestParam(value = "subject")String subject,@RequestParam(value="level") int level, HttpServletRequest request){
+        Long count=examTimeDao.getCount("select count (*) from examTime where subject='"+subject+"'and level = "+level,request);
         if(count>0)
             return "success";
         else

@@ -64,7 +64,7 @@ public class Message1Controller extends BaseController{
                 File file = new File(realPath, myfile.getOriginalFilename());
                 FileUtils.copyInputStreamToFile(myfile.getInputStream(), file);
                 if(myfile.getOriginalFilename().toLowerCase().endsWith("xls")){
-                    lineNum=readXls(myfile.getInputStream(),lineNum, endSignUpTime,place ,subPlace, isAdmin );
+                    lineNum=readXls(request,myfile.getInputStream(),lineNum, endSignUpTime,place ,subPlace, isAdmin );
                 }else{
                     //xlsx格式
                 }
@@ -118,7 +118,7 @@ public class Message1Controller extends BaseController{
 //        }
 //    }
 
-    private synchronized String readXls(InputStream is,String lineNum, String endSignUpTime, String place, String subPlace,Boolean isAdmin) throws IOException {
+    private synchronized String readXls(HttpServletRequest request, InputStream is,String lineNum, String endSignUpTime, String place, String subPlace,Boolean isAdmin) throws IOException {
         HSSFWorkbook hssfWorkbook = new HSSFWorkbook(is);
         int inputTotal=0;
         Boolean isSheetSuccess = true;
@@ -374,7 +374,7 @@ public class Message1Controller extends BaseController{
 
                     }
                     if(isSuccess) {
-                        Long isCount = messageDao.getCount("select count (*) from message where isDelete = 0 and name ='" + getValue(hssfRow.getCell(0)) + "'and sex='" + getValue(hssfRow.getCell(3)) + "'and birth='" + newMessage.getBirth() +"'and subject='" + subject1 + "'and level = " + getValue(hssfRow.getCell(8)));
+                        Long isCount = messageDao.getCount("select count (*) from message where isDelete = 0 and name ='" + getValue(hssfRow.getCell(0)) + "'and sex='" + getValue(hssfRow.getCell(3)) + "'and birth='" + newMessage.getBirth() +"'and subject='" + subject1 + "'and level = " + getValue(hssfRow.getCell(8)),request);
                         if (isCount != 0) {
                             lineNum +="(Sheet"+(numSheet+1)+")"+ (rowNum + 1) + "(重复数据),";
                         } else {
@@ -385,7 +385,7 @@ public class Message1Controller extends BaseController{
                             if ((int) (Double.parseDouble(getValue(hssfRow.getCell(8)))) < 10)
                                 Id += '0';
                             Id += (int) (Double.parseDouble(getValue(hssfRow.getCell(8))));
-                            Long countId = messageDao.getCount("select count (*) from message where endSignUpTime = '"+ endSignUpTime +"' and reportPlace = '"+newMessage.getReportPlace()+"'and subPlace = '"+newMessage.getSubPlace()+"'and subject='" + subject1 + "'and level = " + (int) (Double.parseDouble(getValue(hssfRow.getCell(8))))) + 1;
+                            Long countId = messageDao.getCount("select count (*) from message where endSignUpTime = '"+ endSignUpTime +"' and reportPlace = '"+newMessage.getReportPlace()+"'and subPlace = '"+newMessage.getSubPlace()+"'and subject='" + subject1 + "'and level = " + (int) (Double.parseDouble(getValue(hssfRow.getCell(8)))),request) + 1;
                             ///////搜索全表 包括isDeLETE = 0
 
                             if (countId < 1000)
@@ -398,7 +398,7 @@ public class Message1Controller extends BaseController{
                             newMessage.setCardNumber(Id);
                             newMessage.setEndSignUpTime(endSignUpTime);
                             newMessage.setPay(false);
-                            messageDao.save(newMessage);
+                            messageDao.save(newMessage,request);
                             inputTotal++;
                         }
                     }

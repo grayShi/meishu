@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.springapp.entity.time;
+
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -43,8 +45,8 @@ public class place1Controller extends  BaseController{
     @ResponseBody
     public String edit1(@RequestParam(value = "id") Long id,@RequestParam(value="count")int count,
                         @RequestParam(value = "reportPlace") String reportPlace,@RequestParam(value = "subPlace") String subPlace,
-                        @RequestParam(value = "place") String place,@RequestParam(value = "classPlace") String classPlace,@RequestParam(value = "remark") String remark){
-        Long examPlaceCount = examPlaceDao.getCount("select count (*) from examPlace where place ='"+place+"' and classPlace = '"+classPlace+"'");
+                        @RequestParam(value = "place") String place,@RequestParam(value = "classPlace") String classPlace,@RequestParam(value = "remark") String remark, HttpServletRequest request){
+        Long examPlaceCount = examPlaceDao.getCount("select count (*) from examPlace where place ='"+place+"' and classPlace = '"+classPlace+"'",request);
         if(examPlaceCount <= 1) {
             examPlace exam = examPlaceDao.getId(id).get(0);
             String originalPlace = exam.getPlace();
@@ -56,7 +58,7 @@ public class place1Controller extends  BaseController{
                     mes.setExamPlace(place);
                     mes.setClassPlace(classPlace);
                 }
-                messageDao.update(messageList);
+                messageDao.update(messageList,request);
                 List<time> timeList = timeDao.findAll("from time where place = '" + exam.getPlace() + "' and classPlace = '" + exam.getClassPlace() + "'");
                 if (timeList.size() != 0) {
                     for (time x : timeList) {
@@ -64,7 +66,7 @@ public class place1Controller extends  BaseController{
                         x.setClassPlace(classPlace);
                         x.setCount(count);
                     }
-                    timeDao.update(timeList);
+                    timeDao.update(timeList,request);
                 }
                 exam.setPlace(place);
                 exam.setClassPlace(classPlace);
@@ -72,7 +74,7 @@ public class place1Controller extends  BaseController{
                 exam.setRemark(remark);
                 exam.setReportPlace(reportPlace);
                 exam.setSubPlace(subPlace);
-                reportPlaceDao.update(exam);
+                reportPlaceDao.update(exam,request);
                 return "success";
             }else
                 return messageList.size()+"";
@@ -82,8 +84,8 @@ public class place1Controller extends  BaseController{
     }
     @RequestMapping(value="/place1-delete",method = RequestMethod.POST)
     @ResponseBody
-    public String delete(@RequestParam(value = "id") Long id){
-        examPlaceDao.delete(examPlace.class,id);
+    public String delete(@RequestParam(value = "id") Long id, HttpServletRequest request){
+        examPlaceDao.delete(examPlace.class,id,request);
         return "success";
     }
     @RequestMapping(value="/place1-add",method = RequestMethod.GET)
@@ -95,10 +97,10 @@ public class place1Controller extends  BaseController{
     }
     @RequestMapping(value="/place1-add1",method = RequestMethod.POST)
     @ResponseBody
-    public String add1(@RequestParam(value="count")int count,@RequestParam(value = "place") String place,
-                       @RequestParam(value = "classPlace") String classPlace,@RequestParam(value = "remark") String remark,
-                       @RequestParam(value = "reportPlace") String reportPlace,@RequestParam(value = "subPlace") String subPlace){
-        Long examPlaceCount = examPlaceDao.getCount("select count (*) from examPlace where place ='"+place+"' and classPlace = '"+classPlace+"'");
+    public String add1(HttpServletRequest request, @RequestParam(value="count")int count, @RequestParam(value = "place") String place,
+                       @RequestParam(value = "classPlace") String classPlace, @RequestParam(value = "remark") String remark,
+                       @RequestParam(value = "reportPlace") String reportPlace, @RequestParam(value = "subPlace") String subPlace){
+        Long examPlaceCount = examPlaceDao.getCount("select count (*) from examPlace where place ='"+place+"' and classPlace = '"+classPlace+"'",request);
         if(examPlaceCount == 0) {
             examPlace exam = new examPlace();
             exam.setPlace(place);
@@ -107,7 +109,7 @@ public class place1Controller extends  BaseController{
             exam.setRemark(remark);
             exam.setReportPlace(reportPlace);
             exam.setSubPlace(subPlace);
-            examPlaceDao.save(exam);
+            examPlaceDao.save(exam,request);
             return "success";
         }
         else
