@@ -20,8 +20,8 @@ import java.util.List;
 @RequestMapping(value = "**")
 public class costController extends BaseController{
     @RequestMapping(value="/cost",method = RequestMethod.GET)
-    public ModelAndView home(ModelAndView modelAndView){
-        List<cost> cost=costDao.findAll("from cost");
+    public ModelAndView home(ModelAndView modelAndView, HttpServletRequest request){
+        List<cost> cost=costDao.findAll("from cost",request);
         modelAndView.addObject("cost",cost);
         String costList = JSONArray.fromObject(cost).toString();
         modelAndView.addObject("costList",costList);
@@ -29,11 +29,11 @@ public class costController extends BaseController{
         return modelAndView;
     }
     @RequestMapping(value="/cost-edit",method = RequestMethod.GET)
-    public ModelAndView edit(@RequestParam(value = "id") Long id){
+    public ModelAndView edit(@RequestParam(value = "id") Long id, HttpServletRequest request){
 
         ModelAndView modelAndView = new ModelAndView();
-        List<cost> costEdit = costDao.findAll("from cost where id =" + id);
-        List<cost> cost=costDao.findAll("from cost");
+        List<cost> costEdit = costDao.findAll("from cost where id =" + id,request);
+        List<cost> cost=costDao.findAll("from cost",request);
         String costList1 = JSONArray.fromObject(cost).toString();
         String costList2 = JSONArray.fromObject(costEdit).toString();
         modelAndView.addObject("costList1",costList1);
@@ -47,7 +47,7 @@ public class costController extends BaseController{
     @ResponseBody
     public String edit1(@RequestParam(value = "id") Long id,@RequestParam(value = "zhengshufei") Double zhengshufei,@RequestParam(value = "baomingfei") Double baomingfei,
                         @RequestParam(value = "kaowufei") Double kaowufei,@RequestParam(value = "level") int level,@RequestParam(value = "remark") Double remark, HttpServletRequest request){
-        cost cos = costDao.getId(id).get(0);
+        cost cos = costDao.getId(id,request).get(0);
         cos.setLevel(level);
         cos.setBaomingfei(baomingfei);
         cos.setKaowufei(kaowufei);
@@ -63,8 +63,8 @@ public class costController extends BaseController{
         return "success";
     }
     @RequestMapping(value="/cost-add",method = RequestMethod.GET)
-    public ModelAndView add(ModelAndView modelAndView){
-        List<cost> cost=costDao.findAll("from cost");
+    public ModelAndView add(ModelAndView modelAndView, HttpServletRequest request){
+        List<cost> cost=costDao.findAll("from cost",request);
         String costList = JSONArray.fromObject(cost).toString();
         modelAndView.addObject("costList",costList);
         modelAndView.setViewName("cost-add");

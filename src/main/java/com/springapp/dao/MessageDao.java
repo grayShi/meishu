@@ -5,6 +5,7 @@ import org.apache.poi.hssf.usermodel.HSSFCell;
 import org.apache.poi.hssf.usermodel.HSSFDateUtil;
 import org.springframework.stereotype.Repository;
 
+import javax.servlet.http.HttpServletRequest;
 import java.text.DecimalFormat;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -14,8 +15,8 @@ import java.util.List;
  */
 @Repository
 public class MessageDao extends BaseDao{
-    public List<message> getId(Long id){
-        return this.findAll("from message where isDelete = 0 and id="+id);
+    public List<message> getId(Long id, HttpServletRequest request){
+        return this.findAll("from message where isDelete = 0 and id="+id,request);
     }
     public String getDate(HSSFCell hssfCell){
         DecimalFormat df = new DecimalFormat("#");

@@ -1,5 +1,5 @@
 
-function initTableCheckbox(tableId,checkAllId) {
+function initTableCheckbox(tableId,checkAllId,checkRow) {
     var $thr = $('#'+tableId+' thead tr');
 //      var $checkAllTh = $('<th><input type="checkbox" id="checkAll" name="checkAll" /></th>');
     /*将全选/反选复选框添加到表头最前，即增加一列*/
@@ -38,10 +38,12 @@ function initTableCheckbox(tableId,checkAllId) {
         /*阻止向上冒泡，以防再次触发点击操作*/
         event.stopPropagation();
     });
-    /*点击每一行时也触发该行的选中操作*/
-    $tbr.click(function(){
-        $(this).find('input').click();
-    });
+    if(checkRow){
+        /*点击每一行时也触发该行的选中操作*/
+        $tbr.click(function(){
+            $(this).find('input').click();
+        });
+    }
 }
 function getCheck() {
     var arrayList=[];

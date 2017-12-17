@@ -22,8 +22,8 @@ import java.util.List;
 @Controller
 public class place1Controller extends  BaseController{
     @RequestMapping(value="/place1",method = RequestMethod.GET)
-    public ModelAndView home(ModelAndView modelAndView){
-        List<examPlace> place=examPlaceDao.findAll("from examPlace");
+    public ModelAndView home(ModelAndView modelAndView, HttpServletRequest request){
+        List<examPlace> place=examPlaceDao.findAll("from examPlace",request);
         modelAndView.addObject("place",place);
         String placeList = JSONArray.fromObject(place).toString();
         modelAndView.addObject("placeList",placeList);
@@ -31,11 +31,11 @@ public class place1Controller extends  BaseController{
         return modelAndView;
     }
     @RequestMapping(value="/place1-edit",method = RequestMethod.GET)
-    public ModelAndView home1(@RequestParam(value = "id") Long id){
+    public ModelAndView home1(@RequestParam(value = "id") Long id, HttpServletRequest request){
         ModelAndView modelAndView = new ModelAndView();
-        List<examPlace> placeEdit=examPlaceDao.findAll("from examPlace where id =" + id);
+        List<examPlace> placeEdit=examPlaceDao.findAll("from examPlace where id =" + id,request);
         modelAndView.addObject("placeEdit", placeEdit);
-        List<reportPlace> place=reportPlaceDao.findAll("select distinct place from reportPlace where isDelete = 0");
+        List<reportPlace> place=reportPlaceDao.findAll("select distinct place from reportPlace where isDelete = 0",request);
         modelAndView.addObject("place",place);
         modelAndView.addObject("id", id);
         modelAndView.setViewName("place1-edit");
@@ -48,18 +48,18 @@ public class place1Controller extends  BaseController{
                         @RequestParam(value = "place") String place,@RequestParam(value = "classPlace") String classPlace,@RequestParam(value = "remark") String remark, HttpServletRequest request){
         Long examPlaceCount = examPlaceDao.getCount("select count (*) from examPlace where place ='"+place+"' and classPlace = '"+classPlace+"'",request);
         if(examPlaceCount <= 1) {
-            examPlace exam = examPlaceDao.getId(id).get(0);
+            examPlace exam = examPlaceDao.getId(id,request).get(0);
             String originalPlace = exam.getPlace();
             String originalClassPlace = exam .getClassPlace();
             int originalCount = exam.getCount();
-            List<message>messageList = messageDao.findAll("from message where examPlace = '"+originalPlace+"' and classPlace = '"+originalClassPlace +"'");
+            List<message>messageList = messageDao.findAll("from message where examPlace = '"+originalPlace+"' and classPlace = '"+originalClassPlace +"'",request);
             if(messageList.size() <= count) {
                 for(message mes:messageList){
                     mes.setExamPlace(place);
                     mes.setClassPlace(classPlace);
                 }
                 messageDao.update(messageList,request);
-                List<time> timeList = timeDao.findAll("from time where place = '" + exam.getPlace() + "' and classPlace = '" + exam.getClassPlace() + "'");
+                List<time> timeList = timeDao.findAll("from time where place = '" + exam.getPlace() + "' and classPlace = '" + exam.getClassPlace() + "'",request);
                 if (timeList.size() != 0) {
                     for (time x : timeList) {
                         x.setPlace(place);
@@ -89,8 +89,8 @@ public class place1Controller extends  BaseController{
         return "success";
     }
     @RequestMapping(value="/place1-add",method = RequestMethod.GET)
-    public ModelAndView add(ModelAndView modelAndView){
-        List<reportPlace> place=reportPlaceDao.findAll("select distinct place from reportPlace where isDelete = 0");
+    public ModelAndView add(ModelAndView modelAndView, HttpServletRequest request){
+        List<reportPlace> place=reportPlaceDao.findAll("select distinct place from reportPlace where isDelete = 0",request);
         modelAndView.addObject("place",place);
         modelAndView.setViewName("place1-add");
         return modelAndView;

@@ -104,7 +104,7 @@
         Copyright © 2018 -2020. All rights reserved.
     </div>
 </nav>
-<div id="wrap">
+<div id="wrap"style="z-index: 2000">
     <button type="button" class="btn btn-default btn-circle btn-lg" id="btn_top"><i class="fa fa-arrow-up"></i>
     </button>
 </div>

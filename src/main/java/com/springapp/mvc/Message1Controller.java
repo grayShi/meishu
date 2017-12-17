@@ -274,7 +274,7 @@ public class Message1Controller extends BaseController{
 
                         else if (cellNum == 7 ) {
                             if(!getValue(hssfCell).equals("")){
-                                subjectList = subjectDao.findAll("from subject where subject ='"+getValue(hssfCell)+"'");
+                                subjectList = subjectDao.findAll("from subject where subject ='"+getValue(hssfCell)+"'",request);
                                 oldSubject=getValue(hssfCell);
                                 if(subjectList.size()!=0) {
                                     subject1 = subjectList.get(0).getId() + "￥" + subjectList.get(0).getSubject();
@@ -299,7 +299,7 @@ public class Message1Controller extends BaseController{
                                 if(pattern.matcher((int) (Double.parseDouble(getValue(hssfCell)))+"").matches()) {     ///判断是否全为为数字
                                     if(subjectList.get(0).getLevel() >= (int) (Double.parseDouble(getValue(hssfCell)))) {
                                         newMessage.setLevel((int) (Double.parseDouble(getValue(hssfCell))));
-                                        List<examTime> examTimeList = examTimeDao.findAll("from examTime where subject ='"+oldSubject+"' and level ="+newMessage.getLevel());
+                                        List<examTime> examTimeList = examTimeDao.findAll("from examTime where subject ='"+oldSubject+"' and level ="+newMessage.getLevel(),request);
                                         if(examTimeList.size()!=0) {
                                             newMessage.setExamTime(examTimeList.get(0).getDuration());
                                         }
@@ -341,7 +341,7 @@ public class Message1Controller extends BaseController{
                                     isSuccess = false;
                                     break;
                                 } else {
-                                    List<reportPlace> subPlaceList = reportPlaceDao.findAll("from reportPlace where isDelete = 0 and place='" + getValue(hssfRow.getCell(9)) + "' and subPlace ='" + getValue(hssfCell) + "'");
+                                    List<reportPlace> subPlaceList = reportPlaceDao.findAll("from reportPlace where isDelete = 0 and place='" + getValue(hssfRow.getCell(9)) + "' and subPlace ='" + getValue(hssfCell) + "'",request);
                                     if (subPlaceList.size() != 0) {
                                         if (subPlaceList.get(0).getPlaceId() < 10)
                                             subPlaceIdCount += "0" + subPlaceList.get(0).getPlaceId();

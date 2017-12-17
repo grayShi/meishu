@@ -97,14 +97,14 @@ public class SessionFilter implements Filter {
                 return;
             }
         }*/
-        if(path.endsWith(".css") || path.endsWith(".js") || path.endsWith(".png") || path.endsWith(".woff2")){
+        if(path.endsWith(".css") || path.endsWith(".js") || path.endsWith(".png") || path.endsWith(".woff2") || path.endsWith(".map")){
             chain.doFilter(servletRequest, servletResponse);
             return;
         }
 
         // 登陆页面无需过滤
         if(path.contains("/login")||path.contains("/reLogin")) {
-            this.newLig4j.printLog("["+userId+" - "+ username + " - " +power +"] : " + path);
+            this.newLig4j.printLog(path, servletRequest);
             chain.doFilter(servletRequest, servletResponse);
             return;
         }
@@ -113,7 +113,7 @@ public class SessionFilter implements Filter {
             // 跳转到登陆页面
             servletResponse.sendRedirect(servletRequest.getContextPath() + "/login");
         } else {
-            this.newLig4j.printLog("["+userId+" - "+ username + " - " +power +"] : " + path);
+            this.newLig4j.printLog(path, servletRequest);
             String elements = "";
             while (params.hasMoreElements()) {
                 //得到参数名
@@ -128,9 +128,9 @@ public class SessionFilter implements Filter {
                 elements += name + ": " + val + ", ";
             }
             if(elements != ""){
-                this.newLig4j.printLog(elements);
+                this.newLig4j.printLog(elements, servletRequest);
             } else {
-                this.newLig4j.printLog("no_element");
+                this.newLig4j.printLog("no_element", servletRequest);
             }
             // 已经登陆,继续此次请求
             if(power.equals("admin")){

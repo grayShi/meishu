@@ -19,8 +19,8 @@ import java.util.List;
 @RequestMapping(value = "**")
 public class userController extends BaseController {
     @RequestMapping(value="/user",method = RequestMethod.GET)
-    public ModelAndView home(ModelAndView modelAndView){
-        List<User> user = userDao.findAll("from User");
+    public ModelAndView home(ModelAndView modelAndView, HttpServletRequest request){
+        List<User> user = userDao.findAll("from User",request);
         for(User us : user){
             if(us.getSubPlace() != null){
                 char [] sub = us.getSubPlace().toCharArray();
@@ -43,13 +43,13 @@ public class userController extends BaseController {
         return modelAndView;
     }
     @RequestMapping(value="/user-edit",method = RequestMethod.GET)
-    public ModelAndView edit(@RequestParam(value = "id") Long id){
+    public ModelAndView edit(@RequestParam(value = "id") Long id, HttpServletRequest request){
         ModelAndView modelAndView = new ModelAndView();
-        List<User> userList = userDao.findAll("from User where id =" + id);
+        List<User> userList = userDao.findAll("from User where id =" + id,request);
         modelAndView.addObject("userList", userList);
-        List<reportPlace> place=reportPlaceDao.findAll("select distinct place from reportPlace where isDelete = 0");
+        List<reportPlace> place=reportPlaceDao.findAll("select distinct place from reportPlace where isDelete = 0",request);
         modelAndView.addObject("place",place);
-        List<reportPlace> subPlace= reportPlaceDao.findAll("select subPlace from reportPlace where isDelete = 0 and place ='"+userList.get(0).getPlace()+"'order by subPlace");
+        List<reportPlace> subPlace= reportPlaceDao.findAll("select subPlace from reportPlace where isDelete = 0 and place ='"+userList.get(0).getPlace()+"'order by subPlace",request);
         modelAndView.addObject("subPlace",subPlace);
         modelAndView.addObject("id", id);
         modelAndView.setViewName("user-edit");
@@ -63,7 +63,7 @@ public class userController extends BaseController {
                         @RequestParam(value = "subPlace") String subPlace, HttpServletRequest request){
         Long userCount = userDao.getCount("select count (*) from User where username ='"+username+"' and id !="+ id,request);
         if(userCount == 0) {
-            User user = userDao.getId(id).get(0);
+            User user = userDao.getId(id,request).get(0);
             user.setUsername(username);
             if(!password.equals("")){
                 user.setPassword(password);
@@ -83,8 +83,8 @@ public class userController extends BaseController {
         }
     }
     @RequestMapping(value="/user-add",method = RequestMethod.GET)
-    public ModelAndView add(ModelAndView modelAndView){
-        List<reportPlace> place=reportPlaceDao.findAll("select distinct place from reportPlace where isDelete = 0");
+    public ModelAndView add(ModelAndView modelAndView, HttpServletRequest request){
+        List<reportPlace> place=reportPlaceDao.findAll("select distinct place from reportPlace where isDelete = 0",request);
         modelAndView.addObject("place",place);
         modelAndView.setViewName("user-add");
         return modelAndView;
@@ -116,9 +116,9 @@ public class userController extends BaseController {
             return  "is_exist";
     }
     @RequestMapping(value="/changePassword",method = RequestMethod.GET)
-    public ModelAndView changePassword(@RequestParam(value = "id") Long id){
+    public ModelAndView changePassword(@RequestParam(value = "id") Long id, HttpServletRequest request){
         ModelAndView modelAndView = new ModelAndView();
-        List<User> userList = userDao.findAll("from User where id =" + id);
+        List<User> userList = userDao.findAll("from User where id =" + id,request);
         modelAndView.addObject("username", userList.get(0).getUsername());
         modelAndView.addObject("id", id);
         modelAndView.setViewName("changePassword");
@@ -129,7 +129,7 @@ public class userController extends BaseController {
     public String changePassword(@RequestParam(value = "id") Long id,
                         @RequestParam(value = "originPassword") String originPassword,
                                  @RequestParam(value = "newPassword") String newPassword, HttpServletRequest request){
-        User user = userDao.getId(id).get(0);
+        User user = userDao.getId(id,request).get(0);
         if(user.getPassword().equals(originPassword)) {
             user.setPassword(newPassword);
             userDao.update(user,request);

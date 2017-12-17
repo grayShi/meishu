@@ -23,8 +23,8 @@ import java.util.List;
 
 public class ExamTimeController extends BaseController{
     @RequestMapping(value="/examTime",method = RequestMethod.GET)
-    public ModelAndView home(ModelAndView modelAndView){
-        List<examTime> examTime=examTimeDao.findAll("from examTime");
+    public ModelAndView home(ModelAndView modelAndView, HttpServletRequest request){
+        List<examTime> examTime=examTimeDao.findAll("from examTime",request);
         modelAndView.addObject("examTime",examTime);
         String examTimeList = JSONArray.fromObject(examTime).toString();
         modelAndView.addObject("examTimeList",examTimeList);
@@ -32,8 +32,8 @@ public class ExamTimeController extends BaseController{
         return modelAndView;
     }
     @RequestMapping(value="/examTime-add",method = RequestMethod.GET)
-    public ModelAndView examTime_add(ModelAndView modelAndView){
-        List<subject> subject=subjectDao.findAll("from subject");
+    public ModelAndView examTime_add(ModelAndView modelAndView, HttpServletRequest request){
+        List<subject> subject=subjectDao.findAll("from subject",request);
         modelAndView.addObject("subject",subject);
         modelAndView.setViewName("examTime-add");
         return modelAndView;
@@ -44,13 +44,13 @@ public class ExamTimeController extends BaseController{
         Long count = examTimeDao.getCount("select count (*) from examTime where subject ='"+subject+"' and level ="+level,request);
         if(count == 0) {
             examTime exam = new examTime();
-            List<subject> subjectList = subjectDao.findAll("from subject where subject ='"+subject+"'");
+            List<subject> subjectList = subjectDao.findAll("from subject where subject ='"+subject+"'",request);
             if(subjectList.size()!=0) {
                 exam.setSubId(subjectList.get(0).getId().toString());
                 exam.setSubject(subject);
                 exam.setLevel(level);
                 exam.setDuration(duration);
-                List<message> messageList = messageDao.findAll("from message where isDelete = 0 and subject ='"+exam.getSubId()+"￥"+subject+"' and level ="+level);
+                List<message> messageList = messageDao.findAll("from message where isDelete = 0 and subject ='"+exam.getSubId()+"￥"+subject+"' and level ="+level,request);
                 List<message> messages = new ArrayList<message>();
                 for(message message:messageList){
                     message.setExamTime(duration);
@@ -68,20 +68,20 @@ public class ExamTimeController extends BaseController{
     }
     @RequestMapping(value="/examTime-getlevel",method = RequestMethod.POST)
     @ResponseBody
-    public String getlevel(@RequestParam(value = "subject") String subject){
-        List<subject> subjectList = subjectDao.findAll("from subject where subject = '"+subject+"'");
+    public String getlevel(@RequestParam(value = "subject") String subject, HttpServletRequest request){
+        List<subject> subjectList = subjectDao.findAll("from subject where subject = '"+subject+"'",request);
         return JSONArray.fromObject(subjectList).toString();
     }
     @RequestMapping(value="/examTime-edit",method = RequestMethod.GET)
-    public ModelAndView edit(@RequestParam(value = "id") Long id){
+    public ModelAndView edit(@RequestParam(value = "id") Long id, HttpServletRequest request){
         ModelAndView modelAndView = new ModelAndView();
-        List<examTime> examTimeL = examTimeDao.findAll("from examTime where id =" + id);
+        List<examTime> examTimeL = examTimeDao.findAll("from examTime where id =" + id,request);
         modelAndView.addObject("examTimeLi", examTimeL);
         modelAndView.addObject("examTimeL", JSONArray.fromObject(examTimeL).toString());
         modelAndView.addObject("id", id);
-        List<subject> subject=subjectDao.findAll("from subject where subject = '"+examTimeL.get(0).getSubject()+"'");
+        List<subject> subject=subjectDao.findAll("from subject where subject = '"+examTimeL.get(0).getSubject()+"'",request);
         modelAndView.addObject("subject",JSONArray.fromObject(subject).toString());
-        List<subject> subjectL=subjectDao.findAll("from subject");
+        List<subject> subjectL=subjectDao.findAll("from subject",request);
         String subjectList = JSONArray.fromObject(subjectL).toString();
         modelAndView.addObject("subjectList",subjectList);
 
@@ -93,14 +93,14 @@ public class ExamTimeController extends BaseController{
     public String edit1(@RequestParam(value = "id") Long id,@RequestParam(value = "subject") String subject,@RequestParam(value = "level") int level,@RequestParam(value = "duration") String duration, HttpServletRequest request){
 //        Long count = examTimeDao.getCount("select count (*) from examTime where subject ='"+subject+"' and level ="+level);
 //        if(count == 0) {
-            examTime exam = examTimeDao.getId(id).get(0);
-            List<subject> subjectList = subjectDao.findAll("from subject where subject ='"+subject+"'");
+            examTime exam = examTimeDao.getId(id,request).get(0);
+            List<subject> subjectList = subjectDao.findAll("from subject where subject ='"+subject+"'",request);
             if(subjectList.size()!=0) {
                 exam.setSubId(subjectList.get(0).getId().toString());
                 exam.setLevel(level);
                 exam.setSubject(subject);
                 exam.setDuration(duration);
-                List<message> messageList = messageDao.findAll("from message where isDelete = 0 and subject ='"+exam.getSubId()+"￥"+subject+"' and level ="+level);
+                List<message> messageList = messageDao.findAll("from message where isDelete = 0 and subject ='"+exam.getSubId()+"￥"+subject+"' and level ="+level,request);
                 List<message> messages = new ArrayList<message>();
                 for(message message:messageList){
                     message.setExamTime(duration);
@@ -118,8 +118,8 @@ public class ExamTimeController extends BaseController{
     @RequestMapping(value="/examTime-delete",method = RequestMethod.POST)
     @ResponseBody
     public String delete(@RequestParam(value = "id") Long id, HttpServletRequest request){
-        examTime exam = examTimeDao.getId(id).get(0);
-        List<message> messageList = messageDao.findAll("from message where isDelete = 0 and subject ='"+exam.getSubId()+"￥"+exam.getSubject()+"' and level ="+exam.getLevel());
+        examTime exam = examTimeDao.getId(id,request).get(0);
+        List<message> messageList = messageDao.findAll("from message where isDelete = 0 and subject ='"+exam.getSubId()+"￥"+exam.getSubject()+"' and level ="+exam.getLevel(),request);
         List<message> messages = new ArrayList<message>();
         for(message message:messageList){
             message.setExamTime("");

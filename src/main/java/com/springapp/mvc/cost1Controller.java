@@ -136,14 +136,14 @@ public class cost1Controller extends BaseController{
 //        modelAndView.addObject("levelList1",levelList1);
         searchSql search = new searchSql();
         String sql = search.getSession(request);
-        List<message> reportPlaceList = messageDao.findAll("select distinct reportPlace from message where isDelete = 0" +sql);
+        List<message> reportPlaceList = messageDao.findAll("select distinct reportPlace from message where isDelete = 0" +sql,request);
         modelAndView.addObject("reportPlaceList",reportPlaceList);
 //        List<message> examTime = messageDao.findAll("select distinct time from message where isDelete = 0 and time IS NOT NULL order by time");
 //        if (examTime.size() != 0)
 //            if (examTime.get(0) == null && examTime.size() == 1)
 //                examTime = new ArrayList<>();
 //        modelAndView.addObject("examTime", examTime);
-        List<message> endTimeList = messageDao.findAll("select distinct endSignUpTime from message where isDelete = 0 and endSignUpTime IS NOT NULL "+sql+"");
+        List<message> endTimeList = messageDao.findAll("select distinct endSignUpTime from message where isDelete = 0 and endSignUpTime IS NOT NULL "+sql+"",request);
         modelAndView.addObject("endTimeList",endTimeList);
         modelAndView.setViewName("cost1");
         return modelAndView;
@@ -174,7 +174,7 @@ public class cost1Controller extends BaseController{
             sql4 += "subPlace = '" + subPlace + "'";
         }
         sql+=sql2+sql3+sql4+" group by reportPlace,subPlace,level,message.endSignUpTime";
-        List<message> levelList = messageDao.findAll(sql);
+        List<message> levelList = messageDao.findAll(sql,request);
         List levelCount;
         List<cost1> allCostList = new ArrayList<cost1>();
         int totalCount = 0;
@@ -196,7 +196,7 @@ public class cost1Controller extends BaseController{
             }
             x.setSubPlace(sub1);
             x.setLevel(Integer.parseInt(levelCount.get(2).toString()));
-            List<cost> costList = costDao.findAll("from cost where level = " + Integer.parseInt(levelCount.get(2).toString()));
+            List<cost> costList = costDao.findAll("from cost where level = " + Integer.parseInt(levelCount.get(2).toString()),request);
             if(costList.size()!=0){
                 x.setCount(Integer.parseInt(levelCount.get(3).toString()));
                 x.setBaomingfei(costList.get(0).getBaomingfei() * x.getCount());
@@ -290,9 +290,9 @@ public class cost1Controller extends BaseController{
         return JSONArray.fromObject(totalCostList).toString();
     }
     @RequestMapping(value = "/cost1-detail",method = RequestMethod.GET)
-    public ModelAndView home1(@RequestParam(value="subID")String subID) {
+    public ModelAndView home1(@RequestParam(value="subID")String subID, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
-        List<message> levelList = messageDao.findAll("select reportPlace,subPlace,level,count(*) from message where isDelete = 0 and subPlace like '"+subID+"￥%' group by reportPlace,subPlace,level");
+        List<message> levelList = messageDao.findAll("select reportPlace,subPlace,level,count(*) from message where isDelete = 0 and subPlace like '"+subID+"￥%' group by reportPlace,subPlace,level",request);
         List levelCount;
         List<cost1> allCostList = new ArrayList<cost1>();
         int totalCount = 0;
@@ -314,7 +314,7 @@ public class cost1Controller extends BaseController{
             }
             x.setSubPlace(sub1);
             x.setLevel(Integer.parseInt(levelCount.get(2).toString()));
-            List<cost> costList = costDao.findAll("from cost where level = " + Integer.parseInt(levelCount.get(2).toString()));
+            List<cost> costList = costDao.findAll("from cost where level = " + Integer.parseInt(levelCount.get(2).toString()),request);
             if(costList.size()!=0){
                 x.setCount(Integer.parseInt(levelCount.get(3).toString()));
                 x.setBaomingfei(costList.get(0).getBaomingfei() * x.getCount());

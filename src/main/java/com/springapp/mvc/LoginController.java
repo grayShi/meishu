@@ -36,7 +36,7 @@ public class LoginController extends BaseController{
     @ResponseBody
     public String loginCheck(HttpServletRequest request, @RequestParam(value = "username")String username, @RequestParam(value = "password")String password) {
         HttpSession session= request.getSession();
-        List<User> usersList = userDao.findAll("from User where username = '"+username+"'");
+        List<User> usersList = userDao.findAll("from User where username = '"+username+"'",request);
         for(User user : usersList){
             if(user.getUsername().equals(username)){
                 if (password.equals(user.getPassword())) {

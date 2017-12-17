@@ -25,7 +25,7 @@ public class DataController extends BaseController{
     public ModelAndView home(HttpServletRequest request, ModelAndView modelAndView) {
         searchSql search = new searchSql();
         String sql = search.getSession(request);
-        List<String> messageList = messageDao.findAll("select distinct subject from message where isDelete = 0" + sql);
+        List<String> messageList = messageDao.findAll("select distinct subject from message where isDelete = 0" + sql,request);
         List<subject> subjectList = new ArrayList<subject>();
         String sub1;
         String subId;
@@ -48,11 +48,11 @@ public class DataController extends BaseController{
             subjectList.add(Subject);
         }
         modelAndView.addObject("subjectList",subjectList);
-        List<message> levelList = messageDao.findAll("select distinct level from message where isDelete = 0 and level IS NOT NULL "+sql+" order by level");
+        List<message> levelList = messageDao.findAll("select distinct level from message where isDelete = 0 and level IS NOT NULL "+sql+" order by level",request);
         modelAndView.addObject("levelList",levelList);
-        List<message> reportPlace = messageDao.findAll("select distinct reportPlace from message where isDelete = 0 and reportPlace IS NOT NULL"+ sql);
+        List<message> reportPlace = messageDao.findAll("select distinct reportPlace from message where isDelete = 0 and reportPlace IS NOT NULL"+ sql,request);
         modelAndView.addObject("reportPlaceList",reportPlace);
-        List<message> yearList = messageDao.findAll("select distinct time from message where isDelete = 0 and time IS NOT NULL" + sql);
+        List<message> yearList = messageDao.findAll("select distinct time from message where isDelete = 0 and time IS NOT NULL" + sql,request);
         if(yearList.size() == 0)
             modelAndView.addObject("yearList",new ArrayList<message>());
         else {
@@ -66,7 +66,7 @@ public class DataController extends BaseController{
     public String setSubPlace(HttpServletRequest request, @RequestParam(value = "reportPlace")String reportPlace){
         searchSql search = new searchSql();
         String sql = search.getSession(request);
-        List<message> subPlaceList = messageDao.findAll("select distinct subPlace from message where isDelete = 0 and reportPlace = '"+reportPlace+"' "+sql);
+        List<message> subPlaceList = messageDao.findAll("select distinct subPlace from message where isDelete = 0 and reportPlace = '"+reportPlace+"' "+sql,request);
         return JSONArray.fromObject(subPlaceList).toString();
     }
     @RequestMapping(value = "/data-setLevel",method=RequestMethod.POST)
@@ -74,7 +74,7 @@ public class DataController extends BaseController{
     public String setLevel(HttpServletRequest request, @RequestParam(value = "subject")String subject){
         searchSql search = new searchSql();
         String sql = search.getSession(request);
-        List<message> levelList = messageDao.findAll("select distinct level from message where isDelete = 0 and subject = '"+subject+"'"+ sql+ " order by level");
+        List<message> levelList = messageDao.findAll("select distinct level from message where isDelete = 0 and subject = '"+subject+"'"+ sql+ " order by level",request);
         return JSONArray.fromObject(levelList).toString();
     }
     @RequestMapping(value="/data-getLevel",method = RequestMethod.POST)
@@ -114,7 +114,7 @@ public class DataController extends BaseController{
         searchSql search = new searchSql();
         String sql6 = search.getSession(request);
         sql+=sql1+sql2+sql3+sql4+sql5+sql6+" GROUP BY subject,level order by subject";
-        List<message> levelList = messageDao.findAll(sql);
+        List<message> levelList = messageDao.findAll(sql,request);
         List<levelTable> tableList = new ArrayList<levelTable>();
         levelTable list = new levelTable();
         List x;
@@ -205,7 +205,7 @@ public class DataController extends BaseController{
         searchSql search = new searchSql();
         String sql6 = search.getSession(request);
         sql+=sql1+sql2+sql3+sql4+sql5+sql6+" GROUP BY subject order by subject";
-        List<message> subjectList = messageDao.findAll(sql);
+        List<message> subjectList = messageDao.findAll(sql,request);
         List<levelTable> tableList = new ArrayList<levelTable>();
         List x;
         for(int i = 0; i < subjectList.size(); i++) {
@@ -263,7 +263,7 @@ public class DataController extends BaseController{
         searchSql search = new searchSql();
         String sql6 = search.getSession(request);
         sql+=sql1+sql2+sql3+sql4+sql5+sql6+" GROUP BY sex order by subject";
-        List<message> subjectList = messageDao.findAll(sql);
+        List<message> subjectList = messageDao.findAll(sql,request);
         List<levelTable> tableList = new ArrayList<levelTable>();
         List x;
         for(int i = 0; i < subjectList.size(); i++) {
@@ -312,7 +312,7 @@ public class DataController extends BaseController{
         searchSql search = new searchSql();
         String sql6 = search.getSession(request);
         sql += sql1 + sql2 + sql3 + sql4 + sql5+sql6 + " GROUP BY MONTH(time) order by MONTH(time)";
-        List<message> yearList = messageDao.findAll(sql);
+        List<message> yearList = messageDao.findAll(sql,request);
         List<levelTable> tableList = new ArrayList<levelTable>();
         List x;
         for(int i = 0; i < yearList.size(); i++) {

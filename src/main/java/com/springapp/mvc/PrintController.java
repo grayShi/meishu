@@ -24,7 +24,7 @@ public class PrintController extends BaseController {
     public ModelAndView home(HttpServletRequest request, ModelAndView modelAndView) {
         searchSql search = new searchSql();
         String sql = search.getSession(request);
-        List<String> messageList = messageDao.findAll("select distinct subject from message where isDelete = 0 " +sql);
+        List<String> messageList = messageDao.findAll("select distinct subject from message where isDelete = 0 " +sql,request);
         List<subject> subjectList = new ArrayList<subject>();
         String sub1;
         String subId;
@@ -47,18 +47,18 @@ public class PrintController extends BaseController {
             subjectList.add(Subject);
         }
         modelAndView.addObject("subjectList", subjectList);
-        List<message> levelList = messageDao.findAll("select distinct level from message where isDelete = 0 "+sql+" order by level");
+        List<message> levelList = messageDao.findAll("select distinct level from message where isDelete = 0 "+sql+" order by level",request);
         if (levelList.size() != 0) {
             if (levelList.get(0) == null && levelList.size() == 1)
                 levelList = new ArrayList<>();
         }
         modelAndView.addObject("levelList", levelList);
-        List<message> reportPlace = messageDao.findAll("select distinct reportPlace from message where isDelete = 0 " +sql);
+        List<message> reportPlace = messageDao.findAll("select distinct reportPlace from message where isDelete = 0 " +sql,request);
         if (reportPlace.size() != 0)
             if (reportPlace.get(0) == null && reportPlace.size() == 1)
                 reportPlace = new ArrayList<>();
         modelAndView.addObject("reportPlaceList", reportPlace);
-        List<message> examTime = messageDao.findAll("select distinct time from message where isDelete = 0 and time IS NOT NULL "+sql+" order by time");
+        List<message> examTime = messageDao.findAll("select distinct time from message where isDelete = 0 and time IS NOT NULL "+sql+" order by time",request);
         if (examTime.size() != 0)
             if (examTime.get(0) == null && examTime.size() == 1)
                 examTime = new ArrayList<>();
@@ -104,7 +104,7 @@ public class PrintController extends BaseController {
             sql5 += "time = '" + examTime + "'";
         }
         sql += sql1 + sql2 + sql3 + sql4 + sql5 + sql6;
-        List<message> list = messageDao.findAll(sql);
+        List<message> list = messageDao.findAll(sql,request);
         return JSONArray.fromObject(list).toString();
 //        ModelAndView modelAndView = new ModelAndView();
 //        modelAndView.addObject("levelList",JSONArray.fromObject(levelList).toString());
@@ -148,7 +148,7 @@ public class PrintController extends BaseController {
             sql5 += "time = '" + examTime + "'";
         }
         sql += sql1 + sql2 + sql3 + sql4 + sql5 + sql6;
-        List<message> list = messageDao.findAll(sql);
+        List<message> list = messageDao.findAll(sql,request);
         String Subject = "";
         char[] sub;
         for (message x : list) {

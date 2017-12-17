@@ -3,6 +3,7 @@ package com.springapp.dao;
 import com.springapp.entity.subject;
 import org.springframework.stereotype.Repository;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  */
 @Repository
 public class SubjectDao extends BaseDao {
-    public List<subject> getId(Long id){
-        return this.findAll("from subject where id="+id);
+    public List<subject> getId(Long id, HttpServletRequest request){
+        return this.findAll("from subject where id="+id,request);
     }
 }

@@ -25,7 +25,7 @@ public class forPersonController extends BaseController{
     public ModelAndView home(HttpServletRequest request, ModelAndView modelAndView) {
         searchSql search = new searchSql();
         String sql = search.getSession(request);
-        List<message> message = messageDao.findAll("from message where isDelete = 0 "+ sql);
+        List<message> message = messageDao.findAll("from message where isDelete = 0 "+ sql,request);
         modelAndView.addObject("message",message);
         HttpSession session= request.getSession();
         String place = (String) session.getAttribute("place");
@@ -48,9 +48,9 @@ public class forPersonController extends BaseController{
             sql1 += "and examPlace.reportPlace = '"+place+"' and examPlace.subPlace = '"+ SUBPLACE +"'";
         }
         List<time> timeList = timeDao.findAll("select time from time as time,examPlace as examPlace where " +
-                "time.place = examPlace.place and time.classPlace = examPlace.classPlace "+ sql1);
+                "time.place = examPlace.place and time.classPlace = examPlace.classPlace "+ sql1,request);
         modelAndView.addObject("timeList",timeList);
-        List<examPlace> examPlaceList = examPlaceDao.findAll("from examPlace where 1 = 1 " + sql);
+        List<examPlace> examPlaceList = examPlaceDao.findAll("from examPlace where 1 = 1 " + sql,request);
         modelAndView.addObject("examPlaceList",examPlaceList);
         String[]nameBirth = new String[message.size()];
         for(int i = 0;i<message.size();i++){
@@ -73,7 +73,7 @@ public class forPersonController extends BaseController{
                 sql +=" or ";
         }
         sql+=")";
-        List<message> messageList = messageDao.findAll("from message where isDelete = 0 "+sql);
+        List<message> messageList = messageDao.findAll("from message where isDelete = 0 "+sql,request);
         for(message message:messageList){
             message.setExamPlace(examPlace);
             message.setClassPlace(classPlace);
@@ -106,7 +106,7 @@ public class forPersonController extends BaseController{
             sql1 += "and examPlace.reportPlace = '"+place+"' and examPlace.subPlace = '"+ SUBPLACE +"'";
         }
         List<time> timeList = timeDao.findAll("select time from time as time,examPlace as examPlace where time.startTime = '"+time+"'" +
-                "and time.place = examPlace.place and time.classPlace = examPlace.classPlace "+ sql1);
+                "and time.place = examPlace.place and time.classPlace = examPlace.classPlace "+ sql1,request);
         return JSONArray.fromObject(timeList).toString();
     }
 }

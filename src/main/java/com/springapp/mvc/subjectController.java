@@ -20,8 +20,8 @@ import java.util.List;
 
 public class subjectController extends BaseController{
     @RequestMapping(value="/subject",method = RequestMethod.GET)
-    public ModelAndView home(ModelAndView modelAndView){
-        List<subject> subject=subjectDao.findAll("from subject");
+    public ModelAndView home(ModelAndView modelAndView, HttpServletRequest request){
+        List<subject> subject=subjectDao.findAll("from subject",request);
         modelAndView.addObject("subject",subject);
         String subjectList = JSONArray.fromObject(subject).toString();
         modelAndView.addObject("subjectList",subjectList);
@@ -29,10 +29,10 @@ public class subjectController extends BaseController{
         return modelAndView;
     }
     @RequestMapping(value="/subject-edit",method = RequestMethod.GET)
-    public ModelAndView edit(@RequestParam(value = "id") Long id){
+    public ModelAndView edit(@RequestParam(value = "id") Long id, HttpServletRequest request){
 
             ModelAndView modelAndView = new ModelAndView();
-            List<subject> subjectList = subjectDao.findAll("from subject where id =" + id);
+            List<subject> subjectList = subjectDao.findAll("from subject where id =" + id,request);
             modelAndView.addObject("subjectEdit", subjectList);
             modelAndView.addObject("id", id);
             modelAndView.setViewName("subject-edit");
@@ -43,7 +43,7 @@ public class subjectController extends BaseController{
     public String edit1(@RequestParam(value = "id") Long id,@RequestParam(value = "subject") String subject,@RequestParam(value = "level") int level, HttpServletRequest request){
         Long count = subjectDao.getCount("select count (*) from subject where subject ='"+subject+"' and id !="+id,request);
         if(count == 0) {
-            subject sub = subjectDao.getId(id).get(0);
+            subject sub = subjectDao.getId(id,request).get(0);
             sub.setLevel(level);
             sub.setSubject(subject);
             subjectDao.update(sub,request);

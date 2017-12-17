@@ -46,7 +46,7 @@ public class examinationController extends BaseController {
             sql += "and examPlace.reportPlace = '"+place+"' and examPlace.subPlace = '"+ SUBPLACE +"'";
         }
         List<String> timeList = timeDao.findAll("select distinct time.startTime from time as time,examPlace as examPlace " +
-                "where time.place = examPlace.place and time.classPlace = examPlace.classPlace "+ sql);
+                "where time.place = examPlace.place and time.classPlace = examPlace.classPlace "+ sql,request);
         modelAndView.addObject("timeList",timeList);
         modelAndView.setViewName("examination");
         return modelAndView;
@@ -57,13 +57,13 @@ public class examinationController extends BaseController {
         searchSql search = new searchSql();
         String sql1 = search.getSession(request);
         String sql="select distinct reportPlace,subPlace from message where isDelete = 0 and reportPlace IS NOT NULL and subPlace IS NOT NULL " + sql1;
-        List<String> reportList = messageDao.findAll(sql);
+        List<String> reportList = messageDao.findAll(sql,request);
         return JSONArray.fromObject(reportList).toString();
     }
     @RequestMapping(value="/examination-searchSubject",method = RequestMethod.POST)
     @ResponseBody
-    public String searchPlace(@RequestParam(value = "reportPlace") String reportPlace,@RequestParam(value = "subPlace") String subPlace){
-        List<String> placeList = messageDao.findAll("select distinct subject,level from message where isDelete = 0 and reportPlace ='"+reportPlace+"'and subPlace = '"+subPlace+"'");
+    public String searchPlace(@RequestParam(value = "reportPlace") String reportPlace,@RequestParam(value = "subPlace") String subPlace, HttpServletRequest request){
+        List<String> placeList = messageDao.findAll("select distinct subject,level from message where isDelete = 0 and reportPlace ='"+reportPlace+"'and subPlace = '"+subPlace+"'",request);
         return JSONArray.fromObject(placeList).toString();
     }
     @RequestMapping(value="/examination-examPlace",method = RequestMethod.POST)
@@ -80,7 +80,7 @@ public class examinationController extends BaseController {
             sql += "and examPlace.reportPlace = '"+place+"' and examPlace.subPlace like '%"+ subPlace +"'";
         }
         List<time> timeList = timeDao.findAll("select time from time as time,examPlace as examPlace where time.startTime = '"+time+"'" +
-                "and time.place = examPlace.place and time.classPlace = examPlace.classPlace "+ sql);
+                "and time.place = examPlace.place and time.classPlace = examPlace.classPlace "+ sql,request);
         return JSONArray.fromObject(timeList).toString();
     }
     @RequestMapping(value="/examination-getPlaceCount",method = RequestMethod.POST)
@@ -116,7 +116,7 @@ public class examinationController extends BaseController {
             sql+="or (subject ='"+subject[i]+"'and level ="+level[i]+")";
         }
         sql+=")";
-        List<message> list = messageDao.findAll("from message where isDelete = 0 and examPlace IS NULL and classPlace IS NULL and reportPlace='"+reportPlace+"' and subPlace ='"+subPlace+"' "+sql+"order by cardNumber");
+        List<message> list = messageDao.findAll("from message where isDelete = 0 and examPlace IS NULL and classPlace IS NULL and reportPlace='"+reportPlace+"' and subPlace ='"+subPlace+"' "+sql+"order by cardNumber",request);
         int count=0;
         List<message> changeList = new ArrayList<message>();
             for(int x=0;x<otherCount.length;x++) {
@@ -147,7 +147,7 @@ public class examinationController extends BaseController {
             sql+="or (reportPlace ='"+reportPlace[i]+"'and subPlace ='"+subPlace[i]+"')";
         }
         sql+=")";
-        List<message> list = messageDao.findAll("from message where isDelete = 0 and examPlace IS NULL and classPlace IS NULL "+sql+"order by cardNumber");
+        List<message> list = messageDao.findAll("from message where isDelete = 0 and examPlace IS NULL and classPlace IS NULL "+sql+"order by cardNumber",request);
         int count=0;
         List<message> changeList = new ArrayList<message>();
         for(int x=0;x<otherCount.length;x++) {
@@ -170,21 +170,21 @@ public class examinationController extends BaseController {
     }
     @RequestMapping(value="/examination-list",method = RequestMethod.POST)
     @ResponseBody
-    public String list(){
-        List<message> list=messageDao.findAll("from message where isDelete = 0 and examPlace IS NOT NULL and classPlace IS NOT NULL");
+    public String list(HttpServletRequest request){
+        List<message> list=messageDao.findAll("from message where isDelete = 0 and examPlace IS NOT NULL and classPlace IS NOT NULL",request);
         return JSONArray.fromObject(list).toString();
     }
     @RequestMapping(value="/examination-getConfigExamList",method = RequestMethod.POST)
     @ResponseBody
-    public String getConfigExamList(){
-        List<message> list=messageDao.findAll("select DISTINCT(examPlace),classPlace from message where isDelete = 0 and examPlace IS NOT NULL and classPlace IS NOT NULL GROUP BY examPlace,classPlace");
+    public String getConfigExamList(HttpServletRequest request){
+        List<message> list=messageDao.findAll("select DISTINCT(examPlace),classPlace from message where isDelete = 0 and examPlace IS NOT NULL and classPlace IS NOT NULL GROUP BY examPlace,classPlace",request);
         return JSONArray.fromObject(list).toString();
     }
 
     @RequestMapping(value="/examination-getConfigReportList",method = RequestMethod.POST)
     @ResponseBody
-    public String getConfigReportList(){
-        List<message> list=messageDao.findAll("select DISTINCT(reportPlace),subPlace from message where isDelete = 0 GROUP BY reportPlace,subPlace");
+    public String getConfigReportList(HttpServletRequest request){
+        List<message> list=messageDao.findAll("select DISTINCT(reportPlace),subPlace from message where isDelete = 0 GROUP BY reportPlace,subPlace",request);
         return JSONArray.fromObject(list).toString();
     }
 
@@ -198,7 +198,7 @@ public class examinationController extends BaseController {
         List<message> messageList = new ArrayList<message>();
         String sql="",sql1="",sql2="",sql3="",sql4="";
         if(isAllCancel){
-            messageList=messageDao.findAll("from message where isDelete = 0 and examPlace IS NOT NULL and classPlace IS NOT NULL");
+            messageList=messageDao.findAll("from message where isDelete = 0 and examPlace IS NOT NULL and classPlace IS NOT NULL",request);
         }else{
             if(!reportPlace.equals(""))
                 sql1 +="reportPlace ='"+reportPlace +"'";
@@ -216,7 +216,7 @@ public class examinationController extends BaseController {
                 sql+=" and "+sql3;
             if(!sql4.equals(""))
                 sql+=" and "+sql4;
-            messageList=messageDao.findAll("from message where isDelete = 0 " +sql);
+            messageList=messageDao.findAll("from message where isDelete = 0 " +sql,request);
         }
         for(message message:messageList){
             message.setClassPlace(null);

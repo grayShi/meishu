@@ -6,12 +6,16 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 public class log4j {
-    public void printLog(String sql){
+    public void printLog(String sql,HttpServletRequest request){
         Logger logger = Logger.getRootLogger();
-//        HttpSession session= request.getSession();
-//        String userId = (String) session.getAttribute("userId");
-//        String username = (String) session.getAttribute("username");
-//        String output = "("+username +" - "+ userId +")" + sql;
-        logger.info(sql);
+
+        logger.info(getUserFromRequest(request) + sql);
+    }
+    public String getUserFromRequest(HttpServletRequest request){
+        HttpSession session= request.getSession();
+        String userId = (String) session.getAttribute("userId");
+        String username = (String) session.getAttribute("username");
+        String power = (String) session.getAttribute("power");
+        return "["+userId+" - "+ username + " - " +power +"] : ";
     }
 }

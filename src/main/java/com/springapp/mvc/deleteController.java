@@ -36,18 +36,18 @@ public class deleteController extends BaseController{
 //        List<message> message = messageDao.findAll("from message where isDelete = 0 "+sql);
 //        String messageList= JSONArray.fromObject(message).toString();
 //        modelAndView.addObject("messageList",messageList);
-        List<message> messageReportList=messageDao.findAll("select DISTINCT(reportPlace),subPlace from message where isDelete = 0 "+sql+" GROUP BY reportPlace,subPlace ");
+        List<message> messageReportList=messageDao.findAll("select DISTINCT(reportPlace),subPlace from message where isDelete = 0 "+sql+" GROUP BY reportPlace,subPlace ",request);
         String messageReport= JSONArray.fromObject(messageReportList).toString();
         modelAndView.addObject("messageReport",messageReport);
-        List<message> timeList = messageDao.findAll("select distinct time from message where isDelete = 0 and time IS NOT NULL "+sql+"");
+        List<message> timeList = messageDao.findAll("select distinct time from message where isDelete = 0 and time IS NOT NULL "+sql+"",request);
         modelAndView.addObject("timeList",timeList);
-        List<message> endTimeList = messageDao.findAll("select distinct endSignUpTime from message where isDelete = 0 and endSignUpTime IS NOT NULL "+sql+"");
+        List<message> endTimeList = messageDao.findAll("select distinct endSignUpTime from message where isDelete = 0 and endSignUpTime IS NOT NULL "+sql+"",request);
         modelAndView.addObject("endTimeList",endTimeList);
-        List<message> levelList = messageDao.findAll("select distinct level from message where isDelete = 0 "+sql+" order by level ");
+        List<message> levelList = messageDao.findAll("select distinct level from message where isDelete = 0 "+sql+" order by level ",request);
         modelAndView.addObject("levelList",levelList);
-        List<subject> subjectList = subjectDao.findAll("from subject");
+        List<subject> subjectList = subjectDao.findAll("from subject",request);
         modelAndView.addObject("subjectList",subjectList);
-        List<examPlace> examPlaceList = examPlaceDao.findAll("from examPlace where 1 = 1"+ sql);
+        List<examPlace> examPlaceList = examPlaceDao.findAll("from examPlace where 1 = 1"+ sql,request);
         modelAndView.addObject("examPlaceList",examPlaceList);
         modelAndView.setViewName("delete");
         return modelAndView;
@@ -55,7 +55,7 @@ public class deleteController extends BaseController{
     @RequestMapping(value="/delete-start",method = RequestMethod.POST)
     @ResponseBody
     public String delete(@RequestParam(value = "id") Long id, HttpServletRequest request){
-        List<message> list = messageDao.getId(id);
+        List<message> list = messageDao.getId(id,request);
         list.get(0).setIsDelete(1);
         messageDao.update(list,request);
         return "success";
@@ -63,7 +63,7 @@ public class deleteController extends BaseController{
     @RequestMapping(value="/delete-rollback",method = RequestMethod.POST)
     @ResponseBody
     public String rollback(@RequestParam(value = "id") Long id, HttpServletRequest request){
-        List<message> list = messageDao.findAll("from message where isDelete = 1 and id="+id);
+        List<message> list = messageDao.findAll("from message where isDelete = 1 and id="+id,request);
         list.get(0).setIsDelete(0);
         messageDao.update(list,request);
         return "success";
@@ -72,7 +72,7 @@ public class deleteController extends BaseController{
     @ResponseBody
     public String deleteTotal(@RequestParam(value = "deleteArray") Long[] deleteArray, HttpServletRequest request){
         for(int i = 0;i<deleteArray.length;i++){
-            List<message> list = messageDao.getId(deleteArray[i]);
+            List<message> list = messageDao.getId(deleteArray[i],request);
             list.get(0).setIsDelete(1);
             messageDao.update(list,request);
         }
@@ -82,7 +82,7 @@ public class deleteController extends BaseController{
     @ResponseBody
     public String editMessage(@RequestParam(value = "id") Long id,@RequestParam(value = "editName") String editName,
                                     @RequestParam(value = "editSex") String editSex,@RequestParam(value = "editBirth") String editBirth, HttpServletRequest request){
-        List<message> list = messageDao.getId(id);
+        List<message> list = messageDao.getId(id,request);
         list.get(0).setName(editName);
         list.get(0).setSex(editSex);
         list.get(0).setBirth(editBirth);
@@ -126,7 +126,7 @@ public class deleteController extends BaseController{
             str+=" and endSignUpTime = '"+endSignUpTime+"'";
         searchSql search = new searchSql();
         String sql = search.getSession(request);
-        List<message> messageList = messageDao.findAll(str + sql);
+        List<message> messageList = messageDao.findAll(str + sql,request);
         return JSONArray.fromObject(messageList).toString();
     }
     @RequestMapping(value="/delete-getExcel",method = RequestMethod.GET)

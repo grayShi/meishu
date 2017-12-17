@@ -3,6 +3,7 @@ package com.springapp.dao;
 import com.springapp.entity.examPlace;
 import org.springframework.stereotype.Repository;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  */
 @Repository
 public class ExamPlaceDao extends BaseDao {
-    public List<examPlace> getId(Long id){
-        return this.findAll("from examPlace where id="+id);
+    public List<examPlace> getId(Long id, HttpServletRequest request){
+        return this.findAll("from examPlace where id="+id,request);
     }
 }

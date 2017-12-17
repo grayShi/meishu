@@ -3,6 +3,7 @@ package com.springapp.dao;
 import com.springapp.entity.cost;
 import org.springframework.stereotype.Repository;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -10,7 +11,7 @@ import java.util.List;
  */
 @Repository
 public class CostDao extends BaseDao {
-        public List<cost> getId(Long id){
-            return this.findAll("from cost where id="+id);
+        public List<cost> getId(Long id, HttpServletRequest request){
+            return this.findAll("from cost where id="+id,request);
         }
 }

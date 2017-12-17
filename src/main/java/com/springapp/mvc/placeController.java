@@ -22,10 +22,10 @@ import java.util.Map;
 @Controller
 public class placeController extends  BaseController{
     @RequestMapping(value="/place",method = RequestMethod.GET)
-    public ModelAndView home(ModelAndView modelAndView){
-        List<reportPlace> subplace=reportPlaceDao.findAll("from reportPlace where isDelete = 0 order by placeId,subPlaceId");
+    public ModelAndView home(ModelAndView modelAndView, HttpServletRequest request){
+        List<reportPlace> subplace=reportPlaceDao.findAll("from reportPlace where isDelete = 0 order by placeId,subPlaceId",request);
         modelAndView.addObject("subplace",subplace);
-        List<Place> place=placeDao.findAll("from Place");
+        List<Place> place=placeDao.findAll("from Place",request);
         modelAndView.addObject("place",place);
         String placeList = JSONArray.fromObject(subplace).toString();
         modelAndView.addObject("placeList",placeList);
@@ -33,9 +33,9 @@ public class placeController extends  BaseController{
         return modelAndView;
     }
     @RequestMapping(value="/place-edit",method = RequestMethod.GET)
-    public ModelAndView edit(@RequestParam(value = "id") Long id){
+    public ModelAndView edit(@RequestParam(value = "id") Long id, HttpServletRequest request){
         ModelAndView modelAndView = new ModelAndView();
-        List<reportPlace> placeEdit=reportPlaceDao.findAll("from reportPlace where isDelete = 0 and id =" + id);
+        List<reportPlace> placeEdit=reportPlaceDao.findAll("from reportPlace where isDelete = 0 and id =" + id,request);
         modelAndView.addObject("placeEdit", placeEdit);
         modelAndView.addObject("id", id);
         modelAndView.setViewName("place-edit");
@@ -47,7 +47,7 @@ public class placeController extends  BaseController{
         Long reportPlaceCount = reportPlaceDao.getCount("select count(*) from reportPlace where isDelete = 0 and place = '"+place.trim()+"' and subPlace = '"+subPlace.trim()+"' and id !="+id,request);
         if(reportPlaceCount != 0)
             return "notOne";
-        reportPlace rep = reportPlaceDao.getId(id).get(0);
+        reportPlace rep = reportPlaceDao.getId(id,request).get(0);
         String originalPlace = rep.getPlace();
         String originalSubPlaceNum = "";
         String currentSubPlaceNum = "";
@@ -58,11 +58,11 @@ public class placeController extends  BaseController{
             originalSubPlaceNum += '0';
         originalSubPlaceNum += rep.getSubPlaceId();
         String originalSubPlace = originalSubPlaceNum + '￥'+ rep.getSubPlace();
-        List<Place> placeList = placeDao.findAll("from Place where place= '"+place.trim()+"'");
+        List<Place> placeList = placeDao.findAll("from Place where place= '"+place.trim()+"'",request);
         if(placeList.size() == 0) {
             long placeCount = reportPlaceDao.getCount("select count(*) from reportPlace where placeId = "+rep.getPlaceId() +"and subPlaceId !="+rep.getSubPlaceId(),request);
             if(placeCount == 0){
-                List<Place> Place = placeDao.findAll("from Place where place= '"+originalPlace+"'");
+                List<Place> Place = placeDao.findAll("from Place where place= '"+originalPlace+"'",request);
                 Place.get(0).setPlace(place.trim());
                 placeDao.update(Place.get(0),request);
                 rep.setSubPlaceId(Long.parseLong("1"));
@@ -70,12 +70,12 @@ public class placeController extends  BaseController{
                 Place pla = new Place();
                 pla.setPlace(place.trim());
                 placeDao.save(pla,request);
-                rep.setPlaceId(placeDao.setId(place.trim()));
+                rep.setPlaceId(placeDao.setId(place.trim(),request));
                 rep.setSubPlaceId(Long.parseLong("1"));
             }
         }else{
             if(!rep.getPlace().equals(place.trim())) {
-                List<Map> maxList = reportPlaceDao.findAll("select new Map(max(subPlaceId) as subPlaceId) from reportPlace where placeId = " + placeDao.setId(place.trim()));
+                List<Map> maxList = reportPlaceDao.findAll("select new Map(max(subPlaceId) as subPlaceId) from reportPlace where placeId = " + placeDao.setId(place.trim(),request),request);
                 rep.setSubPlaceId(Long.parseLong(maxList.get(0).get("subPlaceId").toString()) + 1);
             }
             rep.setPlaceId(placeList.get(0).getId());
@@ -92,7 +92,7 @@ public class placeController extends  BaseController{
         currentSubPlaceNum += rep.getSubPlaceId();
         String currentPlace = rep.getPlace();
         String currentsubPlace = currentSubPlaceNum + '￥'+ rep.getSubPlace();
-        List<message> messageList = messageDao.findAll("from message where isDelete = 0 and reportPlace = '"+originalPlace +"' and subPlace = '"+originalSubPlace+"'");
+        List<message> messageList = messageDao.findAll("from message where isDelete = 0 and reportPlace = '"+originalPlace +"' and subPlace = '"+originalSubPlace+"'",request);
         for(message changeList : messageList){
             changeList.setReportPlace(currentPlace);
             changeList.setSubPlace(currentsubPlace);
@@ -106,7 +106,7 @@ public class placeController extends  BaseController{
     @RequestMapping(value="/place-delete",method = RequestMethod.POST)
     @ResponseBody
     public String delete(@RequestParam(value = "id") Long id, HttpServletRequest request){
-        List<reportPlace>reportPlaces = reportPlaceDao.getId(id);
+        List<reportPlace>reportPlaces = reportPlaceDao.getId(id,request);
         reportPlace reportPlace = reportPlaces.get(0);
         reportPlace.setIsDelete(1);
         reportPlaceDao.update(reportPlace,request);
@@ -131,14 +131,14 @@ public class placeController extends  BaseController{
         }
         int isCount = 0;  ////重复数据
         for(int i=0;i<subPlace.length;i++) {
-            Long placeId = placeDao.setId(place.trim());
-            List<reportPlace> reportPlaceList = reportPlaceDao.findAll("from reportPlace where isDelete = 0 and subPlace = '"+subPlace[i].trim()+"' and placeId = " + placeId);
+            Long placeId = placeDao.setId(place.trim(),request);
+            List<reportPlace> reportPlaceList = reportPlaceDao.findAll("from reportPlace where isDelete = 0 and subPlace = '"+subPlace[i].trim()+"' and placeId = " + placeId,request);
             if(reportPlaceList.size() == 0) {
                 Long count = reportPlaceDao.getCount("select count(*) from reportPlace where placeId = " + placeId,request);
                 ///////搜索全表
                 reportPlace rep = new reportPlace();
                 if(count >0){
-                    List<Map>maxList = reportPlaceDao.findAll("select new Map(max(subPlaceId) as subPlaceId) from reportPlace where placeId = " + placeId);
+                    List<Map>maxList = reportPlaceDao.findAll("select new Map(max(subPlaceId) as subPlaceId) from reportPlace where placeId = " + placeId,request);
                     rep.setSubPlaceId(Long.parseLong(maxList.get(0).get("subPlaceId").toString())+1);
                 }else
                     rep.setSubPlaceId(Long.parseLong("1"));
@@ -146,7 +146,7 @@ public class placeController extends  BaseController{
                 rep.setIsDelete(0);
                 rep.setSubPlace(subPlace[i].trim());
                 rep.setRemark(remark);
-                rep.setPlaceId(placeDao.setId(place.trim()));
+                rep.setPlaceId(placeDao.setId(place.trim(),request));
                 reportPlaceDao.save(rep,request);
             }else {
                 isCount++;

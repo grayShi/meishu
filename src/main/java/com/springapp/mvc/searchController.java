@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import javax.servlet.http.HttpServletRequest;
 import java.util.List;
 
 /**
@@ -18,16 +19,16 @@ import java.util.List;
 @Controller
 public class searchController extends BaseController{
     @RequestMapping(value = "/search",method = RequestMethod.GET)
-    public ModelAndView home(ModelAndView modelAndView) {
-        List<subject> subjectList = subjectDao.findAll("from subject");
+    public ModelAndView home(ModelAndView modelAndView, HttpServletRequest request) {
+        List<subject> subjectList = subjectDao.findAll("from subject",request);
         modelAndView.addObject("subjectList",subjectList);
         modelAndView.setViewName("search");
         return modelAndView;
     }
     @RequestMapping(value="/search-getSearch",method = RequestMethod.POST)
     @ResponseBody
-    public String getSearch(@RequestParam(value = "subject")String subject){
-        List<message> messageList = messageDao.findAll("from message where isDelete = 0 and subject ='"+subject+"'");
+    public String getSearch(@RequestParam(value = "subject")String subject, HttpServletRequest request){
+        List<message> messageList = messageDao.findAll("from message where isDelete = 0 and subject ='"+subject+"'",request);
         return JSONArray.fromObject(messageList).toString();
     }
 }

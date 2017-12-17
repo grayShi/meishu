@@ -116,7 +116,7 @@
 <script src="js/checkBox.js"></script>
 <script>
     $(function () {
-        initTableCheckbox('table','checkAll');
+        initTableCheckbox('table','checkAll',true);
         var $tbr = $('#table tbody tr');
         $tbr.find('input').click(function(event){
             var arrayList = getCheck();

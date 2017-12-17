@@ -23,12 +23,12 @@ import java.util.List;
 @Controller
 public class MessageController extends BaseController{
     @RequestMapping(value = "/message", method = RequestMethod.GET)
-    public ModelAndView home(ModelAndView modelAndView) {
-        List<reportPlace> place=reportPlaceDao.findAll("select distinct place from reportPlace where isDelete = 0");
+    public ModelAndView home(ModelAndView modelAndView, HttpServletRequest request) {
+        List<reportPlace> place=reportPlaceDao.findAll("select distinct place from reportPlace where isDelete = 0",request);
         String placeList=JSONArray.fromObject(place).toString();
         modelAndView.addObject("placeList",placeList);
         modelAndView.addObject("place",place);
-        List<subject> subject=subjectDao.findAll("from subject");
+        List<subject> subject=subjectDao.findAll("from subject",request);
         String subjectList=JSONArray.fromObject(subject).toString();
         modelAndView.addObject("subject",subject);
         modelAndView.addObject("subjectList",subjectList);
@@ -37,14 +37,14 @@ public class MessageController extends BaseController{
     }
     @RequestMapping(value="/message-getLevel",method = RequestMethod.POST)
     @ResponseBody
-    public String getLevel(@RequestParam(value = "subject") String subject){
-        List<subject> subjectList= subjectDao.findAll("from subject where subject ='"+subject+"'order by level");
+    public String getLevel(@RequestParam(value = "subject") String subject, HttpServletRequest request){
+        List<subject> subjectList= subjectDao.findAll("from subject where subject ='"+subject+"'order by level",request);
         return JSONArray.fromObject(subjectList).toString();
     }
     @RequestMapping(value="/message-getSubPlace",method = RequestMethod.POST)
     @ResponseBody
     public String getSubPlace(HttpServletRequest request, @RequestParam(value = "place") String place){
-        List<reportPlace> subPlaceList= reportPlaceDao.findAll("from reportPlace where isDelete = 0 and place ='"+place+"' order by subPlace");
+        List<reportPlace> subPlaceList= reportPlaceDao.findAll("from reportPlace where isDelete = 0 and place ='"+place+"' order by subPlace",request);
         return JSONArray.fromObject(subPlaceList).toString();
     }
     @RequestMapping(value="/message-saveMessage",method = RequestMethod.POST)
@@ -76,12 +76,12 @@ public class MessageController extends BaseController{
         Message.setIsDelete(0);
         Date nowDate = new Date();
         String Id=(nowDate.getYear()+1900+"").substring(2);
-        String placeId=""+placeDao.setId(reportPlace);
+        String placeId=""+placeDao.setId(reportPlace,request);
         String subPlaceId="";
         String subjectId="";
         String Subject="";
         String subPlaceIdCount = "";
-        if(placeDao.setId(reportPlace)<10){
+        if(placeDao.setId(reportPlace,request)<10){
             Id+='0';
             subPlaceIdCount+='0';
         }
@@ -126,7 +126,7 @@ public class MessageController extends BaseController{
             Id+='0';
         Id+=countId;
         Message.setCardNumber(Id);
-        List<examTime> examTimeList = examTimeDao.findAll("from examTime where subject ='"+Subject+"' and level ="+level);
+        List<examTime> examTimeList = examTimeDao.findAll("from examTime where subject ='"+Subject+"' and level ="+level,request);
         if(examTimeList.size()!=0) {
             Message.setExamTime(examTimeList.get(0).getDuration());
         }
@@ -137,8 +137,8 @@ public class MessageController extends BaseController{
     @RequestMapping(value="/message-getSearch",method = RequestMethod.POST)
     @ResponseBody
     public String getSearch(@RequestParam(value = "name") String name, @RequestParam(value = "sex") String sex,
-                            @RequestParam(value = "birth") String birth){
-        List<message> messageList= messageDao.findAll("from message where isDelete = 0 and name ='"+name+"'and sex='"+sex+"'and birth='"+birth+"'");
+                            @RequestParam(value = "birth") String birth, HttpServletRequest request){
+        List<message> messageList= messageDao.findAll("from message where isDelete = 0 and name ='"+name+"'and sex='"+sex+"'and birth='"+birth+"'",request);
         return JSONArray.fromObject(messageList).toString();
     }
 //    @RequestMapping(value = "getCardNumber",method = RequestMethod.POST)
@@ -161,7 +161,7 @@ public class MessageController extends BaseController{
                               @RequestParam(value = "address",required = false) String address, @RequestParam(value = "postCodes",required = false) String postCodes,
                               @RequestParam(value = "phoneNumber",required = false) String phoneNumber, @RequestParam(value = "subject") String subject,
                               @RequestParam(value = "level") int level,@RequestParam(value = "date") String date, HttpServletRequest request){
-        message Message = messageDao.getId(id).get(0);
+        message Message = messageDao.getId(id,request).get(0);
         Message.setSubject(subject);
         Message.setAddress(address);
         Message.setBirth(birth);
@@ -176,12 +176,12 @@ public class MessageController extends BaseController{
         Message.setIsDelete(0);
         Date nowDate = new Date();
         String Id=(nowDate.getYear()+1900+"").substring(2);             /////////////////准考证前两位  当前录入年份
-        String placeId=""+placeDao.setId(reportPlace);
+        String placeId=""+placeDao.setId(reportPlace,request);
         String subPlaceId="";
         String subjectId="";                                        ////////////////两位    报考点代号
         String Subject="";
         String subPlaceIdCount = "";
-        if(placeDao.setId(reportPlace)<10){
+        if(placeDao.setId(reportPlace,request)<10){
             Id+='0';
             subPlaceIdCount+='0';
         }
@@ -228,7 +228,7 @@ public class MessageController extends BaseController{
             Id+='0';
         Id+=countId;
         Message.setCardNumber(Id);
-        List<examTime> examTimeList = examTimeDao.findAll("from examTime where subject ='"+Subject+"' and level ="+level);
+        List<examTime> examTimeList = examTimeDao.findAll("from examTime where subject ='"+Subject+"' and level ="+level,request);
         if(examTimeList.size()!=0) {
             Message.setExamTime(examTimeList.get(0).getDuration());
         }

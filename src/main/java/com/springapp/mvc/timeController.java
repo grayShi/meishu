@@ -21,8 +21,8 @@ import java.util.List;
 @Controller
 public class timeController extends BaseController{
     @RequestMapping(value="/time",method = RequestMethod.GET)
-    public ModelAndView home(ModelAndView modelAndView){
-        List<time> time=timeDao.findAll("from time");
+    public ModelAndView home(ModelAndView modelAndView, HttpServletRequest request){
+        List<time> time=timeDao.findAll("from time",request);
         modelAndView.addObject("time",time);
         String timeList = JSONArray.fromObject(time).toString();
         modelAndView.addObject("timeList",timeList);
@@ -30,12 +30,12 @@ public class timeController extends BaseController{
         return modelAndView;
     }
     @RequestMapping(value="/time-edit",method = RequestMethod.GET)
-    public ModelAndView edit(@RequestParam(value = "id") Long id){
+    public ModelAndView edit(@RequestParam(value = "id") Long id, HttpServletRequest request){
         ModelAndView modelAndView = new ModelAndView();
-        List<time> timeList = timeDao.findAll("from time where id =" + id);
-        List<examPlace> placeList= examPlaceDao.findAll("from examPlace where place !='"+timeList.get(0).getPlace()+"'");
+        List<time> timeList = timeDao.findAll("from time where id =" + id,request);
+        List<examPlace> placeList= examPlaceDao.findAll("from examPlace where place !='"+timeList.get(0).getPlace()+"'",request);
         modelAndView.addObject("timeEdit", timeList);
-        List<subject> placeList1= examPlaceDao.findAll("from examPlace where place ='"+timeList.get(0).getPlace()+"' and classPlace !='"+timeList.get(0).getClassPlace()+"'");
+        List<subject> placeList1= examPlaceDao.findAll("from examPlace where place ='"+timeList.get(0).getPlace()+"' and classPlace !='"+timeList.get(0).getClassPlace()+"'",request);
         modelAndView.addObject("placeList", placeList);
         modelAndView.addObject("placeList1", placeList1);
         modelAndView.addObject("id", id);
@@ -48,11 +48,11 @@ public class timeController extends BaseController{
                         @RequestParam(value = "startTime") String startTime, HttpServletRequest request){
         Long timeCount = timeDao.getCount("select count (*) from time where place ='"+place+"' and classPlace = '"+classPlace +"' and startTime = '"+startTime+"'",request);
         if(timeCount == 0) {
-            time time = timeDao.getId(id).get(0);
+            time time = timeDao.getId(id,request).get(0);
             String originalPlace = time.getPlace();
             String originalClassPlace = time .getClassPlace();
             String originalStartTime = time.getStartTime();
-            List<message>messageList = messageDao.findAll("from message where examPlace = '"+originalPlace+"' and classPlace = '"+originalClassPlace +"' and time = '"+originalStartTime+"'");
+            List<message>messageList = messageDao.findAll("from message where examPlace = '"+originalPlace+"' and classPlace = '"+originalClassPlace +"' and time = '"+originalStartTime+"'",request);
             for(message mes:messageList){
                 mes.setExamPlace(place);
                 mes.setClassPlace(classPlace);
@@ -61,7 +61,7 @@ public class timeController extends BaseController{
             messageDao.update(messageList,request);
             time.setPlace(place);
             time.setClassPlace(classPlace);
-            List<examPlace> countList = examPlaceDao.findAll("from examPlace where place = '" + place + "' and classPlace = '" + classPlace + "'");
+            List<examPlace> countList = examPlaceDao.findAll("from examPlace where place = '" + place + "' and classPlace = '" + classPlace + "'",request);
             time.setCount(countList.get(0).getCount());
             time.setStartTime(startTime);
 
@@ -73,8 +73,8 @@ public class timeController extends BaseController{
     }
     @RequestMapping(value="/time-edit-getClassPlace",method = RequestMethod.POST)
     @ResponseBody
-    public String getLevel(@RequestParam(value = "place") String place){
-        List<examPlace> placeList= examPlaceDao.findAll("from examPlace where place ='"+place+"'");
+    public String getLevel(@RequestParam(value = "place") String place, HttpServletRequest request){
+        List<examPlace> placeList= examPlaceDao.findAll("from examPlace where place ='"+place+"'",request);
         return JSONArray.fromObject(placeList).toString();
     }
     @RequestMapping(value="/time-delete",method = RequestMethod.POST)
@@ -84,8 +84,8 @@ public class timeController extends BaseController{
         return "success";
     }
     @RequestMapping(value="/time-add",method = RequestMethod.GET)
-    public ModelAndView add(ModelAndView modelAndView){
-        List<examPlace> PlaceList= examPlaceDao.findAll("select distinct place from examPlace");
+    public ModelAndView add(ModelAndView modelAndView, HttpServletRequest request){
+        List<examPlace> PlaceList= examPlaceDao.findAll("select distinct place from examPlace",request);
         modelAndView.addObject("PlaceList",PlaceList);
         modelAndView.setViewName("time-add");
         return modelAndView;
@@ -99,7 +99,7 @@ public class timeController extends BaseController{
             time time = new time();
             time.setPlace(place);
             time.setClassPlace(classPlace);
-            List<examPlace> countList = examPlaceDao.findAll("from examPlace where place = '" + place + "' and classPlace = '" + classPlace + "'");
+            List<examPlace> countList = examPlaceDao.findAll("from examPlace where place = '" + place + "' and classPlace = '" + classPlace + "'",request);
             time.setCount(countList.get(0).getCount());
             time.setStartTime(startTime);
             timeDao.save(time,request);

@@ -204,7 +204,7 @@
             }
             $("#place").html(row);
             $('#subject').html("");
-            initTableCheckbox('reportTable','');
+            initTableCheckbox('reportTable','',false);
         }
     })
     }
@@ -246,7 +246,7 @@
                 row+="<tr><td><input name='subject' type='checkbox' />"+subjcet1+"</td><td>"+sub[1]+"</td><td>"+otherCount+"</td><td>"+totalCount+"</td></tr>";
             }
             $("#subject").html(row);
-            initTableCheckbox('subjectTable','');
+            initTableCheckbox('subjectTable','',true);
         }
     })
     }
@@ -429,7 +429,7 @@
                 row+="<tr> <td><input name='examPlace' type='checkbox' />  "+data[index].place+"</td> <td>"+data[index].classPlace+"</td> <td>"+otherExamPlace+"</td> <td>"+data[index].count+"</td> </tr>"
             })
             $("#examPlace").html(row);
-            initTableCheckbox('examTable','');
+            initTableCheckbox('examTable','',true);
         }
     })
     }
