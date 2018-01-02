@@ -59,7 +59,7 @@ body {
 .image{
 	  float: left;
     top: 30%;
-    left: 18%;
+    /*left: 18%;*/
 }
 .pic-1{
   margin-left: 27%;
@@ -76,6 +76,6 @@ i{
 	min-width: 1200px;
 }
 .box{
-margin-left: 10%;
+/*margin-left: 10%;*/
 margin-top: 18%;
 }

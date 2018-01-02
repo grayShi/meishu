@@ -26,9 +26,9 @@
 </div>
 <div class="container">
     <div class="box">
-        <div class="image">
-            <img src="images/logo.png" class="pic-1">
-            <p> <img src="images/word.png" class="pic-2"></p>
+        <div class="image" style="width:70%">
+            <%--<img src="images/logo.png" class="pic-1">--%>
+            <img src="images/word.png" class="pic-2">
         </div>
         <div class="panel">
                 <div class="panel-heading">

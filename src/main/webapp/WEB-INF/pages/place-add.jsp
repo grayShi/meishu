@@ -14,6 +14,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
     <title>上海市美术考级管理系统</title>
+    <link rel="shortcut icon" href="images/logo.png">
     <!-- Bootstrap Core CSS -->
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet">
 
