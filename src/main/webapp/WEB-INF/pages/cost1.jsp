@@ -102,7 +102,6 @@
                     <tr>
                         <th>考点编号</th>
                         <th>报名省市 机构名称</th>
-                        <th>考试时间</th>
                         <th>报考人数</th>
                         <th>报名费</th>
                         <th>考务费</th>
@@ -192,14 +191,13 @@
                 for(var i=0;i<data.length-1;i++){
                     str+="<tr> <td>"+data[i].subID+"</td>" +
                         "<td><a href='#' onclick='searchPlace(\""+data[i].subID+"\")'>"+data[i].reportPlace+" "+data[i].subPlace+"</a></td> " +
-                        "<td>"+data[i].startTime+"</td>" +
                         "<td>"+data[i].count+"</td>" +
                         " <td>"+data[i].baomingfei+"</td> " +
                         "<td>"+data[i].kaowufei+"</td> " +
                         "<td>"+data[i].zhengshufei+"</td> " +
                         "<td>"+data[i].remark+"</td> </tr>";
                 }
-                str+="<tr> <td colspan='3' style='text-align:center'>合&nbsp;&nbsp;&nbsp;&nbsp;计</td>" +
+                str+="<tr> <td colspan='2' style='text-align:center'>合&nbsp;&nbsp;&nbsp;&nbsp;计</td>" +
                     "<td>"+data[data.length-1].count+"</td>" +
                     " <td>"+data[data.length-1].baomingfei+"</td> " +
                     "<td>"+data[data.length-1].kaowufei+"</td> " +

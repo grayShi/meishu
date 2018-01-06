@@ -62,11 +62,11 @@
                 <div class="row row-top">
                     <div class="col-lg-3">
                         <span>姓名</span>
-                        <input type="text" id="name" list="lista" placeholder="输入姓名关键字筛选" class="form-control"/>
+                        <input type="text" id="name" list="lista" placeholder="输入姓名关键字筛选" class="form-control" oninput="javaScript:setStudents()"/>
                         <datalist id="lista">
-                            <c:forEach items="${message}" var="item">
-                                <option value="${item.name}-${item.birth}">${item.name}-${item.birth}</option>
-                            </c:forEach>
+                            <%--<c:forEach items="${message}" var="item">--%>
+                                <%--<option value="${item.name}-${item.birth}">${item.name}-${item.birth}</option>--%>
+                            <%--</c:forEach>--%>
                         </datalist>
                     </div>
                     <div class="col-lg-1">
@@ -155,11 +155,12 @@
     var NABI =[];  //name-birth
     var NAMELIST =[];
     var BIRTHLIST =[];
+    var nameBirth = [];
     function addName() {
         var nabi = $("#name").val();
         var list=[];
         if(nabi!="") {
-            if($.inArray(nabi, JSON.parse('${nameBirth}')) < 0){
+            if($.inArray(nabi, nameBirth) < 0){
                 $('#message').html('不存在此考生');
                 $('#false').modal('show');
             }else {
@@ -175,6 +176,32 @@
                 }
             }
         }
+    }
+    function setStudents() {
+        window.setTimeout(function () {
+            var name = $("#name").val();
+            if(name == ''){
+                return false;
+            }
+            $.ajax({
+                url: "forPerson-setName",
+                data: {
+                    name: name,
+                },
+                dataType: "json",
+                type: "post",
+                success: function (data) {
+                    var nameList = "";
+                    nameBirth = [];
+                    $(data).each(function (index) {
+                        nameBirth.push(data[index].name+'-'+data[index].birth);
+                        nameList += '<option value="'+data[index].name+'-'+data[index].birth+'">'+data[index].name+'-'+data[index].birth+'</option>';
+                    })
+                    $('#lista').html(nameList);
+                }
+            })
+
+        }, 500);
     }
     function setHTML() {
         var htmlStr = "<tr>";

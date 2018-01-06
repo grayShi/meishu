@@ -72,8 +72,12 @@
         $("#line").html(htm);
         var row="Excel中,</br>";
         row+=line[line.length-1]+",</br>";
+        var notRow = "";
         for(var i=0;i<line.length-1;i++){
-            row+="第"+line[i]+"行,";
+            notRow+="第"+line[i]+"行,";
+        }
+        if(notRow == ""){
+            row += "0行"
         }
         row+="</br>未提交";
         $("#line2").html(row);

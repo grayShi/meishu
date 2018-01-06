@@ -65,8 +65,12 @@
                     <button class="btn btn-danger" type="button" onclick="getCancel()">取消分配</button>
                 </div>
             </div>
+        <div class="row">
+            <div class="col-lg-4"><h4><p class="fa fa-paperclip">考生人数将只显示已缴费人数</p></h4></div>
+            <div class="col-lg-4"><h4><span id="placeMessage"></span></h4></div>
+        </div>
             <div class="row">
-                <div class="col-lg-4 table-responsive table-bordered"  style="max-height: 70%;overflow:auto;">
+                <div class="col-lg-4 table-responsive table-bordered"  style="max-height: 70%;overflow-y:auto;">
                     <table class="table table-striped table-bordered table-hover" id="reportTable" style="margin-top: 2%">
                         <thead>
                         <tr>
@@ -80,7 +84,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="col-lg-4 table-responsive table-bordered"  style="max-height: 70%;overflow:auto;">
+                <div class="col-lg-4 table-responsive table-bordered"  style="max-height: 70%;overflow-y:auto;">
                     <table class="table table-striped table-bordered table-hover" id="subjectTable" style="margin-top: 2%">
                         <thead>
                         <tr>
@@ -95,7 +99,7 @@
                         </tbody>
                     </table>
                 </div>
-                <div class="col-lg-4 table-responsive table-bordered"  style="max-height: 70%;overflow:auto;">
+                <div class="col-lg-4 table-responsive table-bordered"  style="max-height: 70%;overflow-y:auto;">
                     <table class="table table-striped table-bordered table-hover" id="examTable" style="margin-top: 2%">
                         <thead>
                         <tr>
@@ -111,8 +115,6 @@
                     </table>
                 </div>
             </div>
-
-
     </div><!-- /#page-wrapper -->
         <div class="modal fade" id="false" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
             <div class="modal-dialog">
@@ -201,7 +203,7 @@
                     }
                     subID+=subplace1[x];
                 }
-                row+="<tr><td><input name='subPlace' type='checkbox' />"+subID+"</td><td><a href='javascript:void(0)' onclick='searchPlace(\""+sub[0]+"\",\""+sub[1]+"\")'>"+sub[0]+"</a></td><td>"+subp1+"</td></tr>";
+                row+="<tr><td><input name='subPlace' type='checkbox' />"+subID+"</td><td><a href='javascript:void(0)' onclick='searchPlace(\""+sub[0]+"\",\""+sub[1]+"\",\""+subp1+"\")'>"+sub[0]+"</a></td><td>"+subp1+"</td></tr>";
             }
             $("#place").html(row);
             $('#subject').html("");
@@ -213,12 +215,12 @@
     var Level=[];
     var REPORTPLACE;
     var SUBPLACE;
-    var TIME;
-    function searchPlace(reportPlace,subPlace){
+    function searchPlace(reportPlace,subPlace,formatSubplace){
     Subject.length=0;
     Level.length=0;
     REPORTPLACE=reportPlace;
     SUBPLACE=subPlace;
+    $('#placeMessage').html(reportPlace+"-"+formatSubplace);
     $.ajax({
         url:"examination-searchSubject",
         dataType:"json",
@@ -317,7 +319,6 @@
             data: {
                 reportPlace: realReportPlace,
                 subPlace: realSubPlace,
-                time: TIME,
                 realExamPlace: realExamPlace,
                 realExamTime:realExamTime,
                 realClassPlace: realClassPlace,
@@ -367,7 +368,6 @@
             data: {
                 reportPlace: REPORTPLACE,
                 subPlace: SUBPLACE,
-                time: TIME,
                 realSubject: realSubject,
                 realLevel: realLevel,
                 realExamPlace: realExamPlace,
@@ -384,7 +384,7 @@
                     ClassPlace.length = 0;
                     ExamTime.length = 0;
                     count.length = 0;
-                    searchPlace(REPORTPLACE, SUBPLACE, TIME);
+                    searchPlace(REPORTPLACE, SUBPLACE);
                     getExamPlace();
                     $("#success").modal('show');
                 }else{
@@ -401,7 +401,6 @@
     var count=[];
     function getExamPlace(){
     var time = $("#time option:selected").val();
-    TIME=time;
     $.ajax({
         url:"examination-examPlace",
         dataType:"json",

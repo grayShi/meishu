@@ -131,6 +131,7 @@ public class MessageController extends BaseController{
             Message.setExamTime(examTimeList.get(0).getDuration());
         }
         Message.setEndSignUpTime(date);
+        Message.setIsPay(false);
         messageDao.save(Message, request);
         return "success";
     }
@@ -233,6 +234,7 @@ public class MessageController extends BaseController{
             Message.setExamTime(examTimeList.get(0).getDuration());
         }
         Message.setEndSignUpTime(date);
+        Message.setIsPay(false);
         messageDao.update(Message,request);
         return "success";
     }

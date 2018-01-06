@@ -31,6 +31,7 @@ public class message {
     private String endSignUpTime;        //报名结束时间
     private Boolean isPay;        //是否缴费
 
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {
@@ -196,11 +197,12 @@ public class message {
         this.endSignUpTime = endSignUpTime;
     }
 
-    public Boolean getPay() {
-        return isPay;
+    @Column(length = 45,name = "isPay")
+    public Boolean getIsPay() {
+        return this.isPay;
     }
 
-    public void setPay(Boolean pay) {
-        isPay = pay;
+    public void setIsPay(Boolean isPay) {
+        this.isPay = isPay;
     }
 }

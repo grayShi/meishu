@@ -397,7 +397,7 @@ public class Message1Controller extends BaseController{
                             Id += countId;
                             newMessage.setCardNumber(Id);
                             newMessage.setEndSignUpTime(endSignUpTime);
-                            newMessage.setPay(false);
+                            newMessage.setIsPay(false);
                             messageDao.save(newMessage,request);
                             inputTotal++;
                         }

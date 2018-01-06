@@ -73,7 +73,7 @@ public class PrintController extends BaseController {
                             @RequestParam(value = "reportPlace") String reportPlace, @RequestParam(value = "subPlace") String subPlace) {
         searchSql search = new searchSql();
         String sql6 = search.getSession(request);
-        String sql = "from message where isDelete = 0";
+        String sql = "from message where isDelete = 0 and isPay = true ";
         String sql1 = "";
         String sql2 = "";
         String sql3 = "";
@@ -117,7 +117,7 @@ public class PrintController extends BaseController {
                                      @RequestParam(value = "reportPlace") String reportPlace, @RequestParam(value = "subPlace") String subPlace, @RequestParam(value = "remark") String remark) {
         searchSql search = new searchSql();
         String sql6 = search.getSession(request);
-        String sql = "from message where isDelete = 0";
+        String sql = "from message where isDelete = 0 and isPay = true ";
         String sql1 = "";
         String sql2 = "";
         String sql3 = "";

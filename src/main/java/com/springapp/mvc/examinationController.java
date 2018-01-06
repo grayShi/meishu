@@ -88,8 +88,8 @@ public class examinationController extends BaseController {
     public String getPlaceCount(@RequestParam(value = "reportPlace") String reportPlace,@RequestParam(value = "subPlace") String subPlace,@RequestParam(value = "subject") String subject,
                                 @RequestParam(value = "level") int level, HttpServletRequest request){
         ArrayList<Long> count= new ArrayList<Long>();
-        long totalCount = messageDao.getCount("select count (*) from message where isDelete = 0 and reportPlace='"+reportPlace+"' and subPlace= '"+subPlace+"' and subject ='"+subject+"' and level ="+level,request);
-        long realCount = messageDao.getCount("select count (classPlace) from message where isDelete = 0 and reportPlace='"+reportPlace+"' and subPlace= '"+subPlace+"' and subject ='"+subject+"' and level ="+level,request);
+        long totalCount = messageDao.getCount("select count (*) from message where isDelete = 0 and reportPlace='"+reportPlace+"' and subPlace= '"+subPlace+"' and subject ='"+subject+"' and level ="+level +" and isPay = true",request);
+        long realCount = messageDao.getCount("select count (classPlace) from message where isDelete = 0 and reportPlace='"+reportPlace+"' and subPlace= '"+subPlace+"' and subject ='"+subject+"' and level ="+level+" and isPay = true",request);
         BigDecimal b1 = new BigDecimal(totalCount);
         BigDecimal b2 = new BigDecimal(realCount);
         long otherCount = b1.subtract(b2).longValue();
@@ -101,7 +101,7 @@ public class examinationController extends BaseController {
     @ResponseBody
     public Long getExamPlaceCount(@RequestParam(value = "examPlace") String examPlace,@RequestParam(value = "classPlace") String classPlace, HttpServletRequest request){
         ArrayList<Long> count= new ArrayList<Long>();
-        long realCount = messageDao.getCount("select count (*) from message where isDelete = 0 and examPlace='"+examPlace+"' and classPlace= '"+classPlace+"'",request);
+        long realCount = messageDao.getCount("select count (*) from message where isDelete = 0 and examPlace='"+examPlace+"' and classPlace= '"+classPlace+"' and isPay = true",request);
         return realCount;
     }
     @RequestMapping(value="/examination-start",method = RequestMethod.POST)
@@ -110,13 +110,13 @@ public class examinationController extends BaseController {
                       @RequestParam(value = "realExamPlace") String[] examPlace,@RequestParam(value = "realClassPlace") String[] classPlace,
                       @RequestParam(value = "realCount") Long[] otherCount,@RequestParam(value = "realSubject") String[] subject,
                         @RequestParam(value = "realExamTime") String[] examTime,
-                      @RequestParam(value = "realLevel") int[] level,@RequestParam(value = "time") String time, HttpServletRequest request){
+                      @RequestParam(value = "realLevel") int[] level, HttpServletRequest request){
         String sql="and ((subject ='"+subject[0]+"'and level ="+level[0]+")";
         for(int i=1;i<subject.length;i++){
             sql+="or (subject ='"+subject[i]+"'and level ="+level[i]+")";
         }
         sql+=")";
-        List<message> list = messageDao.findAll("from message where isDelete = 0 and examPlace IS NULL and classPlace IS NULL and reportPlace='"+reportPlace+"' and subPlace ='"+subPlace+"' "+sql+"order by cardNumber",request);
+        List<message> list = messageDao.findAll("from message where isDelete = 0 and examPlace IS NULL and classPlace IS NULL and isPay = true and reportPlace='"+reportPlace+"' and subPlace ='"+subPlace+"' "+sql+"order by cardNumber",request);
         int count=0;
         List<message> changeList = new ArrayList<message>();
             for(int x=0;x<otherCount.length;x++) {
@@ -125,9 +125,9 @@ public class examinationController extends BaseController {
                 for (int i = 0; i < otherCount[x]; i++) {
                     list.get(count+i).setClassPlace(classPlace[x]);
                     list.get(count+i).setExamPlace(examPlace[x]);
-                    list.get(count+i).setTime(time);
+//                    list.get(count+i).setTime(time);
                     if(!examTime[x].equals("noTime"))
-                        list.get(count+i).setExamTime(examTime[x]);
+                        list.get(count+i).setTime(examTime[x]);
                     messageDao.update(list.get(count+i),request);
                     changeList.add(list.get(count+i));
                     if(list.size()==(count+i+1))
@@ -141,7 +141,7 @@ public class examinationController extends BaseController {
     @ResponseBody
     public String startPlace(@RequestParam(value = "reportPlace") String[] reportPlace,@RequestParam(value = "subPlace") String[] subPlace,
                         @RequestParam(value = "realExamPlace") String[] examPlace,@RequestParam(value = "realClassPlace") String[] classPlace,
-                        @RequestParam(value = "realCount") Long[] otherCount,@RequestParam(value = "realExamTime") String[] examTime,@RequestParam(value = "time") String time, HttpServletRequest request){
+                        @RequestParam(value = "realCount") Long[] otherCount,@RequestParam(value = "realExamTime") String[] examTime, HttpServletRequest request){
         String sql="and ((reportPlace ='"+reportPlace[0]+"'and subPlace ='"+subPlace[0]+"')";
         for(int i=1;i<reportPlace.length;i++){
             sql+="or (reportPlace ='"+reportPlace[i]+"'and subPlace ='"+subPlace[i]+"')";
@@ -156,9 +156,9 @@ public class examinationController extends BaseController {
             for (int i = 0; i < otherCount[x]; i++) {
                 list.get(count+i).setClassPlace(classPlace[x]);
                 list.get(count+i).setExamPlace(examPlace[x]);
-                list.get(count+i).setTime(time);
+//                list.get(count+i).setTime(time);
                 if(!examTime[x].equals("noTime"))
-                    list.get(count+i).setExamTime(examTime[x]);
+                    list.get(count+i).setTime(examTime[x]);
                 messageDao.update(list.get(count+i),request);
                 changeList.add(list.get(count+i));
                 if(list.size()==(count+i+1))

@@ -157,7 +157,7 @@ public class cost1Controller extends BaseController{
         String sql2="";
         String sql3="";
         String sql4="";
-        String sql = "select reportPlace,subPlace,level,count(*),time from message as message where isDelete = 0 "+ sql1;
+        String sql = "select reportPlace,subPlace,level,count(*) from message as message where isDelete = 0 "+ sql1;
         if(!reportPlace.equals("0") || !subPlace.equals("0") || !endSignUpTime.equals("0"))
             sql+="and ";
         if(! reportPlace.equals("0")) {
@@ -223,7 +223,6 @@ public class cost1Controller extends BaseController{
                 totalZhengshufei += x.getZhengshufei();
                 totalRemark += x.getRemark();
             }
-            x.setStartTime(levelCount.get(4).toString());
             allCostList.add(x);
         }
 
@@ -233,18 +232,15 @@ public class cost1Controller extends BaseController{
         int count = 0;
         if(allCostList.size()!=0) {
             String newId = allCostList.get(0).getSubID();
-            String newStart = allCostList.get(0).getStartTime();
             for (int i = 0; i < allCostList.size(); i++) {
                 if (!allCostList.get(i).getSubID().equals(newId)) {
                     y.setSubID(newId);
-                    y.setStartTime(newStart);
                     y.setBaomingfei(Baomingfei);
                     y.setZhengshufei(Zhengshufei);
                     y.setKaowufei(Kaowufei);
                     y.setRemark(Remark);
                     y.setCount(count);
                     newId = allCostList.get(i).getSubID();
-                    newStart = allCostList.get(i).getStartTime();
                     i--;
                     y.setReportPlace(allCostList.get(i).getReportPlace());
                     y.setSubPlace(allCostList.get(i).getSubPlace());
@@ -268,11 +264,6 @@ public class cost1Controller extends BaseController{
             y.setSubID(newId);
             y.setReportPlace(allCostList.get(allCostList.size() - 1).getReportPlace());
             y.setSubPlace(allCostList.get(allCostList.size() - 1).getSubPlace());
-            if(!allCostList.get(allCostList.size() - 1).getStartTime().equals("null")){
-                y.setStartTime(allCostList.get(allCostList.size() - 1).getStartTime());
-            } else {
-                y.setStartTime("");
-            }
             y.setBaomingfei(Baomingfei);
             y.setZhengshufei(Zhengshufei);
             y.setKaowufei(Kaowufei);

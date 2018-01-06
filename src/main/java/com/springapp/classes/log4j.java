@@ -4,6 +4,7 @@ import org.apache.log4j.Logger;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
+import java.io.IOException;
 
 public class log4j {
     public void printLog(String sql,HttpServletRequest request){
@@ -16,6 +17,9 @@ public class log4j {
         String userId = (String) session.getAttribute("userId");
         String username = (String) session.getAttribute("username");
         String power = (String) session.getAttribute("power");
-        return "["+userId+" - "+ username + " - " +power +"] : ";
+        //获取ip
+        NetworkUtil newIp = new NetworkUtil();
+        String ip = newIp.getIpAddress(request);
+        return "["+userId+" - "+ username + " - " +power +" - "+ip+"] : ";
     }
 }
