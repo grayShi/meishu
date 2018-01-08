@@ -46,6 +46,22 @@ public class userController extends BaseController {
     public ModelAndView edit(@RequestParam(value = "id") Long id, HttpServletRequest request){
         ModelAndView modelAndView = new ModelAndView();
         List<User> userList = userDao.findAll("from User where id =" + id,request);
+        for (User user: userList) {
+            if(user.getSubPlace() != null) {
+                String s = user.getSubPlace().toString();
+                char[] pla = s.toCharArray();
+                String sub = "";
+                for (int i = 0; i < pla.length; i++) {
+                    if (pla[i] == '￥') {
+                        for (int j = i + 1; j < pla.length; j++) {
+                            sub += pla[j];
+                        }
+                        break;
+                    }
+                }
+                user.setSubPlace(sub);
+            }
+        }
         modelAndView.addObject("userList", userList);
         List<reportPlace> place=reportPlaceDao.findAll("select distinct place from reportPlace where isDelete = 0",request);
         modelAndView.addObject("place",place);

@@ -203,7 +203,7 @@
                     }
                     subID+=subplace1[x];
                 }
-                row+="<tr><td><input name='subPlace' type='checkbox' />"+subID+"</td><td><a href='javascript:void(0)' onclick='searchPlace(\""+sub[0]+"\",\""+sub[1]+"\",\""+subp1+"\")'>"+sub[0]+"</a></td><td>"+subp1+"</td></tr>";
+                row+="<tr><td><input name='subPlace' type='checkbox' />"+subID+"</td><td><a href='javascript:void(0)' onclick='searchPlace(\""+sub[0]+"\",\""+sub[1]+"\")'>"+sub[0]+"</a></td><td>"+subp1+"</td></tr>";
             }
             $("#place").html(row);
             $('#subject').html("");
@@ -215,12 +215,21 @@
     var Level=[];
     var REPORTPLACE;
     var SUBPLACE;
-    function searchPlace(reportPlace,subPlace,formatSubplace){
+    function searchPlace(reportPlace,subPlace){
+        var formatSubPlace = "";
+        for(var x=0;x<subPlace.length;x++){
+            if(subPlace[x]=="￥"){
+                for(var j=x+1;j<subPlace.length;j++) {
+                    formatSubPlace += subPlace[j];
+                }
+                break;
+            }
+        }
     Subject.length=0;
     Level.length=0;
     REPORTPLACE=reportPlace;
     SUBPLACE=subPlace;
-    $('#placeMessage').html(reportPlace+"-"+formatSubplace);
+    $('#placeMessage').html(reportPlace+"-"+formatSubPlace);
     $.ajax({
         url:"examination-searchSubject",
         dataType:"json",
