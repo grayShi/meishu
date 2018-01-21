@@ -15,6 +15,7 @@ public class reportPlace {
     private Integer isDelete;   //////0为未删除  1为删除
     private Long subPlaceId;
     private String remark;
+    private String realId;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {
@@ -71,5 +72,13 @@ public class reportPlace {
 
     public void setSubPlaceId(Long subPlaceId) {
         this.subPlaceId = subPlaceId;
+    }
+
+    public String getRealId() {
+        return realId;
+    }
+
+    public void setRealId(String realId) {
+        this.realId = realId;
     }
 }

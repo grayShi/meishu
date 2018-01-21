@@ -34,6 +34,8 @@ public class BaseController{
     protected MessageDao messageDao;
     @Autowired
     protected ExamTimeDao examTimeDao;
+    @Autowired
+    protected commitCostDao costCommitDao;
     public BaseController(){
        simpleDateFormat =new SimpleDateFormat("yyyy-MM-dd");
     }

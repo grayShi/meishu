@@ -68,7 +68,7 @@
                         <% if(power.equals("admin")){%>
                             <li><a href="message">手动录入报考信息</a></li>
                         <% }%>
-                        <li><a href="message1">excel录入报考信息</a></li>
+                        <li><a href="message1">Excel录入报考信息</a></li>
                         <li><a href="delete">管理信息</a></li>
                     </ul>
                 </li>
@@ -77,6 +77,9 @@
                         <ul class="nav nav-second-level">
                             <li><a href="data">图表统计</a></li>
                             <li><a href="cost1">收费情况</a></li>
+                            <% if(power.equals("admin")){%>
+                            <li><a href="commitCost">审核提交收费</a></li>
+                            <% }%>
                         </ul>
                     </li>
                 <li>

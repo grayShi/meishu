@@ -1,6 +1,7 @@
 package com.springapp.mvc;
 
 import com.springapp.classes.searchSql;
+import com.springapp.entity.commitCost;
 import com.springapp.entity.cost;
 import com.springapp.entity.cost1;
 import com.springapp.entity.message;
@@ -283,7 +284,7 @@ public class cost1Controller extends BaseController{
     @RequestMapping(value = "/cost1-detail",method = RequestMethod.GET)
     public ModelAndView home1(@RequestParam(value="subID")String subID, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
-        List<message> levelList = messageDao.findAll("select reportPlace,subPlace,level,count(*) from message where isDelete = 0 and subPlace like '"+subID+"￥%' group by reportPlace,subPlace,level",request);
+        List<message> levelList = messageDao.findAll("select reportPlace,subPlace,level,count(*) from message where isDelete = 0 and subPlace like '"+subID+"￥%' and isPay = false group by reportPlace,subPlace,level",request);
         List levelCount;
         List<cost1> allCostList = new ArrayList<cost1>();
         int totalCount = 0;
@@ -344,5 +345,37 @@ public class cost1Controller extends BaseController{
         modelAndView.addObject("allCostList",allCostList);
         modelAndView.setViewName("cost1-detail");
         return modelAndView;
+    }
+
+    @RequestMapping(value="/cost1-commit",method = RequestMethod.POST)
+    @ResponseBody
+    public String commit(HttpServletRequest request, @RequestParam(value="level") String[] level, @RequestParam(value="plaId") String plaId) {
+        String listString = "(";
+        String str = "";
+        for(int i = 0; i<level.length; i++){
+            if(i+1 ==level.length){
+                str += level[i];
+            } else {
+                str += level[i]+",";
+            }
+
+        }
+        listString += str+")";
+        List<message> List = messageDao.findAll("select message.level,cost.remark,count(*) from message message,cost cost where message.isDelete = 0 and message.subPlace like '"+plaId+"￥%' and message.level in "+listString+" and message.level = cost.level group by message.level",request);
+        List levelCount;
+        int count = 0;
+        int cost = 0;
+        for(int i=0;i<List.size();i++) {
+            levelCount = JSONArray.fromObject(List.get(i));
+            count += Integer.parseInt(levelCount.get(2).toString());
+            cost += (Double.parseDouble(levelCount.get(1).toString())) * (Integer.parseInt(levelCount.get(2).toString()));
+            commitCost commitCost = new commitCost();
+            commitCost.setCount(count);
+            commitCost.setLevel(Integer.parseInt(levelCount.get(0).toString()));
+            commitCost.setPlaceId(plaId);
+            commitCost.setTotalCost(cost);
+            this.costCommitDao.save(commitCost,request);
+        }
+        return "success";
     }
 }

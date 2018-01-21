@@ -100,6 +100,7 @@ public class placeController extends  BaseController{
                 changeList.setCardNumber(changeList.getCardNumber().substring(0,2)+currentSubPlaceNum+changeList.getCardNumber().substring(6,changeList.getCardNumber().length()));
         }
         messageDao.update(messageList,request);
+        rep.setRealId(currentSubPlaceNum);
         reportPlaceDao.update(rep,request);
         return "success";
     }
@@ -147,6 +148,14 @@ public class placeController extends  BaseController{
                 rep.setSubPlace(subPlace[i].trim());
                 rep.setRemark(remark);
                 rep.setPlaceId(placeDao.setId(place.trim(),request));
+                String currentSubPlaceNum = "";
+                if(rep.getPlaceId()<10)
+                    currentSubPlaceNum +='0';
+                currentSubPlaceNum += rep.getPlaceId();
+                if (rep.getSubPlaceId() < 10)
+                    currentSubPlaceNum += '0';
+                currentSubPlaceNum += rep.getSubPlaceId();
+                rep.setRealId(currentSubPlaceNum);
                 reportPlaceDao.save(rep,request);
             }else {
                 isCount++;

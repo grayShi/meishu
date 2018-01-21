@@ -14,6 +14,15 @@ public class cost1 {
     private String subID;
     private String startTime;
     private int count;
+    private String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public int getLevel() {
         return level;

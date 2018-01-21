@@ -74,7 +74,7 @@
                     <tbody id="costTable">
                     <c:forEach items="${allCostList}" var="item">
                         <tr>
-                            <td><input type='checkbox' name='checkItem' value='${item.subID}'></td>
+                            <td><input type='checkbox' name='checkItem' value='${item.count}-${item.remark}-${item.subID}-${item.level}'></td>
                             <td>${item.subID}</td>
                             <td>${item.reportPlace}  ${item.subPlace}</td>
                             <td>${item.level}</td>
@@ -109,9 +109,51 @@
                 </table>
             </div>
         </div>
-
+        <div class="row  col-lg-5 pull-right">
+            <div class="panel panel-primary">
+                <div class="panel-heading" id="line">
+                    缴费合计
+                </div>
+                <div class="panel-body" id="line2">
+                    总数量:0,总金额:0
+                </div>
+                <div class="panel-footer text-center" >
+                    <button type="button" class="btn btn-danger" onclick="commitSuccess()">提交缴费成功申请</button>
+                </div>
+            </div>
+        </div>
 
     </div>
+    <div class="modal fade" id="success" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">提交成功</h4>
+                </div>
+                <div class="modal-body text-center">
+                    <p>提交成功,请等待管理员审核后进行后续操作</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" onclick="reloadPage()">确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
+    <div class="modal fade" id="fail" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">提交失败</h4>
+                </div>
+                <div class="modal-body text-center">
+                    <p>提交数量为0</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" >确定</button>
+                </div>
+            </div><!-- /.modal-content -->
+        </div><!-- /.modal-dialog -->
+    </div><!-- /.modal -->
 </div>
 
 <script src="js/checkBox.js"></script>
@@ -121,9 +163,22 @@
         var $tbr = $('#table tbody tr');
         $tbr.find('input').click(function(event){
             var arrayList = getCheck();
-            debugger;
+            setTotal(arrayList);
+        });
+        var $tdr = $('#table thead tr th');
+        $tdr.find('input').click(function(event){
+            var arrayList = getCheck();
+            setTotal(arrayList);
         });
     });
+    function setTotal(arrayList) {
+        var count = 0,total = 0;
+        for(var i = 0; i< arrayList.length; i++) {
+            count += Number(arrayList[i].split('-')[0]);
+            total += Number(arrayList[i].split('-')[1]);
+        }
+        $('#line2').html("总数量:"+count+",总金额:"+total);
+    }
     function setSubPlace(){
         var reportPlace = $("#reportPlace option:selected").val();
         if(reportPlace!='0'){
@@ -195,7 +250,35 @@
     function searchPlace(subID) {
         window.location="cost1-detail?subID="+subID;
     }
-
+    function commitSuccess() {
+        var arrayList = getCheck();
+        var plaId = [], level = [];
+        for(var i = 0; i< arrayList.length; i++) {
+            plaId = arrayList[i].split('-')[2];
+            level.push(arrayList[i].split('-')[3]);
+        }
+        if(level.length == 0){
+            $("#fail").modal('show');
+            return;
+        }
+        $.ajax({
+            url: "cost1-commit",
+            type: "post",
+            data: {
+                level: level,
+                plaId: plaId
+            },
+            traditional: true,
+            success: function (data) {
+                if(data=='success'){
+                    $("#success").modal('show');
+                }
+            }
+        })
+    }
+    function reloadPage(){
+        location.reload();
+    }
 
 </script>
 </body>
