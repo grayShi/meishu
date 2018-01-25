@@ -363,9 +363,9 @@ public class cost1Controller extends BaseController{
         listString += str+")";
         List<message> List = messageDao.findAll("select message.level,cost.remark,count(*) from message message,cost cost where message.isDelete = 0 and message.subPlace like '"+plaId+"￥%' and message.level in "+listString+" and message.level = cost.level group by message.level",request);
         List levelCount;
-        int count = 0;
-        int cost = 0;
         for(int i=0;i<List.size();i++) {
+            int count = 0;
+            int cost = 0;
             levelCount = JSONArray.fromObject(List.get(i));
             count += Integer.parseInt(levelCount.get(2).toString());
             cost += (Double.parseDouble(levelCount.get(1).toString())) * (Integer.parseInt(levelCount.get(2).toString()));
