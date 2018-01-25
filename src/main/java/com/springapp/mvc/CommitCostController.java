@@ -56,8 +56,6 @@ public class CommitCostController extends BaseController{
     public String commit(@RequestParam(value = "id") Long[] id, HttpServletRequest request){
         List<commitCost> commitCosts = costCommitDao.getId(id,request);
         for(commitCost commitCost : commitCosts) {
-            commitCost.setIsDelete(1);
-            costCommitDao.update(commitCost, request);
             List<message>messageList = messageDao.findAll("from message where isDelete = 0 and subPlace like '"+commitCost.getPlaceId()+"￥%' and level ="+commitCost.getLevel()+" and isPay = false order by id",request);
             if(messageList.size() >= commitCost.getCount()){
                 for(int i =0;i<commitCost.getCount();i++) {
@@ -67,6 +65,8 @@ public class CommitCostController extends BaseController{
             } else {
                 return "报名机构编号"+commitCost.getPlaceId()+","+commitCost.getLevel()+"级,实际数量为"+messageList.size()+",提交数量为"+commitCost.getCount();
             }
+            commitCost.setIsDelete(1);
+            costCommitDao.update(commitCost, request);
         }
         return "success";
     }
