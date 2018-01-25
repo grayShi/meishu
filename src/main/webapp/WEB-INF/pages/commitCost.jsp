@@ -140,11 +140,13 @@
         type:"post",
         data:{id:[].concat(id)},
             traditional: true,
+          dataType: "json",
         success:function(data){
-            if(data=='success'){
+            if(data[0].placeId == "" && data[0].id == 0){
                 $("#success").modal('show');
             } else {
-                $("#errMessage").html(data);
+                var str = "报名机构编号"+data[0].placeId+","+data[0].level+"级,实际数量为"+data[0].isDelete+",提交数量为"+data[0].count+".";
+                $("#errMessage").html(str);
                 $("#fail").modal('show');
             }
 
