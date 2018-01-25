@@ -63,11 +63,12 @@ public class CommitCostController extends BaseController{
                 }
                 messageDao.update(messageList,request);
             } else {
-                return "报名机构编号"+commitCost.getPlaceId()+","+commitCost.getLevel()+"级,实际数量为"+messageList.size()+",提交数量为"+commitCost.getCount();
+                commitCost.setIsDelete(messageList.size()); // 目前有多少没有缴费的人
+                return JSONArray.fromObject(commitCost).toString();
             }
             commitCost.setIsDelete(1);
             costCommitDao.update(commitCost, request);
         }
-        return "success";
+        return JSONArray.fromObject(new commitCost()).toString();
     }
 }
