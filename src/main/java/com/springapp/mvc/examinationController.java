@@ -77,10 +77,20 @@ public class examinationController extends BaseController {
         if(power.equals("admin")){
             sql += " and 1 = 1";
         } else {
-            sql += "and examPlace.reportPlace = '"+place+"' and examPlace.subPlace like '%"+ subPlace +"'";
+            char [] sub = subPlace.toCharArray();
+            String SUBPLACE ="";
+            for(int i=0;i<sub.length;i++){
+                if(sub[i] == '￥'){
+                    for(int j=i+1;j<sub.length;j++) {
+                        SUBPLACE += sub[j];
+                    }
+                    break;
+                }
+            }
+            sql += "and examPlace.reportPlace = '"+place+"' and examPlace.subPlace = '"+ SUBPLACE +"'";
         }
         List<time> timeList = timeDao.findAll("select time from time as time,examPlace as examPlace where time.startTime = '"+time+"'" +
-                "and time.place = examPlace.place and time.classPlace = examPlace.classPlace "+ sql,request);
+                " and time.place = examPlace.place and time.classPlace = examPlace.classPlace "+ sql,request);
         return JSONArray.fromObject(timeList).toString();
     }
     @RequestMapping(value="/examination-getPlaceCount",method = RequestMethod.POST)

@@ -60,7 +60,7 @@ import javax.servlet.http.HttpSession;
 //}
 
 public class SessionFilter implements Filter {
-    private String[] adminPages = {"/subject","/place","/place1","/examTime","/time",
+    private String[] adminPages = {"/subject","/place","/examTime","/data",
             "/cost","/message","/user","/costCommit"};
     private log4j newLig4j = new log4j();
     @Override

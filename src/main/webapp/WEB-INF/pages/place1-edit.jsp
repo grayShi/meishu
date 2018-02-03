@@ -69,6 +69,7 @@
                             <td>容纳人数</td>
                             <td><input class="form-control" id="count" value="${item.count}"/></td>
                         </tr>
+                        <% if(power.equals("admin")){%>
                         <tr>
                             <td>报名省市</td>
                             <td>
@@ -90,6 +91,7 @@
                                 </select>
                             </td>
                         </tr>
+                        <% }%>
                         <tr>
                             <td>备注</td>
                             <td><input class="form-control" id="remark" value="${item.remark}"/></td>

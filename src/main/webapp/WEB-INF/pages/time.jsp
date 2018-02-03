@@ -64,11 +64,11 @@
                     <tbody>
                     <c:forEach items="${time}" var="item">
                         <tr>
-                            <td>${item.place}</td>
-                            <td>${item.classPlace}</td>
-                            <td>${item.startTime}</td>
-                            <td><button type="button" onclick="editTime('${item.id}')" class="btn btn-default">编辑</button>
-                                <button type="button" data-toggle="modal" data-target="#delete" onclick="getId('${item.id}')" class="btn btn-default">删除</button>
+                            <td>${item[0].place}</td>
+                            <td>${item[0].classPlace}</td>
+                            <td>${item[0].startTime}</td>
+                            <td><button type="button" onclick="editTime('${item[0].id}')" class="btn btn-default">编辑</button>
+                                <button type="button" data-toggle="modal" data-target="#delete" onclick="getId('${item[0].id}')" class="btn btn-default">删除</button>
                             </td>
                         </tr>
                     </c:forEach>

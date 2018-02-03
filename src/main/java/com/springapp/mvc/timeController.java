@@ -1,5 +1,6 @@
 package com.springapp.mvc;
 
+import com.springapp.classes.searchSql;
 import com.springapp.entity.examPlace;
 import com.springapp.entity.message;
 import com.springapp.entity.subject;
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpSession;
 import java.util.List;
 
 /**
@@ -22,7 +24,18 @@ import java.util.List;
 public class timeController extends BaseController{
     @RequestMapping(value="/time",method = RequestMethod.GET)
     public ModelAndView home(ModelAndView modelAndView, HttpServletRequest request){
-        List<time> time=timeDao.findAll("from time",request);
+        searchSql search = new searchSql();
+        HttpSession session= request.getSession();
+        String place = (String) session.getAttribute("place");
+        String subPlace = (String) session.getAttribute("subPlace");
+        String power = (String) session.getAttribute("power");
+        String sql = "";
+        if(power.equals("admin")){
+            sql += " and 1 = 1";
+        } else {
+            sql += " and examPlace.reportPlace = '"+place+"' and examPlace.subPlace = '"+ search.setSubPlace(subPlace) +"'";
+        }
+        List<time> time=timeDao.findAll("from time time,examPlace examPlace where time.place = examPlace.place and time.classPlace = examPlace.classPlace "+sql,request);
         modelAndView.addObject("time",time);
         String timeList = JSONArray.fromObject(time).toString();
         modelAndView.addObject("timeList",timeList);
@@ -32,13 +45,20 @@ public class timeController extends BaseController{
     @RequestMapping(value="/time-edit",method = RequestMethod.GET)
     public ModelAndView edit(@RequestParam(value = "id") Long id, HttpServletRequest request){
         ModelAndView modelAndView = new ModelAndView();
+        searchSql search = new searchSql();
+        HttpSession session= request.getSession();
+        String sql = search.getSessionEqual(request);
         List<time> timeList = timeDao.findAll("from time where id =" + id,request);
-        List<examPlace> placeList= examPlaceDao.findAll("from examPlace where place !='"+timeList.get(0).getPlace()+"'",request);
-        modelAndView.addObject("timeEdit", timeList);
-        List<subject> placeList1= examPlaceDao.findAll("from examPlace where place ='"+timeList.get(0).getPlace()+"' and classPlace !='"+timeList.get(0).getClassPlace()+"'",request);
-        modelAndView.addObject("placeList", placeList);
-        modelAndView.addObject("placeList1", placeList1);
-        modelAndView.addObject("id", id);
+        String power = (String) session.getAttribute("power");
+        Long examPlaceCount = examPlaceDao.getCount("select count (*) from examPlace where place ='"+timeList.get(0).getPlace()+"' and classPlace = '"+timeList.get(0).getClassPlace()+"'" + sql,request);
+        if(examPlaceCount >0) {
+            List<examPlace> placeList = examPlaceDao.findAll("select distinct place from examPlace where place !='" + timeList.get(0).getPlace() + "'" + sql, request);
+            modelAndView.addObject("timeEdit", timeList);
+            List<subject> placeList1 = examPlaceDao.findAll("from examPlace where place ='" + timeList.get(0).getPlace() + "' and classPlace !='" + timeList.get(0).getClassPlace() + "'" + sql, request);
+            modelAndView.addObject("placeList", placeList);
+            modelAndView.addObject("placeList1", placeList1);
+            modelAndView.addObject("id", id);
+        }
         modelAndView.setViewName("time-edit");
         return modelAndView;
     }
@@ -85,7 +105,9 @@ public class timeController extends BaseController{
     }
     @RequestMapping(value="/time-add",method = RequestMethod.GET)
     public ModelAndView add(ModelAndView modelAndView, HttpServletRequest request){
-        List<examPlace> PlaceList= examPlaceDao.findAll("select distinct place from examPlace",request);
+        searchSql search = new searchSql();
+        String sql = search.getSessionEqual(request);
+        List<examPlace> PlaceList= examPlaceDao.findAll("select distinct place from examPlace where 1 = 1 "+sql,request);
         modelAndView.addObject("PlaceList",PlaceList);
         modelAndView.setViewName("time-add");
         return modelAndView;

@@ -68,6 +68,7 @@
                         <td>容纳人数</td>
                         <td><input class="form-control" id="count"/></td>
                     </tr>
+                    <% if(power.equals("admin")){%>
                     <tr>
                         <td>报名省市</td>
                         <td>
@@ -87,6 +88,7 @@
                             </select>
                         </td>
                     </tr>
+                    <% }%>
                     <tr>
                         <td>备注</td>
                         <td><input class="form-control" id="remark"/></td>
@@ -154,11 +156,11 @@
             var remark = $('#remark').val();
             var reportPlace=$("#reportPlace option:selected").val();
             var subPlace=$("#subPlace option:selected").val();
-            if(reportPlace =="0" || subPlace =="0"){
-                $("#message").html("报名省市.机构名称不能为空");
-                $('#false').modal('show');
-                return 0;
-            }
+//            if((reportPlace =="0" || subPlace =="0"){
+//                $("#message").html("报名省市.机构名称不能为空");
+//                $('#false').modal('show');
+//                return 0;
+//            }
             $.ajax({
                 url: "place1-add1",
                 type: "post",
@@ -167,14 +169,17 @@
                     remark: remark,
                     classPlace: classPlace,
                     count:count,
-                    reportPlace:reportPlace,
-                    subPlace:subPlace
+                    reportPlace:reportPlace != undefined ? reportPlace : "0",
+                    subPlace:subPlace != undefined? subPlace : "0",
                 },
                 success: function (data) {
                     if (data == "success")
                         $('#success').modal('show');
                     else if(data == "is_exist") {
                         $("#message").html("存在相同数据");
+                        $('#false').modal('show');
+                    } else if(data == "no_place") {
+                        $("#message").html("报名省市.机构名称不能为空");
                         $('#false').modal('show');
                     }
                 }

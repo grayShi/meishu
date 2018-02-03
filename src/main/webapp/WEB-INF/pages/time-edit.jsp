@@ -56,13 +56,13 @@
             <div class="col-lg-6 col-lg-offset-3">
                 <table class="table vertical-table vertical-table1">
                     <tbody>
-                    <c:forEach items="${timeEdit}" var="item">
+                    <c:forEach items="${timeEdit}" var="item[0]">
                         <tr>
                             <td>考点地址</td>
                             <td><select  id="place" class="form-control" onchange="javascript:setClassPlace()">
-                                <option value="${item.place}" selected="selected" >${item.place}</option>
+                                <option value="${item[0].place}" selected="selected" >${item[0].place}</option>
                                 <c:forEach items="${placeList}" var="item1">
-                                    <option value="${item1.place}">${item1.place}</option>
+                                    <option value="${item[0]}">${item[0]}</option>
                                 </c:forEach>
                             </select></td>
                         </tr>
@@ -70,7 +70,7 @@
                             <td>考场地址</td>
                             <td>
                                 <select id="classPlace" class="form-control">
-                                    <option value="${item.classPlace}" selected="selected">${item.classPlace}</option>
+                                    <option value="${item[0].classPlace}" selected="selected">${item[0].classPlace}</option>
                                     <c:forEach items="${placeList1}" var="item2">
                                         <option value="${item2.classPlace}">${item2.classPlace}</option>
                                     </c:forEach>
@@ -79,7 +79,7 @@
                         </tr>
                         <tr>
                             <td>考试时间</td>
-                            <td><input class="form-control" id="date" value="${item.startTime}"/></td>
+                            <td><input class="form-control" id="date" value="${item[0].startTime}"/></td>
                         </tr>
                     </c:forEach>
                     </tbody>
@@ -141,7 +141,7 @@
             var place=$("#place option:selected").val();
             var classPlace=$("#classPlace option:selected").val();
             var startTime=$("#date").val();
-            if(place=="" || classPlace==""|| startTime ==""){
+            if(place=="" || classPlace==""|| startTime =="" || !'${id}'){
                 $("#message").html("输入数据不能为空");
                 $('#false').modal('show');
                 return 0;

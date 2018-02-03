@@ -48,20 +48,25 @@
                 <li>
                     <a href="index"><i class="fa fa-dashboard fa-fw"></i>首页</a>
                 </li>
-                <% if(power.equals("admin")){%>
+
                     <li>
                         <a href="javascript:void(0)"><i class="fa fa-bar-chart-o fa-fw"></i> 考试管理 <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
-                                <li><a href="subject">考试科目管理</a></li>
-
+                            <% if(power.equals("admin")){%>
+                            <li><a href="subject">考试科目管理</a></li>
                             <li><a href="place">报考地点管理</a></li>
+                            <% }%>
                             <li><a href="place1">考试地点管理</a></li>
+                            <% if(power.equals("admin")){%>
                             <li><a href="examTime">持续时间管理</a></li>
+                            <% }%>
                             <li><a href="time">考试时间管理</a></li>
+                            <% if(power.equals("admin")){%>
                             <li><a href="cost">收费信息管理</a></li>
+                            <% }%>
                         </ul>
                     </li>
-                <% }%>
+
                 <li>
                     <a href="javascript:void(0)"><i class="fa fa-bar-chart-o fa-fw"></i> 数据录入 <span class="fa arrow"></span></a>
                     <ul class="nav nav-second-level">
@@ -75,7 +80,9 @@
                     <li>
                         <a href="javascript:void(0)"><i class="fa fa-bar-chart-o fa-fw"></i> 数据分析 <span class="fa arrow"></span></a>
                         <ul class="nav nav-second-level">
+                            <% if(power.equals("admin")){%>
                             <li><a href="data">图表统计</a></li>
+                            <% }%>
                             <li><a href="cost1">收费情况</a></li>
                             <% if(power.equals("admin")){%>
                             <li><a href="commitCost">审核提交收费</a></li>
