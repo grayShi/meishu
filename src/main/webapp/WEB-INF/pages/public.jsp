@@ -10,6 +10,9 @@
     String power= (String) session.getAttribute("power");
     String username = (String) session.getAttribute("username");
     String id = (String) session.getAttribute("userId");
+    String place = (String) session.getAttribute("place");
+    String realSubPlace = (String) session.getAttribute("realSubPlace");
+
 %>
 <nav class="navbar navbar-default navbar-static-top navbar-fixed-top" role="navigation" style="margin-bottom: 0">
     <div class="navbar-header">
@@ -27,6 +30,9 @@
         <!-- /.dropdown -->
         <li class="dropdown">
             <a class="dropdown-toggle" data-toggle="dropdown" href="#">
+                <% if(!power.equals("admin")){%>
+                    <%=place %> - <%=realSubPlace %>
+                <% }%>
                 <i class="fa fa-user fa-fw"></i><%=username %> <i class="fa fa-caret-down"></i>
             </a>
             <ul class="dropdown-menu dropdown-message">

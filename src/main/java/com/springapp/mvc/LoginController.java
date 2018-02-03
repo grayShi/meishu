@@ -1,5 +1,6 @@
 package com.springapp.mvc;
 
+import com.springapp.classes.searchSql;
 import com.springapp.entity.User;
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
@@ -29,6 +30,9 @@ public class LoginController extends BaseController{
         session.removeAttribute("userId");
         session.removeAttribute("username");
         session.removeAttribute("power");
+        session.removeAttribute("place");
+        session.removeAttribute("subPlace");
+        session.removeAttribute("realSubPlace");
         modelAndView.setViewName("login");
         return modelAndView;
     }
@@ -45,6 +49,10 @@ public class LoginController extends BaseController{
                     session.setAttribute("power", user.getPower());
                     session.setAttribute("place", user.getPlace());
                     session.setAttribute("subPlace", user.getSubPlace());
+                    if(!user.getPower().equals("admin")) {
+                        searchSql search = new searchSql();
+                        session.setAttribute("realSubPlace", search.setSubPlace(user.getSubPlace()));
+                    }
                     return "success";
                 }
                 return "pwd_error";
