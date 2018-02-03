@@ -89,8 +89,14 @@ public class userController extends BaseController {
                 user.setPlace("");
                 user.setSubPlace("");
             } else {
-                user.setPlace(place);
-                user.setSubPlace(subPlace);
+                List<reportPlace> reportPlaceList = reportPlaceDao.findAll("from reportPlace where isDelete = 0 and subPlace = '"+subPlace+"' and place = '" + place +"'",request);
+                if(reportPlaceList.size() > 0){
+                    user.setPlace(place);
+                    user.setSubPlace(reportPlaceList.get(0).getSubPlaceId()+"￥"+subPlace);
+                } else {
+                    return "no_place";
+                }
+
             }
             userDao.update(user,request);
             return "success";

@@ -184,7 +184,7 @@
                 success:function(data){
                     var row="<option value='0'>机构名称</option>";
                     $(data).each(function(index){
-                        row+="<option value='"+data[index].subPlaceId+"￥"+data[index].subPlace+"' >"+data[index].subPlace+"</option>";
+                        row+="<option value='"+data[index].subPlace+"' >"+data[index].subPlace+"</option>";
                     })
                     $("#subPlace").html(row);
                 }
@@ -229,6 +229,9 @@
                         $('#success').modal('show');
                     else if(data == "is_exist"){
                         $("#message").html("用户名已存在");
+                        $('#false').modal('show');
+                    } else if(data == "no_place"){
+                        $("#message").html("报名机构不存在");
                         $('#false').modal('show');
                     }
                 }
