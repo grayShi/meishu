@@ -14,46 +14,46 @@ public class CostDao extends BaseDao {
         public List<cost> getId(Long id, HttpServletRequest request){
             return this.findAll("from cost where id="+id,request);
         }
-        public Double cashbackRules(int count) {
+        public Double cashbackRules(int realCount, int totalCount) {
             Double cashBack = 0.0;
-            if(count>=10 && count <=30){
-                cashBack += 10*count;
+            if(totalCount>=10 && totalCount <=30){
+                cashBack += 10*realCount;
             }
-            else if(count>=31 && count <=100){
-                cashBack += 30*count;
+            else if(totalCount>=31 && totalCount <=100){
+                cashBack += 30*realCount;
             }
-            else if(count>=101 && count <=200){
-                cashBack += 31*count;
+            else if(totalCount>=101 && totalCount <=200){
+                cashBack += 31*realCount;
             }
-            else if(count>=201 && count <=300){
-                cashBack += 32*count;
+            else if(totalCount>=201 && totalCount <=300){
+                cashBack += 32*realCount;
             }
-            else if(count>=301 && count <=400){
-                cashBack += 33*count;
+            else if(totalCount>=301 && totalCount <=400){
+                cashBack += 33*realCount;
             }
-            else if(count>=401 && count <=500){
-                cashBack += 34*count;
+            else if(totalCount>=401 && totalCount <=500){
+                cashBack += 34*realCount;
             }
-            else if(count>=501 && count <=600){
-                cashBack += 35*count;
+            else if(totalCount>=501 && totalCount <=600){
+                cashBack += 35*realCount;
             }
-            else if(count>=600 && count <=700){
-                cashBack += 36*count;
+            else if(totalCount>=600 && totalCount <=700){
+                cashBack += 36*realCount;
             }
-            else if(count>=701 && count <=800){
-                cashBack += 37*count;
+            else if(totalCount>=701 && totalCount <=800){
+                cashBack += 37*realCount;
             }
-            else if(count>=801 && count <=900){
-                cashBack += 38*count;
+            else if(totalCount>=801 && totalCount <=900){
+                cashBack += 38*realCount;
             }
-            else if(count>=901 && count <=1000){
-                cashBack += 39*count;
+            else if(totalCount>=901 && totalCount <=1000){
+                cashBack += 39*realCount;
             }
-            else if(count>=1001 && count <=2000){
-                cashBack += 40*count;
+            else if(totalCount>=1001 && totalCount <=2000){
+                cashBack += 40*realCount;
             }
-            else if(count>=2001){
-                cashBack += 50*count;
+            else if(totalCount>=2001){
+                cashBack += 50*realCount;
             }
             return cashBack;
         }

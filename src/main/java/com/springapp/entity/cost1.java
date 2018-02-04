@@ -16,6 +16,7 @@ public class cost1 {
     private int count;
     private String id;
     private Double cashback;
+    private String confirm;
 
     public String getId() {
         return id;
@@ -111,5 +112,13 @@ public class cost1 {
 
     public void setCashback(Double cashback) {
         this.cashback = cashback;
+    }
+
+    public String getConfirm() {
+        return confirm;
+    }
+
+    public void setConfirm(String confirm) {
+        this.confirm = confirm;
     }
 }

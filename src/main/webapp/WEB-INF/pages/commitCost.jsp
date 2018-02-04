@@ -55,9 +55,9 @@
                         <th>报名点编号</th>
                         <th>报名省市</th>
                         <th>机构名称</th>
-                        <th>等级</th>
                         <th>人数</th>
                         <th>费用</th>
+                        <th>审核情况</th>
                         <th>操作</th>
                     </tr>
                     </thead>
@@ -67,11 +67,14 @@
                             <td>${item.subID}</td>
                             <td>${item.reportPlace}</td>
                             <td>${item.subPlace}</td>
-                            <td>${item.level}</td>
                             <td>${item.count}</td>
                             <td>${item.remark}</td>
-                            <td><button type="button" onclick="commitCost('${item.id}')" class="btn btn-default">确认缴费</button>
-                                <button type="button" data-toggle="modal" data-target="#delete" onclick="getId('${item.id}')" class="btn btn-default">取消</button>
+                            <td>${item.confirm}</td>
+                            <td>
+                            <c:if test="${item.confirm != '已确认缴费' }">
+                                <button type="button" onclick="commitCost('${item.id}')" class="btn btn-default">确认缴费</button>
+                                    <button type="button" data-toggle="modal" data-target="#delete" onclick="getId('${item.id}')" class="btn btn-default">取消</button>
+                            </c:if>
                             </td>
                         </tr>
                     </c:forEach>

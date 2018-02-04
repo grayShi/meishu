@@ -15,6 +15,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -240,8 +241,8 @@ public class cost1Controller extends BaseController{
                     y.setZhengshufei(Zhengshufei);
                     y.setKaowufei(Kaowufei);
                     y.setCount(count);
-                    y.setCashback(costDao.cashbackRules(count));
-                    y.setRemark(Remark - costDao.cashbackRules(count));
+                    y.setCashback(costDao.cashbackRules(count, count));
+                    y.setRemark(Remark - costDao.cashbackRules(count, count));
                     newId = allCostList.get(i).getSubID();
                     i--;
                     y.setReportPlace(allCostList.get(i).getReportPlace());
@@ -271,8 +272,8 @@ public class cost1Controller extends BaseController{
             y.setKaowufei(Kaowufei);
             y.setRemark(Remark);
             y.setCount(count);
-            y.setCashback(costDao.cashbackRules(count));
-            y.setRemark(Remark - costDao.cashbackRules(count));
+            y.setCashback(costDao.cashbackRules(count,count));
+            y.setRemark(Remark - costDao.cashbackRules(count, count));
             totalCostList.add(y);
         }
         cost1 total = new cost1();
@@ -280,8 +281,8 @@ public class cost1Controller extends BaseController{
         total.setBaomingfei(totalBaomingfei);
         total.setKaowufei(totalKaowufei);
         total.setZhengshufei(totalZhengshufei);
-        total.setCashback(costDao.cashbackRules(totalCount));
-        total.setRemark(totalRemark - costDao.cashbackRules(totalCount));
+        total.setCashback(costDao.cashbackRules(totalCount,totalCount));
+        total.setRemark(totalRemark - costDao.cashbackRules(totalCount,totalCount));
         totalCostList.add(total);
         return JSONArray.fromObject(totalCostList).toString();
     }
@@ -344,9 +345,11 @@ public class cost1Controller extends BaseController{
         total.setBaomingfei(totalBaomingfei);
         total.setKaowufei(totalKaowufei);
         total.setZhengshufei(totalZhengshufei);
-        total.setRemark(totalRemark);
-//        total.setCashback(costDao.cashbackRules(totalCount));
-//        total.setRemark(totalRemark - costDao.cashbackRules(totalCount));
+//        total.setRemark(totalRemark);
+        Long ttlCount = messageDao.getCount("select count (*) from message where subPlace like '"+subID+"￥%'",request);
+        total.setCashback(costDao.cashbackRules(totalCount, new Long(ttlCount).intValue()));
+        total.setRemark(totalRemark - costDao.cashbackRules(totalCount, new Long(ttlCount).intValue()));
+        modelAndView.addObject("cashback",total.getCashback());
         modelAndView.addObject("totalCost",total);
         modelAndView.addObject("allCostList",allCostList);
         modelAndView.setViewName("cost1-detail");
@@ -367,23 +370,23 @@ public class cost1Controller extends BaseController{
 
         }
         listString += str+")";
-        List<message> List = messageDao.findAll("select message.level,cost.remark,count(*) from message message,cost cost where message.isDelete = 0 and message.subPlace like '"+plaId+"￥%' and message.level in "+listString+" and message.level = cost.level group by message.level",request);
+        List<message> List = messageDao.findAll("select message.level,cost.remark,count(*) from message message,cost cost where message.isPay = false and message.isDelete = 0 and message.subPlace like '"+plaId+"￥%' and message.level in "+listString+" and message.level = cost.level group by message.level",request);
         List levelCount;
         int count = 0;
         int cost = 0;
         for(int i=0;i<List.size();i++) {
-            count = 0;
-            cost = 0;
             levelCount = JSONArray.fromObject(List.get(i));
             count += Integer.parseInt(levelCount.get(2).toString());
             cost += (Double.parseDouble(levelCount.get(1).toString())) * (Integer.parseInt(levelCount.get(2).toString()));
-            commitCost commitCost = new commitCost();
-            commitCost.setCount(count);
-            commitCost.setLevel(Integer.parseInt(levelCount.get(0).toString()));
-            commitCost.setPlaceId(plaId);
-            commitCost.setTotalCost(cost);
-            this.costCommitDao.save(commitCost,request);
         }
+        Long totalCount = messageDao.getCount("select count (*) from message where subPlace like '"+plaId+"￥%'",request);
+        commitCost commitCost = new commitCost();
+        commitCost.setCount(count);
+        commitCost.setLevel(str);
+        commitCost.setPlaceId(plaId);
+        commitCost.setTotalCost(cost - costDao.cashbackRules(count, new Long(totalCount).intValue()));
+        commitCost.setCommitDate(new Date());
+        this.costCommitDao.save(commitCost,request);
         return "success";
     }
 }

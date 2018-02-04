@@ -60,7 +60,6 @@
                 <table class="table table-striped table-bordered table-hover" id="table">
                     <thead>
                     <tr>
-                        <th><input type="checkbox" id="checkAll" name="checkAll" /></th>
                         <th>考点编号</th>
                         <th>报名省市 机构名称</th>
                         <th>级别</th>
@@ -74,7 +73,7 @@
                     <tbody id="costTable">
                     <c:forEach items="${allCostList}" var="item">
                         <tr>
-                            <td><input type='checkbox' name='checkItem' value='${item.count}-${item.remark}-${item.subID}-${item.level}'></td>
+                            <td style="display: none;"><input type='checkbox' name='checkItem' value='${item.count}-${item.remark}-${item.subID}-${item.level}'></td>
                             <td>${item.subID}</td>
                             <td>${item.reportPlace}  ${item.subPlace}</td>
                             <td>${item.level}</td>
@@ -95,6 +94,7 @@
                         <th>报名费</th>
                         <th>考务费</th>
                         <th>证书费</th>
+                        <th>返点费</th>
                         <th>合计</th>
                     </tr>
                         <tr>
@@ -103,6 +103,7 @@
                             <td>${totalCost.baomingfei}</td>
                             <td>${totalCost.kaowufei}</td>
                             <td>${totalCost.zhengshufei}</td>
+                            <td>${totalCost.cashback}</td>
                             <td>${totalCost.remark}</td>
                         </tr>
                     </thead>
@@ -159,17 +160,27 @@
 <script src="js/checkBox.js"></script>
 <script>
     $(function () {
-        initTableCheckbox('table','checkAll',true);
-        var $tbr = $('#table tbody tr');
-        $tbr.find('input').click(function(event){
-            var arrayList = getCheck();
-            setTotal(arrayList);
+//        initTableCheckbox('table','checkAll',true);
+//        var $tbr = $('#table tbody tr');
+//        $tbr.find('input').click(function(event){
+//            debugger;
+//            var arrayList = getCheck();
+//            setTotal(arrayList);
+//        });
+//        var $tdr = $('#table thead tr th');
+//        $tdr.find('input').click(function(event){
+//            var arrayList = getCheck();
+//            setTotal(arrayList);
+//        });
+        var arrayList=[];
+        $('input[name="checkItem"]').each(function(){
+            if(!isNaN($(this).val())){
+                arrayList.push(Number($(this).val()));
+            } else {
+                arrayList.push($(this).val());
+            }
         });
-        var $tdr = $('#table thead tr th');
-        $tdr.find('input').click(function(event){
-            var arrayList = getCheck();
-            setTotal(arrayList);
-        });
+        setTotal(arrayList);
     });
     function setTotal(arrayList) {
         var count = 0,total = 0;
@@ -177,81 +188,19 @@
             count += Number(arrayList[i].split('-')[0]);
             total += Number(arrayList[i].split('-')[1]);
         }
-        $('#line2').html("总数量:"+count+",总金额:"+total);
+        $('#line2').html("总数量:"+count+",总金额:"+(total - '${cashback}'));
     }
-    function setSubPlace(){
-        var reportPlace = $("#reportPlace option:selected").val();
-        if(reportPlace!='0'){
-            $.ajax({
-                url:"date/setSubPlace",
-                type:"post",
-                dataType:"json",
-                data:{
-                    reportPlace:reportPlace
-                },
-                success: function(data){
-                    var str="<option value='0' selected='selected'>机构名称</option>";
-                    $(data).each(function(index){
-                        var subPlace1="";
-                        var subPlace=data[index];
-                        for(var i=0;i<subPlace.length;i++){
-                            if(subPlace[i]=="￥"){
-                                for(var j=i+1;j<subPlace.length;j++) {
-                                    subPlace1 += subPlace[j];
-                                }
-                                break;
-                            }
-                        }
-                        str+=" <option value='"+data[index]+"'>"+subPlace1+"</option>"
-                    })
-                    $("#subPlace").html(str);
-                }
-            })
-        }
-        else{
-            var str="<option value='0' selected='selected'>机构名称</option>";
-            $("#subPlace").html(str);
-        }
-    }
-    function getSearch(){
-        var level = $("#level option:selected").val();
-        var reportPlace = $("#reportPlace option:selected").val();
-        var subPlace = $("#subPlace option:selected").val();
-        $.ajax({
-            url:"cost1-getSearch",
-            type:"post",
-            dataType:"json",
-            data:{
-                level:level,
-                reportPlace:reportPlace,
-                subPlace:subPlace
-            },
-            success:function(data){
-                var str="";
-                for(var i=0;i<data.length-1;i++){
-                    str+="<tr> <td>"+data[i].subID+"</td>" +
-                        "<td><a href='#' onclick='searchPlace(\""+data[i].subID+"\")'>"+data[i].reportPlace+" "+data[i].subPlace+"</a></td> " +
-                        "<td>"+data[i].count+"</td>" +
-                        " <td>"+data[i].baomingfei+"</td> " +
-                        "<td>"+data[i].kaowufei+"</td> " +
-                        "<td>"+data[i].zhengshufei+"</td> " +
-                        "<td>"+data[i].remark+"</td> </tr>";
-                }
-                str+="<tr> <td colspan='2' style='text-align:center'>合&nbsp;&nbsp;&nbsp;&nbsp;计</td>" +
-                    "<td>"+data[data.length-1].count+"</td>" +
-                    " <td>"+data[data.length-1].baomingfei+"</td> " +
-                    "<td>"+data[data.length-1].kaowufei+"</td> " +
-                    "<td>"+data[data.length-1].zhengshufei+"</td> " +
-                    "<td>"+data[data.length-1].remark+"</td> </tr>";
-                $("#costTable").html(str);
-            }
-        })
-    }
-    function searchPlace(subID) {
-        window.location="cost1-detail?subID="+subID;
-    }
+
     function commitSuccess() {
-        var arrayList = getCheck();
+//        var arrayList = getCheck();
+        var arrayList=[];
+        $('input[name="checkItem"]').each(function(){
+            if(!isNaN($(this).val())){
+                arrayList.push(Number($(this).val()));
+            } else {
+                arrayList.push($(this).val());
+            }
+        });
         var plaId = [], level = [];
         for(var i = 0; i< arrayList.length; i++) {
             plaId = arrayList[i].split('-')[2];

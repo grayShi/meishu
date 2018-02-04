@@ -1,16 +1,19 @@
 package com.springapp.entity;
 
 import javax.persistence.*;
+import java.util.Date;
 
 @Entity
 @Table(name = "commitCost")
 public class commitCost {
     private Long id;
-    private int level;
+    private String level;
     private int count;
     private String placeId;
-    private int totalCost;
+    private Double totalCost;
     private int isDelete;
+    private Date commitDate;
+    private Date confirmDate;
 
     public int getIsDelete() {
         return isDelete;
@@ -20,11 +23,11 @@ public class commitCost {
         this.isDelete = isDelete;
     }
 
-    public int getTotalCost() {
+    public Double getTotalCost() {
         return totalCost;
     }
 
-    public void setTotalCost(int totalCost) {
+    public void setTotalCost(Double totalCost) {
         this.totalCost = totalCost;
     }
 
@@ -38,11 +41,11 @@ public class commitCost {
         this.id = id;
     }
 
-    public int getLevel() {
+    public String getLevel() {
         return level;
     }
 
-    public void setLevel(int level) {
+    public void setLevel(String level) {
         this.level = level;
     }
 
@@ -60,5 +63,21 @@ public class commitCost {
 
     public void setPlaceId(String placeId) {
         this.placeId = placeId;
+    }
+
+    public Date getCommitDate() {
+        return commitDate;
+    }
+
+    public void setCommitDate(Date commitDate) {
+        this.commitDate = commitDate;
+    }
+
+    public Date getConfirmDate() {
+        return confirmDate;
+    }
+
+    public void setConfirmDate(Date confirmDate) {
+        this.confirmDate = confirmDate;
     }
 }
