@@ -68,6 +68,7 @@
                         <td>权限</td>
                         <td><select  id="power" class="form-control"onchange="javascript:setReportPlaceShow()">
                             <option value="school" selected="selected" >报名机构</option>
+                            <option value="schoolNoPrint" >报名机构(非打印)</option>
                             <option value="admin" >超级管理员</option>
                         </select></td>
                     </tr>

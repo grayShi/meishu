@@ -61,7 +61,7 @@ import javax.servlet.http.HttpSession;
 
 public class SessionFilter implements Filter {
     private String[] adminPages = {"/subject","/place","/examTime","/data",
-            "/cost","/message","/user","/costCommit"};
+            "/cost","/user","/costCommit"};
     private log4j newLig4j = new log4j();
     @Override
     public void init(FilterConfig filterConfig) throws ServletException {
@@ -136,7 +136,14 @@ public class SessionFilter implements Filter {
             if(power.equals("admin")){
                 chain.doFilter(request, response);
             } else {
-                if(!findIndex(adminPages, path.split("-")[0])){
+                String[] newAdminPages = new String[adminPages.length + 1] ;
+                for(int i = 0; i< adminPages.length; i++) {
+                    newAdminPages[i] = adminPages[i];
+                }
+                if(power.equals("schoolNoPrint")) {
+                    newAdminPages[newAdminPages.length -1 ] = "/print";
+                }
+                if(!findIndex(newAdminPages, path.split("-")[0])){
                     chain.doFilter(request, response);
                 } else {
                     servletResponse.sendRedirect(servletRequest.getContextPath() + "/reLogin");

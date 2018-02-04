@@ -100,7 +100,9 @@
                     <ul class="nav nav-second-level">
                         <li><a href="examination">整体考场分配</a></li>
                         <li><a href="forPerson">单人考场分配</a></li>
-                        <li><a href="print">打印准考证</a></li>
+                        <% if(!power.equals("schoolNoPrint")){%>
+                            <li><a href="print">打印准考证</a></li>
+                        <% }%>
                     </ul>
                 </li>
                 <% if(power.equals("admin")){%>

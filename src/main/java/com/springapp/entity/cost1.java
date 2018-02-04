@@ -15,6 +15,7 @@ public class cost1 {
     private String startTime;
     private int count;
     private String id;
+    private Double cashback;
 
     public String getId() {
         return id;
@@ -102,5 +103,13 @@ public class cost1 {
 
     public void setStartTime(String startTime) {
         this.startTime = startTime;
+    }
+
+    public Double getCashback() {
+        return cashback;
+    }
+
+    public void setCashback(Double cashback) {
+        this.cashback = cashback;
     }
 }

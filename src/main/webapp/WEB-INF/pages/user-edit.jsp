@@ -70,11 +70,18 @@
                             <td><select  id="power" class="form-control"onchange="javascript:setReportPlaceShow()">
                                 <c:if test="${item.power == 'school'}">
                                     <option value="school" selected="selected" >报名机构</option>
+                                    <option value="schoolNoPrint" >报名机构(非打印)</option>
                                     <option value="admin" >超级管理员</option>
                                 </c:if>
                                 <c:if test="${item.power == 'admin'}">
                                     <option value="school"  >报名机构</option>
+                                    <option value="schoolNoPrint" >报名机构(非打印)</option>
                                     <option value="admin" selected="selected" >超级管理员</option>
+                                </c:if>
+                                <c:if test="${item.power == 'schoolNoPrint'}">
+                                    <option value="school"  >报名机构</option>
+                                    <option value="schoolNoPrint"  selected="selected" >报名机构(非打印)</option>
+                                    <option value="admin">超级管理员</option>
                                 </c:if>
                             </select></td>
                         </tr>

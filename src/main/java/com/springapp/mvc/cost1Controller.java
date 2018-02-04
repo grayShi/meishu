@@ -239,8 +239,9 @@ public class cost1Controller extends BaseController{
                     y.setBaomingfei(Baomingfei);
                     y.setZhengshufei(Zhengshufei);
                     y.setKaowufei(Kaowufei);
-                    y.setRemark(Remark);
                     y.setCount(count);
+                    y.setCashback(costDao.cashbackRules(count));
+                    y.setRemark(Remark - costDao.cashbackRules(count));
                     newId = allCostList.get(i).getSubID();
                     i--;
                     y.setReportPlace(allCostList.get(i).getReportPlace());
@@ -270,6 +271,8 @@ public class cost1Controller extends BaseController{
             y.setKaowufei(Kaowufei);
             y.setRemark(Remark);
             y.setCount(count);
+            y.setCashback(costDao.cashbackRules(count));
+            y.setRemark(Remark - costDao.cashbackRules(count));
             totalCostList.add(y);
         }
         cost1 total = new cost1();
@@ -277,7 +280,8 @@ public class cost1Controller extends BaseController{
         total.setBaomingfei(totalBaomingfei);
         total.setKaowufei(totalKaowufei);
         total.setZhengshufei(totalZhengshufei);
-        total.setRemark(totalRemark);
+        total.setCashback(costDao.cashbackRules(totalCount));
+        total.setRemark(totalRemark - costDao.cashbackRules(totalCount));
         totalCostList.add(total);
         return JSONArray.fromObject(totalCostList).toString();
     }
@@ -341,6 +345,8 @@ public class cost1Controller extends BaseController{
         total.setKaowufei(totalKaowufei);
         total.setZhengshufei(totalZhengshufei);
         total.setRemark(totalRemark);
+//        total.setCashback(costDao.cashbackRules(totalCount));
+//        total.setRemark(totalRemark - costDao.cashbackRules(totalCount));
         modelAndView.addObject("totalCost",total);
         modelAndView.addObject("allCostList",allCostList);
         modelAndView.setViewName("cost1-detail");

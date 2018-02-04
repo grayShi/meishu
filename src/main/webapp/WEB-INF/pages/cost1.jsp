@@ -106,6 +106,7 @@
                         <th>报名费</th>
                         <th>考务费</th>
                         <th>证书费</th>
+                        <th>返点费</th>
                         <th>合计</th>
                     </tr>
                     </thead>
@@ -195,6 +196,7 @@
                         " <td>"+data[i].baomingfei+"</td> " +
                         "<td>"+data[i].kaowufei+"</td> " +
                         "<td>"+data[i].zhengshufei+"</td> " +
+                        "<td>"+data[i].cashback+"</td> " +
                         "<td>"+data[i].remark+"</td> </tr>";
                 }
                 str+="<tr> <td colspan='2' style='text-align:center'>合&nbsp;&nbsp;&nbsp;&nbsp;计</td>" +
@@ -202,6 +204,7 @@
                     " <td>"+data[data.length-1].baomingfei+"</td> " +
                     "<td>"+data[data.length-1].kaowufei+"</td> " +
                     "<td>"+data[data.length-1].zhengshufei+"</td> " +
+                    "<td>"+data[data.length-1].cashback+"</td> " +
                     "<td>"+data[data.length-1].remark+"</td> </tr>";
                 $("#costTable").html(str);
             }
