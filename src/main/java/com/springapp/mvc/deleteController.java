@@ -81,11 +81,14 @@ public class deleteController extends BaseController{
     @RequestMapping(value="/delete-editMessage",method = RequestMethod.POST)
     @ResponseBody
     public String editMessage(@RequestParam(value = "id") Long id,@RequestParam(value = "editName") String editName,
-                                    @RequestParam(value = "editSex") String editSex,@RequestParam(value = "editBirth") String editBirth, HttpServletRequest request){
+                                    @RequestParam(value = "editSex") String editSex,@RequestParam(value = "editBirth") String editBirth,
+                              @RequestParam(value = "editCountry") String editCountry,@RequestParam(value = "editNation") String editNation,HttpServletRequest request){
         List<message> list = messageDao.getId(id,request);
         list.get(0).setName(editName);
         list.get(0).setSex(editSex);
         list.get(0).setBirth(editBirth);
+        list.get(0).setCountry(editCountry);
+        list.get(0).setNation(editNation);
         messageDao.update(list,request);
         return "success";
     }

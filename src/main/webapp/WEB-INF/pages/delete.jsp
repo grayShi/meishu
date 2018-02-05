@@ -121,8 +121,10 @@
                 </div>
                 </div>
                 <div class="col-lg-12 text-center">
-                    <input type="checkbox" id="checkDelete" name="checkAll" />查看删除考生
-                    <button type='button' data-toggle='modal' class='btn btn-default' data-target='#delete-total'>批量删除</button>
+                    <% if(power.equals("admin")){%>
+                        <input type="checkbox" id="checkDelete" name="checkAll" />查看删除考生
+                        <button type='button' data-toggle='modal' class='btn btn-default' data-target='#delete-total'>批量删除</button>
+                    <% } %>
                     <button class="btn btn-primary" type="button" onclick="getSearch()">搜索</button>
                     <button class="btn btn-primary" onclick="getExcel()">导出EXCEL</button>
                 </div>
@@ -223,6 +225,12 @@
                         </div>
                         <div class="form-group">
                             <label>出生日期</label><input id="editBirth" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label>国家</label><input id="editCountry" class="form-control"/>
+                        </div>
+                        <div class="form-group">
+                            <label>民族</label><input id="editNation" class="form-control"/>
                         </div>
                     </form>
                 </div>
@@ -357,7 +365,11 @@
     var ENDSIGNTIME = "0";
     var CHECKDELETE = "0";
     function getSearch(){
-        CHECKDELETE = $("#checkDelete")[0].checked;
+        if($("#checkDelete")[0]) {
+            CHECKDELETE = $("#checkDelete")[0].checked;
+        } else {
+            CHECKDELETE = false;
+        }
         NAME=$("#name").val();
         SUBJECT=$("#subject option:selected").val();
         LEVEL = $("#level option:selected").val();
@@ -435,8 +447,8 @@
                             "<td>" + data[index].level + "</td>" +
                             "<td>" + data[index].reportPlace + " " + sub2 + "</td>" +
                             "<td>" + data[index].examPlace + " " + data[index].classPlace + "</td>" +
-                            "<td><button type='button' onclick='editMessage(\"" + data[index].id + "\",\"" + data[index].name + "\",\"" + data[index].sex + "\",\"" + data[index].birth + "\")' class='btn btn-default'>编辑</button> " +
-                            "<button type='button' data-toggle='modal' data-target='#delete' onclick='getId(" + data[index].id + ")' class='btn btn-default'>删除</button> </td></tr>";
+                            "<td><button type='button' onclick='editMessage(\"" + data[index].id + "\",\"" + data[index].name + "\",\"" + data[index].sex + "\",\"" + data[index].birth + "\",\""+ data[index].country +"\",\""+data[index].nation + "\")' class='btn btn-default'>编辑</button> " +
+                            "<% if(power.equals("admin")){%><button type='button' data-toggle='modal' data-target='#delete' onclick='getId(" + data[index].id + ")' class='btn btn-default'>删除</button> <% } %> </td></tr>";
                     } else {
                         list += "<tr> " +
                             "<td><input type='checkbox' name='checkItem' value=" + data[index].id + "></td>" +
@@ -449,7 +461,7 @@
                             "<td>" + data[index].level + "</td>" +
                             "<td>" + data[index].reportPlace + " " + sub2 + "</td>" +
                             "<td>" + data[index].examPlace + " " + data[index].classPlace + "</td>" +
-                            "<td><button type='button' onclick='editMessage(\"" + data[index].id + "\",\"" + data[index].name + "\",\"" + data[index].sex + "\",\"" + data[index].birth + "\")' class='btn btn-default'>编辑</button> " +
+                            "<td><button type='button' onclick='editMessage(\"" + data[index].id + "\",\"" + data[index].name + "\",\"" + data[index].sex + "\",\"" + data[index].birth + "\",\""+ data[index].country +"\",\""+data[index].nation + "\")' class='btn btn-default'>编辑</button> " +
                             "<button type='button' data-toggle='modal' data-target='#rollback' onclick='getId(" + data[index].id + ")' class='btn btn-default'>撤销</button> </td></tr>";
                     }
                     });
@@ -516,17 +528,21 @@
             +EXAMPLACE+"&classPlace="+CLASSPLACE+"&reportPlace="+REPORTPLACE+"&subPlace="+SUBPLACE+"&time="+TIME+"&endSignUpTime="+ENDSIGNTIME+"&isDelete="+CHECKDELETE;
     }
     var ID;
-    function editMessage(id,name,sex,birth) {
+    function editMessage(id,name,sex,birth,country,nation) {
         ID=id;
         $("#editName").val(name);
         $("#editSex").val(sex);
         $("#editBirth").val(birth);
+        $("#editCountry").val(country);
+        $("#editNation").val(nation);
         $("#edit").modal('show');
     }
     function saveMessage() {
         var editName = $("#editName").val();
         var editSex = $("#editSex option:selected").val();
         var editBirth = $("#editBirth").val();
+        var editCountry = $("#editCountry").val();
+        var editNation = $("#editNation").val();
         if(editName!=""&& editBirth!="") {
             $.ajax({
                 url: "delete-editMessage",
@@ -535,7 +551,9 @@
                     id: ID,
                     editName: editName,
                     editSex: editSex,
-                    editBirth: editBirth
+                    editBirth: editBirth,
+                    editCountry: editCountry,
+                    editNation: editNation,
                 },
                 success: function (data) {
                     if(data == "success"){
