@@ -11,7 +11,7 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1.5">
-    <title>上海市美术考级管理系统</title>
+    <title>全国美术考级管理系统</title>
     <link href="vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" media="screen" />
     <link rel="stylesheet" href="vendor/css/ani.css">
     <link rel="stylesheet" href="vendor/css/style2.css">
@@ -28,7 +28,7 @@
     <div class="box">
         <div class="image" style="width:70%">
             <%--<img src="images/logo.png" class="pic-1">--%>
-            <img src="images/word.png" class="pic-2">
+            <img src="images/word1.png" class="pic-2">
         </div>
         <div class="panel">
                 <div class="panel-heading">

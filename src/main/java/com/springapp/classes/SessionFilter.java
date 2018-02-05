@@ -123,9 +123,9 @@ public class SessionFilter implements Filter {
                 String[] value = servletRequest.getParameterValues(name);
                 String val = "";
                 for (int i = 0; i < value.length; i++) {
-                    val = val + value[i];
+                    val = val + value[i] + ", ";
                 }
-                elements += name + ": " + val + ", ";
+                elements += name + ": " + val;
             }
             if(elements != ""){
                 this.newLig4j.printLog(elements, servletRequest);
