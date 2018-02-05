@@ -78,6 +78,8 @@
         }
         if(notRow == ""){
             row += "0行"
+        } else {
+            row += notRow;
         }
         row+="</br>未提交";
         $("#line2").html(row);
