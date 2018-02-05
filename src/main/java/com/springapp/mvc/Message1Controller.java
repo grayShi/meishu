@@ -47,8 +47,9 @@ public class Message1Controller extends BaseController{
         String FileName="";
         HttpSession session= request.getSession();
         String place = (String) session.getAttribute("place");
-        String subPlace = (String) session.getAttribute("subPlace");
         String power = (String) session.getAttribute("power");
+        searchSql search = new searchSql();
+        String subPlace = search.setSubPlace((String) session.getAttribute("subPlace"));
         Boolean isAdmin = false;
         if(power.equals("admin")){
             isAdmin = true;
