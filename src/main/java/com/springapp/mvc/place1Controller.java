@@ -115,7 +115,7 @@ public class place1Controller extends  BaseController{
         if(power.equals("admin") && (place.equals("0")||subPlace.equals("0"))) {
             return "no_place";
         }
-        if(power.equals("school")) {
+        if(!power.equals("admin")) {
             reportPlace = (String) session.getAttribute("place");
             searchSql search = new searchSql();
             subPlace = search.setSubPlace((String) session.getAttribute("subPlace"));

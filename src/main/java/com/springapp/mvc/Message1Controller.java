@@ -49,11 +49,13 @@ public class Message1Controller extends BaseController{
         HttpSession session= request.getSession();
         String place = (String) session.getAttribute("place");
         String power = (String) session.getAttribute("power");
-        searchSql search = new searchSql();
-        String subPlace = search.setSubPlace((String) session.getAttribute("subPlace"));
         Boolean isAdmin = false;
+        String subPlace = (String) session.getAttribute("subPlace");
         if(power.equals("admin")){
             isAdmin = true;
+        } else {
+            searchSql search = new searchSql();
+            subPlace = search.setSubPlace((String) session.getAttribute("subPlace"));
         }
         for (MultipartFile myfile : myfiles) {
             if (myfile.isEmpty()) {
@@ -323,7 +325,7 @@ public class Message1Controller extends BaseController{
                         }
                         else if (cellNum == 9 ) {
                             if(!getValue(hssfCell).equals("")) {
-                                if(getValue(hssfCell) != place && !isAdmin){
+                                if(!getValue(hssfCell).equals(place) && !isAdmin){
                                     lineNum +="(Sheet"+(numSheet+1)+")"+ (rowNum + 1) + "(无效报名省市),";
                                     isSuccess = false;
                                     break;
@@ -338,7 +340,7 @@ public class Message1Controller extends BaseController{
                         }
                         else if (cellNum == 10 ) {
                             if(!getValue(hssfCell).equals("")) {
-                                if(getValue(hssfCell) != subPlace && !isAdmin){
+                                if(!getValue(hssfCell).equals(subPlace) && !isAdmin){
                                     lineNum +="(Sheet"+(numSheet+1)+")"+ (rowNum + 1) + "(无效机构名称),";
                                     isSuccess = false;
                                     break;
