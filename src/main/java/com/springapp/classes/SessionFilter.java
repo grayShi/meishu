@@ -160,8 +160,10 @@ public class SessionFilter implements Filter {
     }
     public static boolean findIndex(String[] arr,String targetValue){
         for(String s:arr){
+          if(s!=null) {
             if(s.equals(targetValue))
                 return true;
+            }
         }
         return false;
     }
