@@ -14,6 +14,7 @@ public class commitCost {
     private int isDelete;
     private Date commitDate;
     private Date confirmDate;
+    private String endSignUpdate;
 
     public int getIsDelete() {
         return isDelete;
@@ -79,5 +80,13 @@ public class commitCost {
 
     public void setConfirmDate(Date confirmDate) {
         this.confirmDate = confirmDate;
+    }
+
+    public String getEndSignUpdate() {
+        return endSignUpdate;
+    }
+
+    public void setEndSignUpdate(String endSignUpdate) {
+        this.endSignUpdate = endSignUpdate;
     }
 }

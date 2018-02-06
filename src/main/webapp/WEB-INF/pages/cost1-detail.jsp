@@ -62,6 +62,7 @@
                     <tr>
                         <th>考点编号</th>
                         <th>报名省市 机构名称</th>
+                        <th>报名截止日期</th>
                         <th>级别</th>
                         <th>未缴费人数</th>
                         <th>报名费</th>
@@ -76,6 +77,7 @@
                             <td style="display: none;"><input type='checkbox' name='checkItem' value='${item.count}-${item.remark}-${item.subID}-${item.level}'></td>
                             <td>${item.subID}</td>
                             <td>${item.reportPlace}  ${item.subPlace}</td>
+                            <td>${item.endSignUpTime}</td>
                             <td>${item.level}</td>
                             <td>${item.count}</td>
                             <td>${item.baomingfei}</td>
@@ -94,8 +96,8 @@
                         <th>报名费</th>
                         <th>考务费</th>
                         <th>证书费</th>
-                        <th>返点费</th>
-                        <th>合计</th>
+                        <th>劳务费</th>
+                        <th>合计(扣除劳务费)</th>
                     </tr>
                         <tr>
                             <td style="text-align:center">合计</td>
@@ -116,7 +118,7 @@
                     缴费合计
                 </div>
                 <div class="panel-body" id="line2">
-                    总数量:0,总金额:0
+                    总数量:0,总金额(扣除劳务费):0
                 </div>
                 <div class="panel-footer text-center" >
                     <button type="button" class="btn btn-danger" onclick="commitSuccess()">提交缴费成功申请</button>
@@ -188,7 +190,7 @@
             count += Number(arrayList[i].split('-')[0]);
             total += Number(arrayList[i].split('-')[1]);
         }
-        $('#line2').html("总数量:"+count+",总金额:"+(total - '${cashback}'));
+        $('#line2').html("总数量:"+count+",总金额(扣除劳务费):"+(total - '${cashback}'));
     }
 
     function commitSuccess() {
@@ -215,7 +217,8 @@
             type: "post",
             data: {
                 level: level,
-                plaId: plaId
+                plaId: plaId,
+                endSignUpdate: '${endSignUpdate}'
             },
             traditional: true,
             success: function (data) {

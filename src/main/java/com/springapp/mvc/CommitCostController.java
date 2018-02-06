@@ -22,7 +22,7 @@ import java.util.List;
 public class CommitCostController extends BaseController{
     @RequestMapping(value="/commitCost",method = RequestMethod.GET)
     public ModelAndView home(ModelAndView modelAndView, HttpServletRequest request){
-        List<commitCost> commitCostList= this.costCommitDao.findAll("select commitCost.id,commitCost.placeId,reportPlace.place,reportPlace.subPlace,commitCost.count,commitCost.totalCost, commitCost.isDelete from commitCost commitCost,reportPlace reportPlace where commitCost.placeId = reportPlace.realId",request);
+        List<commitCost> commitCostList= this.costCommitDao.findAll("select commitCost.id,commitCost.placeId,reportPlace.place,reportPlace.subPlace,commitCost.count,commitCost.totalCost, commitCost.isDelete, commitCost.endSignUpdate from commitCost commitCost,reportPlace reportPlace where commitCost.placeId = reportPlace.realId",request);
         List <cost1> allCostList = new ArrayList<>();
         for(int i=0;i<commitCostList.size();i++) {
             cost1 cost = new cost1();
@@ -39,7 +39,11 @@ public class CommitCostController extends BaseController{
             } else {
                 cost.setConfirm("等待确认缴费");
             }
-
+            if(result.get(7).toString().equals("null")){
+                cost.setEndSignUpTime("");
+            } else {
+                cost.setEndSignUpTime(result.get(7).toString());
+            }
             allCostList.add(cost);
         }
         modelAndView.addObject("allCostList",allCostList);

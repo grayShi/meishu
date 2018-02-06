@@ -55,6 +55,7 @@
                         <th>报名点编号</th>
                         <th>报名省市</th>
                         <th>机构名称</th>
+                        <th>报名截止日期</th>
                         <th>人数</th>
                         <th>费用</th>
                         <th>审核情况</th>
@@ -67,6 +68,7 @@
                             <td>${item.subID}</td>
                             <td>${item.reportPlace}</td>
                             <td>${item.subPlace}</td>
+                            <td>${item.endSignUpTime}</td>
                             <td>${item.count}</td>
                             <td>${item.remark}</td>
                             <td>${item.confirm}</td>

@@ -17,6 +17,7 @@ public class cost1 {
     private String id;
     private Double cashback;
     private String confirm;
+    private String endSignUpTime;
 
     public String getId() {
         return id;
@@ -120,5 +121,13 @@ public class cost1 {
 
     public void setConfirm(String confirm) {
         this.confirm = confirm;
+    }
+
+    public String getEndSignUpTime() {
+        return endSignUpTime;
+    }
+
+    public void setEndSignUpTime(String endSignUpTime) {
+        this.endSignUpTime = endSignUpTime;
     }
 }

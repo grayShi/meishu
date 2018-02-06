@@ -159,7 +159,7 @@ public class cost1Controller extends BaseController{
         String sql2="";
         String sql3="";
         String sql4="";
-        String sql = "select reportPlace,subPlace,level,count(*) from message as message where isDelete = 0 "+ sql1;
+        String sql = "select reportPlace,subPlace,level,count(*),message.endSignUpTime from message as message where isDelete = 0 "+ sql1;
         if(!reportPlace.equals("0") || !subPlace.equals("0") || !endSignUpTime.equals("0"))
             sql+="and ";
         if(! reportPlace.equals("0")) {
@@ -175,7 +175,7 @@ public class cost1Controller extends BaseController{
                 sql4 += " and ";
             sql4 += "subPlace = '" + subPlace + "'";
         }
-        sql+=sql2+sql3+sql4+" group by reportPlace,subPlace,level,message.endSignUpTime";
+        sql+=sql2+sql3+sql4+" group by reportPlace,subPlace,level,message.endSignUpTime order by message.endSignUpTime asc";
         List<message> levelList = messageDao.findAll(sql,request);
         List levelCount;
         List<cost1> allCostList = new ArrayList<cost1>();
@@ -197,6 +197,7 @@ public class cost1Controller extends BaseController{
                 subId+=sub[m];
             }
             x.setSubPlace(sub1);
+            x.setEndSignUpTime(levelCount.get(4).toString());
             x.setLevel(Integer.parseInt(levelCount.get(2).toString()));
             List<cost> costList = costDao.findAll("from cost where level = " + Integer.parseInt(levelCount.get(2).toString()),request);
             if(costList.size()!=0){
@@ -234,8 +235,9 @@ public class cost1Controller extends BaseController{
         int count = 0;
         if(allCostList.size()!=0) {
             String newId = allCostList.get(0).getSubID();
+            String newEndSignUpTime = allCostList.get(0).getEndSignUpTime();
             for (int i = 0; i < allCostList.size(); i++) {
-                if (!allCostList.get(i).getSubID().equals(newId)) {
+                if (!allCostList.get(i).getSubID().equals(newId) || !allCostList.get(i).getEndSignUpTime().equals(newEndSignUpTime)) {
                     y.setSubID(newId);
                     y.setBaomingfei(Baomingfei);
                     y.setZhengshufei(Zhengshufei);
@@ -243,10 +245,14 @@ public class cost1Controller extends BaseController{
                     y.setCount(count);
                     y.setCashback(costDao.cashbackRules(count, count));
                     y.setRemark(Remark - costDao.cashbackRules(count, count));
-                    newId = allCostList.get(i).getSubID();
+                    if(!allCostList.get(i).getSubID().equals(newId))
+                        newId = allCostList.get(i).getSubID();
+                    if(!allCostList.get(i).getEndSignUpTime().equals(newEndSignUpTime))
+                        newEndSignUpTime = allCostList.get(i).getEndSignUpTime();
                     i--;
                     y.setReportPlace(allCostList.get(i).getReportPlace());
                     y.setSubPlace(allCostList.get(i).getSubPlace());
+                    y.setEndSignUpTime(allCostList.get(i).getEndSignUpTime());
                     totalCostList.add(y);
                     y = new cost1();
                     Baomingfei = 0.0;
@@ -270,6 +276,7 @@ public class cost1Controller extends BaseController{
             y.setBaomingfei(Baomingfei);
             y.setZhengshufei(Zhengshufei);
             y.setKaowufei(Kaowufei);
+            y.setEndSignUpTime(allCostList.get(allCostList.size() - 1).getEndSignUpTime());
             y.setRemark(Remark);
             y.setCount(count);
             y.setCashback(costDao.cashbackRules(count,count));
@@ -287,9 +294,9 @@ public class cost1Controller extends BaseController{
         return JSONArray.fromObject(totalCostList).toString();
     }
     @RequestMapping(value = "/cost1-detail",method = RequestMethod.GET)
-    public ModelAndView home1(@RequestParam(value="subID")String subID, HttpServletRequest request) {
+    public ModelAndView home1(@RequestParam(value="subID")String subID,@RequestParam(value="endSignUpdate")String endSignUpdate, HttpServletRequest request) {
         ModelAndView modelAndView = new ModelAndView();
-        List<message> levelList = messageDao.findAll("select reportPlace,subPlace,level,count(*) from message where isDelete = 0 and subPlace like '"+subID+"￥%' and isPay = false group by reportPlace,subPlace,level",request);
+        List<message> levelList = messageDao.findAll("select reportPlace,subPlace,level,count(*),endSignUpTime from message where isDelete = 0 and subPlace like '"+subID+"￥%' and endSignUpTime = '"+endSignUpdate+"' and isPay = false group by reportPlace,subPlace,level",request);
         List levelCount;
         List<cost1> allCostList = new ArrayList<cost1>();
         int totalCount = 0;
@@ -318,6 +325,7 @@ public class cost1Controller extends BaseController{
                 x.setKaowufei(costList.get(0).getKaowufei() * x.getCount());
                 x.setZhengshufei(costList.get(0).getZhengshufei() * x.getCount());
                 x.setRemark(costList.get(0).getRemark() * x.getCount());
+                x.setEndSignUpTime(levelCount.get(4).toString());
                 x.setSubID(subId);
                 totalCount += x.getCount();
                 totalBaomingfei += x.getBaomingfei();
@@ -326,7 +334,7 @@ public class cost1Controller extends BaseController{
                 totalRemark += x.getRemark();
             }
             else{
-                x.setCount(Integer.parseInt(levelCount.get(3).toString()));
+                x.setCount(0);
                 x.setSubID(subId);
                 x.setBaomingfei(0.0);
                 x.setKaowufei(0.0);
@@ -346,10 +354,11 @@ public class cost1Controller extends BaseController{
         total.setKaowufei(totalKaowufei);
         total.setZhengshufei(totalZhengshufei);
 //        total.setRemark(totalRemark);
-        Long ttlCount = messageDao.getCount("select count (*) from message where subPlace like '"+subID+"￥%'",request);
+        Long ttlCount = messageDao.getCount("select count (*) from message where subPlace like '"+subID+"￥%' and isDelete = 0",request);
         total.setCashback(costDao.cashbackRules(totalCount, new Long(ttlCount).intValue()));
         total.setRemark(totalRemark - costDao.cashbackRules(totalCount, new Long(ttlCount).intValue()));
         modelAndView.addObject("cashback",total.getCashback());
+        modelAndView.addObject("endSignUpdate",endSignUpdate);
         modelAndView.addObject("totalCost",total);
         modelAndView.addObject("allCostList",allCostList);
         modelAndView.setViewName("cost1-detail");
@@ -358,7 +367,7 @@ public class cost1Controller extends BaseController{
 
     @RequestMapping(value="/cost1-commit",method = RequestMethod.POST)
     @ResponseBody
-    public String commit(HttpServletRequest request, @RequestParam(value="level") String[] level, @RequestParam(value="plaId") String plaId) {
+    public String commit(HttpServletRequest request, @RequestParam(value="level") String[] level, @RequestParam(value="plaId") String plaId, @RequestParam(value="endSignUpdate") String endSignUpdate) {
         String listString = "(";
         String str = "";
         for(int i = 0; i<level.length; i++){
@@ -370,7 +379,7 @@ public class cost1Controller extends BaseController{
 
         }
         listString += str+")";
-        List<message> List = messageDao.findAll("select message.level,cost.remark,count(*) from message message,cost cost where message.isPay = false and message.isDelete = 0 and message.subPlace like '"+plaId+"￥%' and message.level in "+listString+" and message.level = cost.level group by message.level",request);
+        List<message> List = messageDao.findAll("select message.level,cost.remark,count(*) from message message,cost cost where message.isPay = false and message.isDelete = 0 and message.endSignUpTime = '"+endSignUpdate+"' and message.subPlace like '"+plaId+"￥%' and message.level in "+listString+" and message.level = cost.level group by message.level",request);
         List levelCount;
         int count = 0;
         int cost = 0;
@@ -379,11 +388,12 @@ public class cost1Controller extends BaseController{
             count += Integer.parseInt(levelCount.get(2).toString());
             cost += (Double.parseDouble(levelCount.get(1).toString())) * (Integer.parseInt(levelCount.get(2).toString()));
         }
-        Long totalCount = messageDao.getCount("select count (*) from message where subPlace like '"+plaId+"￥%'",request);
+        Long totalCount = messageDao.getCount("select count (*) from message where subPlace like '"+plaId+"￥%' and isDelete = 0",request);
         commitCost commitCost = new commitCost();
         commitCost.setCount(count);
         commitCost.setLevel(str);
         commitCost.setPlaceId(plaId);
+        commitCost.setEndSignUpdate(endSignUpdate);
         commitCost.setTotalCost(cost - costDao.cashbackRules(count, new Long(totalCount).intValue()));
         commitCost.setCommitDate(new Date());
         this.costCommitDao.save(commitCost,request);

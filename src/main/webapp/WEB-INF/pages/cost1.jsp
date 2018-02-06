@@ -102,11 +102,12 @@
                     <tr>
                         <th>考点编号</th>
                         <th>报名省市 机构名称</th>
+                        <th>报名截止日期</th>
                         <th>报考人数</th>
                         <th>报名费</th>
                         <th>考务费</th>
                         <th>证书费</th>
-                        <th>返点费</th>
+                        <th>劳务费</th>
                         <th>合计</th>
                     </tr>
                     </thead>
@@ -191,7 +192,8 @@
                 var str="";
                 for(var i=0;i<data.length-1;i++){
                     str+="<tr> <td>"+data[i].subID+"</td>" +
-                        "<td><a href='#' onclick='searchPlace(\""+data[i].subID+"\")'>"+data[i].reportPlace+" "+data[i].subPlace+"</a></td> " +
+                        "<td><a href='#' onclick='searchPlace(\""+data[i].subID+"\",\""+data[i].endSignUpTime+"\")'>"+data[i].reportPlace+" "+data[i].subPlace+"</a></td> " +
+                        "<td>"+data[i].endSignUpTime+"</td>" +
                         "<td>"+data[i].count+"</td>" +
                         " <td>"+data[i].baomingfei+"</td> " +
                         "<td>"+data[i].kaowufei+"</td> " +
@@ -199,7 +201,7 @@
                         "<td>"+data[i].cashback+"</td> " +
                         "<td>"+data[i].remark+"</td> </tr>";
                 }
-                str+="<tr> <td colspan='2' style='text-align:center'>合&nbsp;&nbsp;&nbsp;&nbsp;计</td>" +
+                str+="<tr> <td colspan='3' style='text-align:center'>合&nbsp;&nbsp;&nbsp;&nbsp;计</td>" +
                     "<td>"+data[data.length-1].count+"</td>" +
                     " <td>"+data[data.length-1].baomingfei+"</td> " +
                     "<td>"+data[data.length-1].kaowufei+"</td> " +
@@ -210,8 +212,8 @@
             }
         })
     }
-    function searchPlace(subID) {
-        window.location="cost1-detail?subID="+subID;
+    function searchPlace(subID,endSignUpdate) {
+        window.location="cost1-detail?subID="+subID+"&endSignUpdate="+endSignUpdate;
     }
 
 
