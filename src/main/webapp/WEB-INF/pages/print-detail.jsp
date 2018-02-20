@@ -48,14 +48,15 @@
 <c:forEach items="${list}" var="item" varStatus="status">
     <%--<div style="height: 77mm; overflow: hidden;margin: 8mm 9mm;" class="nextPage">--%>
     <div class="nextPage" style="margin-top: 1.5mm">
-        <table style="border-bottom: #000000 1px solid; border-left: #000000 1px solid; height: 72mm; border-top: #000000 1px solid; border-right: #000000 1px solid;" title=第${status.count}张 border=0 cellSpacing=1 cellPadding=0 width=363 align=center>
+        <div style="border-bottom:1px dashed #000">
+        <table style="margin-bottom:15px;border-bottom: #000000 1px solid; border-left: #000000 1px solid; height: 72mm; border-top: #000000 1px solid; border-right: #000000 1px solid;" title=第${status.count}张 border=0 cellSpacing=1 cellPadding=0 width=400px align=center>
             <tbody>
-    <tr> <td style="line-height: 20px" height=42 colSpan=3 align=center><span style="font-size: 15px; font-weight: 600">全国美术考级准考证</span><br>
-    <span style="text-align: left; padding-left: 5px; width: 100%; font-size: 14px">准考证号:<u>${item.cardNumber}</u></span></td></tr>
+    <tr> <td style="line-height: 20px" height=88px colSpan=3 align=center><span style="font-size: 28px; font-weight: 600">全国美术考级准考证</span></br>
+    <span style="display: block;margin-top: 10px;padding-left: 5px; width: 100%; font-size: 14px">准考证号:<u>${item.cardNumber}</u></span></td></tr>
     <tr><td style="padding-left: 6px; font-size: 13px" height=30 width=147>姓名:<u>${item.name}</u></td> <td style="padding-left: 6px; font-size: 13px" height=30 width=89 white-space: nowrap>性别:<u>${item.sex}</u></td>
     <td style="padding-right: 8px; font-size: 12px" rowSpan=5 width=121 align=center>
     <table style="border-bottom: #333333 1px solid; border-left: #333333 1px solid; border-top: #333333 1px solid; border-right: #333333 1px solid" border=0 cellSpacing=0 cellPadding=0 width=104 align=center height=137>
-<tbody> <tr> <td width=110 align=center> <div style="width: 100%; font-size: 12px">二寸照片二张<br>(写上姓名及考号)一张贴此处，一张贴背面</div></td></tr></tbody></table></td></tr>
+<tbody> <tr> <td width=110 align=center> <div style="width: 100%; font-size: 12px">二寸照片二张</br>(写上姓名及考号)</div></td></tr></tbody></table></td></tr>
     <tr> <td style="padding-left: 6px; font-size: 13px" height=30>出生日期: <u>${item.birth}</u> </td>
     <td style="padding-left: 6px; font-size: 13px" height=30 white-space: nowrap>编号:<u>${item.reportPlace}</u></td></tr>
     <tr> <td style="padding-left: 6px; font-size: 13px" height=30>国籍:<u>${item.country}</u></td>
@@ -69,7 +70,29 @@
     <td height=25px>&nbsp;</td></tr>
     <tr> <td style="font-size: 13px" height=21 colSpan=3 align=center>${remark}</td></tr></tbody>
         </table>
-    </div> 
+        </div>
+        <div style="margin-top: 10px">
+            <table style="margin-bottom:15px;border-bottom: #000000 1px solid; border-left: #000000 1px solid; height: 72mm; border-top: #000000 1px solid; border-right: #000000 1px solid;" title=第${status.count}张 border=0 cellSpacing=1 cellPadding=0 width=400px align=center>
+                <tbody>
+                <tr> <td style="line-height: 20px" height=88px colSpan=3 align=center><span style="font-size: 28px; font-weight: 600">考生须知</span></td></tr>
+                <tr><td style="padding-left: 6px; font-size: 13px" height=25 colSpan=2>1. <u>xxxxxxxxx</u></td>
+                    <td style="padding-right: 20px; font-size: 12px;" rowSpan=5 width=121 align=center>
+                        <table style="border-bottom: #333333 1px solid; border-left: #333333 1px solid; border-top: #333333 1px solid; border-right: #333333 1px solid" border=0 cellSpacing=0 cellPadding=0 width=104 align=center height=137>
+                            <tbody> <tr> <td width=110 align=center> <div style="width: 100%; font-size: 12px">二寸照片二张</br>(写上姓名及考号)</div></td></tr></tbody></table>
+                        (用于证书制作)
+                    </td></tr>
+                <tr><td style="padding-left: 6px; font-size: 13px" height=25 colSpan=2>2. <u>xxxxxxxxx</u></td></tr>
+                <tr> <td style="padding-left: 6px; font-size: 13px" height=25 colSpan=2>3. <u>xxxxxxxxx</u></td></tr>
+                <tr> <td style="padding-left: 6px; font-size: 13px" height=25 colSpan=2>4. <u>xxxxxxxxx</u></td></tr>
+                <tr> <td style="padding-left: 6px; font-size: 13px" height=25 colSpan=2>5. <u>xxxxxxxxx</u></td></tr>
+                <tr> <td style="padding-left: 6px; font-size: 13px" height=30 colSpan=3>6. <u>xxxx</u></td></tr>
+                <tr> <td style="padding-left: 6px; font-size: 13px" height=25 colSpan=2>7. <u>xxxxxxxx</u></td>
+                    <td height=25px>&nbsp;</td></tr>
+                <tr> <td style="font-size: 13px" height=21 colSpan=3 align=center></td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
 </c:forEach>
 
 <div class="noPrint" style="position: static;right: 0;left: 0;bottom: 0">
