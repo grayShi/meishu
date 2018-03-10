@@ -55,6 +55,7 @@
     .card-table {
         padding-left: 6px;
         font-size: 15px;
+        height： 20px;
     }
     .table-height {
         min-height: 420px;
@@ -81,21 +82,21 @@
                     <tbody>
                         <tr> <td style="line-height: 20px" height=88px colSpan=3 align=center><span style="font-size: 20px; font-weight: 600">全国美术考级准考证</span></br>
                         <span style="display: block;margin-top: 10px;padding-left: 5px; width: 100%; font-size: 14px">准考证号:<u>${item.cardNumber}</u></span></td></tr>
-                        <tr><td class="card-table" height=20 width=147></td></tr>
-                        <tr><td class="card-table" height=30 width=147>姓名:<u>${item.name}</u></td> <td class="card-table" height=30 width=89 white-space: nowrap>性别:<u>${item.sex}</u></td>
+                        <tr><td class="card-table"  width=147></td></tr>
+                        <tr><td class="card-table" width=147>姓名:<u>${item.name}</u></td> <td class="card-table" width=89 white-space: nowrap>性别:<u>${item.sex}</u></td>
                         <td style="padding-right: 8px; font-size: 12px" rowSpan=5 width=121 align=center>
                             <table style="border-bottom: #333333 1px solid; border-left: #333333 1px solid; border-top: #333333 1px solid; border-right: #333333 1px solid" border=0 cellSpacing=0 cellPadding=0 width=156 align=center height=205>
                                 <tbody> <tr> <td width=110 align=center> <div style="width: 100%; font-size: 12px">二寸照片一张</br>(写上姓名及考号)</div></td></tr></tbody></table>
-                        <tr> <td class="card-table" height=30>出生日期: <u>${item.birth}</u> </td>
-                        <td class="card-table" height=30 white-space: nowrap>编号:<u>${item.reportPlace}</u></td></tr>
-                        <tr> <td class="card-table" height=30>国籍:<u>${item.country}</u></td>
-                        <td class="card-table" height=30>民族:<u>${item.nation}</u></td></tr>
-                        <tr> <td class="card-table" height=30>科目:<u>${item.subject}</u></td>
-                        <td class="card-table" height=30>级别:<u>${item.level}级</u></td></tr>
-                        <tr> <td class="card-table" height=30 white-space: nowrap>时间: <u>${item.time}</u> </td>
-                        <td class="card-table" height=30>时长:<u>${item.examTime}</u>分钟</td></tr>
-                        <tr> <td class="card-table" height=30 colSpan=3>考点:<u>${item.examPlace}</u></td></tr>
-                        <tr> <td class="card-table" height=30 colSpan=2>考场:<u>${item.classPlace}</u></td>
+                        <tr> <td class="card-table">出生日期: <u>${item.birth}</u> </td>
+                        <td class="card-table" white-space: nowrap>编号:<u>${item.reportPlace}</u></td></tr>
+                        <tr> <td class="card-table" >国籍:<u>${item.country}</u></td>
+                        <td class="card-table">民族:<u>${item.nation}</u></td></tr>
+                        <tr> <td class="card-table">科目:<u>${item.subject}</u></td>
+                        <td class="card-table">级别:<u>${item.level}级</u></td></tr>
+                        <tr> <td class="card-table" white-space: nowrap>时间: <u>${item.time}</u> </td>
+                        <td class="card-table">时长:<u>${item.examTime}</u>分钟</td></tr>
+                        <tr> <td class="card-table" colSpan=3>考点:<u>${item.examPlace}</u></td></tr>
+                        <tr> <td class="card-table" colSpan=2>考场:<u>${item.classPlace}</u></td>
                         <td height=25>&nbsp;</td></tr>
                         <tr> <td style="font-size: 15px" height=26 colSpan=3 align=center>${remark}</td></tr>
                         <td height=26>&nbsp;</td></tr>
