@@ -124,7 +124,7 @@
                 </table>
                 </div>
 
-                        <table title=第${status.count}张 cellSpacing=1 cellPadding=0 style="width:318px; height:410px;margin-left: 49px;margin-top: -36px;" class="table-height">
+                        <table title=第${status.count}张 cellSpacing=1 cellPadding=0 style="width:318px; height:410px;margin-left: 49px;margin-top: -36px;border: 0" class="table-height">
                             <tbody>
                             <tr> <td style="line-height: 20px" height=60px colSpan=2 align=center><span style="font-size: 20px; font-weight: 600">考生须知</span></td></tr>
                             <tr><td class="message-table" colSpan=2>1、<span>请仔细核对信息，如有问题及时与报名老师联系。</span></td></tr>
