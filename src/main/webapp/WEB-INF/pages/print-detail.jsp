@@ -68,7 +68,7 @@
         height: 32px;
     }
     .table-width {
-        min-height: 410px;
+        min-height: 405px;
         min-width: 410px;
     }
     .table-height {
