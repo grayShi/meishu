@@ -147,7 +147,7 @@ public class PrintController extends BaseController {
                 sql5 += " and ";
             sql5 += "time = '" + examTime + "'";
         }
-        sql += sql1 + sql2 + sql3 + sql4 + sql5 + sql6;
+        sql += sql1 + sql2 + sql3 + sql4 + sql5 + sql6 + " and examPlace IS NOT NULL and classPlace IS NOT NULL";
         List<message> list = messageDao.findAll(sql,request);
         String Subject = "";
         char[] sub;

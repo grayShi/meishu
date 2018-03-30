@@ -36,8 +36,9 @@ public class SqlFilter implements Filter {
         }
         //System.out.println("============================SQL"+sql);
         //有sql关键字，跳转到error.html
-        if (sqlValidate(sql)) {
-            String ip = req.getRemoteAddr();
+        if (sqlValidate(sql, req)) {
+            NetworkUtil newIp = new NetworkUtil();
+            String ip = newIp.getIpAddress(req);
             throw new IOException("用户"+ip+"发送请求中的参数中含有非法字符");
             //String ip = req.getRemoteAddr();
         } else {
@@ -50,25 +51,28 @@ public class SqlFilter implements Filter {
 
     }
     //效验
-    protected static boolean sqlValidate(String str) {
+    protected static boolean sqlValidate(String str, HttpServletRequest request) {
+        log4j newLog4j = new log4j();
         str = str.toLowerCase();//统一转为小写
         String badStr = "'|and|exec|execute|insert|select|delete|update|count|drop|*|%|chr|mid|master|truncate|" +
                 "char|declare|sitename|xp_cmdshell|or|like'|and|exec|execute|insert|create|drop|" +
                 "table|from|grant|group_concat|column_name|" +
                 "information_schema.columns|table_schema|union|where|select|delete|update|order|by|count|*|" +
-                "chr|mid|master|truncate|char|declare|or|--|+|like|//|/|";//过滤掉的sql关键字，可以手动添加 use
+                "chr|mid|master|truncate|char|declare|--|+|like|//|/|";//过滤掉的sql关键字，可以手动添加 use
         String[] badStrs = badStr.split("\\|");
+        newLog4j.printLog("sql: "+str, request);
         for (int i = 0; i < badStrs.length; i++) {
-            if (str.contains(badStrs[i])) {
+            if (str.contains(' '+badStrs[i]) || str.contains(badStrs[i] + ' ')) {
+                newLog4j.printLog("sql request include illegal param: "+badStrs[i], request);
                 System.out.print(badStrs[i]);
                 return true;
             }
         }
         return false;
     }
-    public static void main(String []args){
-        String str="%E4%B8%8A%E6%B5%B7%E6%88%90%E5%9F%BA%E5%B8%82%E6%94%BF%E5%BB%BA%E8%AE%BE%E5%8F%91%E5%B1%95%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8&date=2016-10-05&startTime=00:00&endTime=23:59\n";
-        if(sqlValidate(str))
-            System.out.print(str);
-    }
+//    public static void main(String []args){
+//        String str="%E4%B8%8A%E6%B5%B7%E6%88%90%E5%9F%BA%E5%B8%82%E6%94%BF%E5%BB%BA%E8%AE%BE%E5%8F%91%E5%B1%95%E6%9C%89%E9%99%90%E5%85%AC%E5%8F%B8&date=2016-10-05&startTime=00:00&endTime=23:59\n";
+//        if(sqlValidate(str))
+//            System.out.print(str);
+//    }
 }

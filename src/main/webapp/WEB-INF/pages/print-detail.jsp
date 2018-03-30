@@ -66,6 +66,7 @@
         padding-left: 6px;
         font-size: 20px;
         height: 32px;
+        word-break: break-all;
     }
     .table-width {
         min-height: 405px;
@@ -114,12 +115,11 @@
                         <td class="card-table">民族:<u>${item.nation}</u></td></tr>
                         <tr> <td class="card-table">科目:<u>${item.subject}</u></td>
                         <td class="card-table">级别:<u>${item.level}级</u></td></tr>
-                        <tr> <td class="card-table" white-space: nowrap>时间: <u>${item.time}</u> </td></tr>
+                        <tr> <td class="card-table" colSpan=2>时间: <u>${item.time}</u> </td></tr>
                         <tr><td class="card-table">时长:<u >${item.examTime}分钟</u></td></tr>
-                        <tr> <td class="card-table" colSpan=3>考点:<u>${item.examPlace}</u></td></tr>
-                        <tr> <td class="card-table" colSpan=2>考场:<u>${item.classPlace}</u></td>
+                        <tr> <td class="card-table" colSpan=2>考点:<u>${item.examPlace}</u></td></tr>
+                        <tr> <td class="card-table" colSpan=3>考场:<u>${item.classPlace}</u></td>
                         <tr> <td class="card-table" colSpan=3 align=center>${remark}</td></tr>
-                        <td height=10>&nbsp;</td></tr>
                     </tbody>
                 </table>
                 </div>
