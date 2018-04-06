@@ -403,6 +403,9 @@ public class Message1Controller extends BaseController{
                             newMessage.setEndSignUpTime(endSignUpTime);
                             newMessage.setIsPay(false);
                             messageDao.save(newMessage,request);
+//                            List<message> changeMessage = messageDao.findAll("from message where name = '" + newMessage.getName() +"'",request);
+//                            changeMessage.get(0).setBirth(newMessage.getBirth());
+//                            messageDao.update(changeMessage,request);
                             inputTotal++;
                         }
                     }

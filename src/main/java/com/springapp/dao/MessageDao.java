@@ -28,7 +28,7 @@ public class MessageDao extends BaseDao{
                 if(HSSFDateUtil.isCellDateFormatted(hssfCell)){
                     SimpleDateFormat sdf = new SimpleDateFormat("yyyyMMdd");
 
-                    return sdf.format(HSSFDateUtil.getJavaDate(hssfCell.getNumericCellValue()));
+                    return sdf.format(hssfCell.getDateCellValue());
                 }
 
                 return df.format(hssfCell.getNumericCellValue());
