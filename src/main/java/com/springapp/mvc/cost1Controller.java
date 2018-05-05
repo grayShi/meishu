@@ -14,9 +14,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import javax.servlet.http.HttpServletRequest;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 /**
  * Created by hello on 2016/7/5.
@@ -228,6 +226,35 @@ public class cost1Controller extends BaseController{
             }
             allCostList.add(x);
         }
+
+        Collections.sort(allCostList, new Comparator<cost1>() {    // 根据subID排序
+
+            @Override
+            public int compare(cost1 pre, cost1 aft) {
+                String o1 = pre.getSubID();
+                String o2 = aft.getSubID();
+
+                if(o1 == null || o2 == null){
+                    return -1;
+                }
+                if(o1.length() > o2.length()){
+                    return 1;
+                }
+                if(o1.length() < o2.length()){
+                    return -1;
+                }
+                if(o1.compareTo(o2) > 0){
+                    return 1;
+                }
+                if(o1.compareTo(o2) < 0){
+                    return -1;
+                }
+                if(o1.compareTo(o2) == 0){
+                    return 0;
+                }
+                return 0;
+            }
+        });
 
         List<cost1> totalCostList = new ArrayList<cost1>();
         cost1 y = new cost1();
