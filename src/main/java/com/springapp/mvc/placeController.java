@@ -1,9 +1,6 @@
 package com.springapp.mvc;
 
-import com.springapp.entity.Place;
-import com.springapp.entity.message;
-import com.springapp.entity.reportPlace;
-import com.springapp.entity.subject;
+import com.springapp.entity.*;
 import net.sf.json.JSONArray;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -51,6 +48,7 @@ public class placeController extends  BaseController{
         String originalPlace = rep.getPlace();
         String originalSubPlaceNum = "";
         String currentSubPlaceNum = "";
+        String userSubPlace = rep.getSubPlaceId() + "¥" + rep.getSubPlace();
         if(rep.getPlaceId()<10)
             originalSubPlaceNum +='0';
         originalSubPlaceNum += rep.getPlaceId();
@@ -92,6 +90,14 @@ public class placeController extends  BaseController{
         currentSubPlaceNum += rep.getSubPlaceId();
         String currentPlace = rep.getPlace();
         String currentsubPlace = currentSubPlaceNum + '￥'+ rep.getSubPlace();
+        String currentUserSubPlace = rep.getSubPlaceId() + "¥" + rep.getSubPlace();
+        List<User> userList = userDao.findAll("from User where place = '"+originalPlace +"' and subPlace = '"+userSubPlace+"'",request);
+        for(User change : userList){
+            change.setPlace(currentPlace);
+            change.setSubPlace(currentUserSubPlace);
+            change.setUsername(rep.getSubPlace());
+        }
+        userDao.update(userList, request);
         List<message> messageList = messageDao.findAll("from message where isDelete = 0 and reportPlace = '"+originalPlace +"' and subPlace = '"+originalSubPlace+"'",request);
         for(message changeList : messageList){
             changeList.setReportPlace(currentPlace);
@@ -157,6 +163,13 @@ public class placeController extends  BaseController{
                 currentSubPlaceNum += rep.getSubPlaceId();
                 rep.setRealId(currentSubPlaceNum);
                 reportPlaceDao.save(rep,request);
+                User user = new User();
+                user.setPower("school");
+                user.setUsername(rep.getSubPlace());
+                user.setPassword("a85436017eb06a341f1a7e2d1fa69de7");   // 默认密码：mskj
+                user.setPlace(place);
+                user.setSubPlace(rep.getSubPlaceId()+"¥"+rep.getSubPlace());
+                userDao.save(user,request);
             }else {
                 isCount++;
             }
