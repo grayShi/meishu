@@ -378,7 +378,7 @@ public class Message1Controller extends BaseController{
 
                     }
                     if(isSuccess) {
-                        Long isCount = messageDao.getCount("select count (*) from message where isDelete = 0 and name ='" + getValue(hssfRow.getCell(0)) + "'and sex='" + getValue(hssfRow.getCell(3)) + "'and birth='" + newMessage.getBirth() +"'and subject='" + subject1 + "'and level = " + getValue(hssfRow.getCell(8)),request);
+                        Long isCount = messageDao.getCount("select count (*) from message where isDelete = 0 and endSignUpTime = '" + endSignUpTime + "' and name ='" + getValue(hssfRow.getCell(0)) + "'and sex='" + getValue(hssfRow.getCell(3)) + "'and birth='" + newMessage.getBirth() +"'and subject='" + subject1 + "'and level = " + getValue(hssfRow.getCell(8)),request);
                         if (isCount != 0) {
                             lineNum +="(Sheet"+(numSheet+1)+")"+ (rowNum + 1) + "(重复数据),";
                         } else {
