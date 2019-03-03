@@ -77,6 +77,9 @@
                                         <option value="8"<c:if test="${item.level == 8 }"> selected="selected"</c:if>>1——8级</option>
                                         <option value="9"<c:if test="${item.level == 9 }"> selected="selected"</c:if>>1——9级</option>
                                         <option value="10"<c:if test="${item.level == 10 }"> selected="selected"</c:if>>1——10级</option>
+                                        <option value="11"<c:if test="${item.level == 11 }"> selected="selected"</c:if>>1——11级</option>
+                                        <option value="12"<c:if test="${item.level == 12 }"> selected="selected"</c:if>>1——12级</option>
+                                        <option value="13"<c:if test="${item.level == 13 }"> selected="selected"</c:if>>1——13级</option>
                                     </c:when>
                                 </c:choose>
 
