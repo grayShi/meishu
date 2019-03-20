@@ -406,7 +406,7 @@ public class cost1Controller extends BaseController{
 
         }
         listString += str+")";
-        List<message> List = messageDao.findAll("select message.level,cost.remark,count(*) from message message,cost cost where message.isPay = false and message.isDelete = 0 and message.endSignUpTime = '"+endSignUpdate+"' and message.subPlace like '"+plaId+"￥%' and message.level in "+listString+" and message.level = cost.level group by message.level",request);
+        List<message> List = messageDao.findAll("select message.level,cost.remark,count(*) from message message,cost cost where message.isPay = false and message.isDelete = 0 and message.endSignUpTime = '"+endSignUpdate+"' and message.subPlace like '"+plaId+"￥%' and message.level in "+listString+" and message.level = cost.level group by message.level,cost.remark",request);
         List levelCount;
         int count = 0;
         int cost = 0;
