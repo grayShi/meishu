@@ -251,7 +251,7 @@
         var ReportPlace = $("#reportPlace option:selected").val();
         var SubPlace = $("#subPlace option:selected").val();
         var remark = $("#remark").val();
-        window.open("print-detail?examTime="+ExamTime+"&subject="+Subject+"&level="+Level+"&reportPlace="+ReportPlace+"&subPlace="+SubPlace+"&remark="+remark);
+        window.open("print-detail?examTime="+ExamTime+"&subject="+Subject+"&level="+Level+"&reportPlace="+ReportPlace+"&subPlace="+SubPlace+"&remark="+remark+"&title=");
     }
 </script>
 </body>

@@ -95,7 +95,7 @@
     </c:if>
         <c:if test="${status.count != list.size() && status.count == 1 }">
             <div class="nextPage table-top-first">
-                </c:if>
+        </c:if>
     <c:if test="${status.count == list.size() }">
         <div class="table-top" style="max-height: 720px;">
     </c:if>
@@ -103,8 +103,14 @@
                 <div class="table-height table-width">
                 <table title=第${status.count}张 cellSpacing=1 cellPadding=0 width=410px align=center>
                     <tbody>
-                        <tr> <td style="line-height: 20px;height:88px;text-align:center"  colSpan=3 ><span style="font-size: 20px; font-weight: 600">全国美术考级准考证</span></br>
-                        <span style="display: block;margin-top: 10px;padding-left: 5px; width: 100%; font-size: 18px">准考证号:<u>${item.cardNumber}</u></span></td></tr>
+                        <c:if test="${title == ''}">
+                            <tr> <td style="line-height: 20px;height:88px;text-align:center"  colSpan=3 ><span style="font-size: 20px; font-weight: 600">全国美术考级准考证</span></br>
+                                <span style="display: block;margin-top: 10px;padding-left: 5px; width: 100%; font-size: 18px">准考证号:<u>${item.cardNumber}</u></span></td></tr>
+                        </c:if>
+                        <c:if test="${title != ''}">
+                            <tr> <td style="line-height: 20px;height:88px;text-align:center"  colSpan=3 ><span style="font-size: 20px; font-weight: 600">${title}</span></br>
+                                <span style="display: block;margin-top: 10px;padding-left: 5px; width: 100%; font-size: 18px">准考证号:<u>${item.cardNumber}</u></span></td></tr>
+                        </c:if>
                         <tr><td class="card-table" width=147>姓名:<u>${item.name}</u></td> <td class="card-table" width=89 white-space: nowrap>性别:<u>${item.sex}</u></td>
                         <td style="padding-right: 6px; font-size: 12px" rowSpan=7 width=121 align=center>
                             <table class="photo-table" cellSpacing=0 cellPadding=0 width=150 align=center>

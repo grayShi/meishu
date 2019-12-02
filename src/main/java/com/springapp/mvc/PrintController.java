@@ -114,7 +114,7 @@ public class PrintController extends BaseController {
 
     @RequestMapping(value = "/print-detail", method = RequestMethod.GET)
     public ModelAndView print_detail(HttpServletRequest request, @RequestParam(value = "examTime") String examTime, @RequestParam(value = "subject") String subject, @RequestParam(value = "level") String level,
-                                     @RequestParam(value = "reportPlace") String reportPlace, @RequestParam(value = "subPlace") String subPlace, @RequestParam(value = "remark") String remark) {
+                                     @RequestParam(value = "reportPlace") String reportPlace, @RequestParam(value = "subPlace") String subPlace, @RequestParam(value = "remark") String remark, @RequestParam(value = "title") String title) {
         searchSql search = new searchSql();
         String sql6 = search.getSession(request);
         String sql = "from message where isDelete = 0 and isPay = true ";
@@ -168,6 +168,7 @@ public class PrintController extends BaseController {
         ModelAndView modelAndView = new ModelAndView();
         modelAndView.addObject("list", list);
         modelAndView.addObject("remark", remark);
+        modelAndView.addObject("title", title);
         modelAndView.setViewName("print-detail");
         return modelAndView;
     }
