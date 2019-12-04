@@ -115,6 +115,29 @@ public class PrintController extends BaseController {
     @RequestMapping(value = "/print-detail", method = RequestMethod.GET)
     public ModelAndView print_detail(HttpServletRequest request, @RequestParam(value = "examTime") String examTime, @RequestParam(value = "subject") String subject, @RequestParam(value = "level") String level,
                                      @RequestParam(value = "reportPlace") String reportPlace, @RequestParam(value = "subPlace") String subPlace, @RequestParam(value = "remark") String remark, @RequestParam(value = "title") String title) {
+
+        List<message> list = getList(request, examTime, subject, level, reportPlace, subPlace);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("list", list);
+        modelAndView.addObject("remark", remark);
+        modelAndView.addObject("title", title);
+        modelAndView.setViewName("print-detail");
+        return modelAndView;
+    }
+
+    @RequestMapping(value = "/print-detail-ls", method = RequestMethod.GET)
+    public ModelAndView print_detail_ls(HttpServletRequest request, @RequestParam(value = "examTime") String examTime, @RequestParam(value = "subject") String subject, @RequestParam(value = "level") String level,
+                                     @RequestParam(value = "reportPlace") String reportPlace, @RequestParam(value = "subPlace") String subPlace, @RequestParam(value = "remark") String remark, @RequestParam(value = "title") String title) {
+
+        List<message> list = getList(request, examTime, subject, level, reportPlace, subPlace);
+        ModelAndView modelAndView = new ModelAndView();
+        modelAndView.addObject("list", list);
+        modelAndView.addObject("remark", remark);
+        modelAndView.addObject("title", title);
+        modelAndView.setViewName("print-detail-ls");
+        return modelAndView;
+    }
+    public List getList(HttpServletRequest request, String examTime, String subject, String level, String reportPlace, String subPlace) {
         searchSql search = new searchSql();
         String sql6 = search.getSession(request);
         String sql = "from message where isDelete = 0 and isPay = true ";
@@ -165,11 +188,8 @@ public class PrintController extends BaseController {
             Subject = "";
             sub = null;
         }
-        ModelAndView modelAndView = new ModelAndView();
-        modelAndView.addObject("list", list);
-        modelAndView.addObject("remark", remark);
-        modelAndView.addObject("title", title);
-        modelAndView.setViewName("print-detail");
-        return modelAndView;
+        return list;
     }
 }
+
+
