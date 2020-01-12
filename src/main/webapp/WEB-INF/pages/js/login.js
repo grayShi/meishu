@@ -155,7 +155,7 @@ function() {
         wavelength: 50,
         segmentLength: 10,
         lineWidth: 1,
-        strokeStyle: "rgba(255, 255, 255, 0.2)",
+        strokeStyle: "rgba(0, 0, 0, 0.2)",
         type: "Sine"
     };
     return a.prototype.getDimension = function(a) {
@@ -264,9 +264,9 @@ $(function() {
         initialize: function() {},
         resizeEvent: function() {
             var a = this.ctx.createLinearGradient(0, 0, this.width, 0);
-            a.addColorStop(0, "rgba(255, 255, 255, 0)"),
-            a.addColorStop(.5, "rgba(255, 255, 255, 0.2)"),
-            a.addColorStop(1, "rgba(255, 255, 255, 0)");
+            a.addColorStop(0, "rgba(0, 0, 0, 0)"),
+            a.addColorStop(.5, "rgba(0, 0, 0, 0.2)"),
+            a.addColorStop(1, "rgba(0, 0, 0, 0)");
             for (var b = -1,
             c = this.waves.length; ++b < c;) this.waves[b].strokeStyle = a;
             b = void 0,
@@ -318,9 +318,9 @@ $(function() {
         initialize: function() {},
         resizeEvent: function() {
             var a = this.ctx.createLinearGradient(0, 0, this.width, 0);
-            a.addColorStop(0, "rgba(255, 255, 255, 0)"),
-            a.addColorStop(.5, "rgba(255, 255, 255, 0.2)"),
-            a.addColorStop(1, "rgba(255, 255, 255, 0)");
+            a.addColorStop(0, "rgba(0, 0, 0, 0)"),
+            a.addColorStop(.5, "rgba(0, 0, 0, 0.2)"),
+            a.addColorStop(1, "rgba(0, 0, 0, 0)");
             for (var b = -1,
             c = this.waves.length; ++b < c;) this.waves[b].strokeStyle = a;
             b = void 0,
@@ -372,9 +372,9 @@ $(function() {
         initialize: function() {},
         resizeEvent: function() {
             var a = this.ctx.createLinearGradient(0, 0, this.width, 0);
-            a.addColorStop(0, "rgba(255, 255, 255, 0)"),
-            a.addColorStop(.5, "rgba(255, 255, 255, 0.2)"),
-            a.addColorStop(1, "rgba(255, 255, 255, 0)");
+            a.addColorStop(0, "rgba(0, 0, 0, 0)"),
+            a.addColorStop(.5, "rgba(0, 0, 0, 0.2)"),
+            a.addColorStop(1, "rgba(0, 0, 0, 0)");
             for (var b = -1,
             c = this.waves.length; ++b < c;) this.waves[b].strokeStyle = a;
             b = void 0,
